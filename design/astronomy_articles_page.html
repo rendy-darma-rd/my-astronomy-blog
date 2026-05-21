@@ -1,0 +1,448 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .blog { font-family: 'Nunito', sans-serif; background: #f5f3ef; color: #2d2d2d; min-height: 100vh; position: relative; overflow: hidden; }
+
+  .bg-deco { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; }
+
+  .nav { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: rgba(245,243,239,0.94); backdrop-filter: blur(6px); border-bottom: 1px solid #e2ddd6; }
+  .logo { font-family: 'Lora', serif; font-size: 20px; color: #3a3a3a; display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 28px; height: 28px; background: #e8e0d0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1.5px solid #d4c9b5; }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: #7a7060; text-decoration: none; transition: color 0.2s; }
+  .nav-links a.active, .nav-links a:hover { color: #4a6fa5; }
+
+  .page-header { position: relative; z-index: 5; background: linear-gradient(180deg, #eceae4 0%, #f5f3ef 100%); border-bottom: 1px solid #e2ddd6; padding: 2rem 2rem 1.5rem; text-align: center; }
+  .page-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #a09888; font-weight: 600; margin-bottom: 0.5rem; }
+  .page-title { font-family: 'Lora', serif; font-size: 30px; font-weight: 600; color: #2a2420; margin-bottom: 0.4rem; }
+  .page-title span { color: #4a6fa5; font-style: italic; }
+  .page-sub { font-size: 14px; color: #9a9080; font-weight: 400; }
+
+  .content-wrap { position: relative; z-index: 5; display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; padding: 1.5rem 2rem 2rem; max-width: 900px; margin: 0 auto; }
+
+  /* FACET SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+  .facet-card { background: #fff; border-radius: 14px; border: 1px solid #e2ddd6; padding: 1rem 1.1rem; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+  .facet-title { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #a09888; font-weight: 700; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 6px; }
+
+  .search-box { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1.5px solid #d4cfc7; background: #f9f7f4; font-family: 'Nunito', sans-serif; font-size: 13px; color: #2d2d2d; outline: none; transition: border-color 0.2s; }
+  .search-box:focus { border-color: #4a6fa5; background: #fff; }
+  .search-box::placeholder { color: #b8b0a0; }
+
+  .sort-select { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1.5px solid #d4cfc7; background: #f9f7f4; font-family: 'Nunito', sans-serif; font-size: 13px; color: #2d2d2d; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a09888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+  .sort-select:focus { border-color: #4a6fa5; }
+
+  .date-input { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1.5px solid #d4cfc7; background: #f9f7f4; font-family: 'Nunito', sans-serif; font-size: 12px; color: #2d2d2d; outline: none; margin-bottom: 6px; }
+  .date-input:focus { border-color: #4a6fa5; }
+  .date-label { font-size: 11px; color: #a09888; margin-bottom: 3px; display: block; }
+
+  .cat-list { display: flex; flex-direction: column; gap: 4px; }
+  .cat-item { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 7px; cursor: pointer; transition: background 0.15s; }
+  .cat-item:hover { background: #f5f3ef; }
+  .cat-item input[type=checkbox] { accent-color: #4a6fa5; width: 14px; height: 14px; cursor: pointer; flex-shrink: 0; }
+  .cat-item-label { font-size: 13px; color: #5a5040; flex: 1; cursor: pointer; }
+  .cat-count { font-size: 11px; color: #b0a898; background: #f0ede8; border-radius: 8px; padding: 1px 7px; }
+
+  .clear-btn { width: 100%; padding: 7px; border-radius: 8px; border: 1.5px solid #d4cfc7; background: transparent; font-family: 'Nunito', sans-serif; font-size: 12px; color: #a09888; cursor: pointer; transition: all 0.2s; margin-top: 0.3rem; }
+  .clear-btn:hover { border-color: #4a6fa5; color: #4a6fa5; background: rgba(74,111,165,0.05); }
+
+  /* ARTICLES LIST */
+  .articles-col { display: flex; flex-direction: column; gap: 0; }
+
+  .results-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .results-count { font-size: 13px; color: #9a9080; }
+  .results-count strong { color: #4a4030; font-weight: 600; }
+  .view-toggle { display: flex; gap: 4px; }
+  .view-btn { width: 30px; height: 30px; border-radius: 7px; border: 1.5px solid #d4cfc7; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #a09888; transition: all 0.2s; }
+  .view-btn.active { background: #4a6fa5; border-color: #4a6fa5; color: #fff; }
+
+  .article-list { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.2rem; }
+
+  .article-row {
+    background: #fff; border-radius: 14px; border: 1px solid #e2ddd6;
+    display: flex; gap: 0; overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .article-row:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.09); transform: translateY(-1px); border-color: #c8c0b4; }
+
+  .article-row-thumb { width: 110px; flex-shrink: 0; overflow: hidden; }
+  .article-row-body { flex: 1; padding: 0.9rem 1.1rem; display: flex; flex-direction: column; justify-content: center; }
+  .article-row-top { display: flex; align-items: center; gap: 8px; margin-bottom: 0.35rem; }
+
+  .tag-pill { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+  .tag-planets { background: #fef0d8; color: #a06020; }
+  .tag-deepsky  { background: #dde8f8; color: #2a5090; }
+  .tag-science  { background: #ddf5ec; color: #1a7050; }
+  .tag-events   { background: #f0ddf8; color: #702090; }
+  .tag-history  { background: #f5e8d8; color: #804020; }
+
+  .article-row-date { font-size: 11px; color: #b0a898; margin-left: auto; }
+  .article-row-title { font-family: 'Lora', serif; font-size: 15px; font-weight: 600; color: #2a2420; line-height: 1.35; margin-bottom: 0.3rem; }
+  .article-row-excerpt { font-size: 12px; color: #9a9080; line-height: 1.55; margin-bottom: 0.4rem; }
+  .article-row-meta { font-size: 11px; color: #b8b0a0; display: flex; align-items: center; gap: 8px; }
+  .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: #d4cfc7; }
+
+  /* PAGINATION */
+  .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding-top: 0.5rem; }
+  .page-btn { min-width: 34px; height: 34px; border-radius: 9px; border: 1.5px solid #d4cfc7; background: #fff; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 500; color: #6b6050; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.18s; padding: 0 10px; }
+  .page-btn:hover { border-color: #4a6fa5; color: #4a6fa5; background: rgba(74,111,165,0.06); }
+  .page-btn.active { background: #4a6fa5; border-color: #4a6fa5; color: #fff; }
+  .page-btn.disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+  .page-ellipsis { font-size: 14px; color: #b0a898; padding: 0 4px; }
+
+  .no-results { text-align: center; padding: 2.5rem 1rem; color: #a09888; }
+  .no-results-icon { font-size: 36px; margin-bottom: 0.8rem; }
+  .no-results-text { font-size: 14px; line-height: 1.6; }
+</style>
+
+<div class="blog">
+
+  <!-- background deco (same style as homepage) -->
+  <svg class="bg-deco" viewBox="0 0 680 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="30"  cy="120" r="1.2" fill="#8a8070" opacity="0.3"/>
+    <circle cx="650" cy="180" r="1.5" fill="#8a8070" opacity="0.28"/>
+    <circle cx="22"  cy="450" r="1"   fill="#8a8070" opacity="0.25"/>
+    <circle cx="658" cy="520" r="1.2" fill="#8a8070" opacity="0.28"/>
+    <circle cx="18"  cy="780" r="1.5" fill="#8a8070" opacity="0.24"/>
+    <circle cx="662" cy="860" r="1"   fill="#8a8070" opacity="0.27"/>
+    <g opacity="0.15" transform="translate(615,90)">
+      <line x1="0" y1="-6" x2="0" y2="6" stroke="#a06020" stroke-width="1"/>
+      <line x1="-6" y1="0" x2="6" y2="0" stroke="#a06020" stroke-width="1"/>
+    </g>
+    <g opacity="0.13" transform="translate(42,380)">
+      <line x1="0" y1="-5" x2="0" y2="5" stroke="#4a6fa5" stroke-width="1"/>
+      <line x1="-5" y1="0" x2="5" y2="0" stroke="#4a6fa5" stroke-width="1"/>
+    </g>
+    <g opacity="0.14" transform="translate(648,680)">
+      <line x1="0" y1="-5" x2="0" y2="5" stroke="#a06020" stroke-width="1"/>
+      <line x1="-5" y1="0" x2="5" y2="0" stroke="#a06020" stroke-width="1"/>
+    </g>
+    <g opacity="0.13">
+      <circle cx="590" cy="130" r="1.8" fill="#4a6fa5"/>
+      <circle cx="625" cy="108" r="1.4" fill="#4a6fa5"/>
+      <circle cx="648" cy="138" r="1.8" fill="#4a6fa5"/>
+      <circle cx="612" cy="158" r="1.4" fill="#4a6fa5"/>
+      <line x1="590" y1="130" x2="625" y2="108" stroke="#4a6fa5" stroke-width="0.5"/>
+      <line x1="625" y1="108" x2="648" y2="138" stroke="#4a6fa5" stroke-width="0.5"/>
+      <line x1="648" y1="138" x2="612" y2="158" stroke="#4a6fa5" stroke-width="0.5"/>
+      <line x1="612" y1="158" x2="590" y2="130" stroke="#4a6fa5" stroke-width="0.5"/>
+    </g>
+    <g opacity="0.13" transform="translate(48,220)">
+      <circle cx="0"  cy="0"  r="13" fill="#c8b880"/>
+      <ellipse cx="0" cy="0" rx="24" ry="5" fill="none" stroke="#a09060" stroke-width="1.3"/>
+    </g>
+    <g opacity="0.12" transform="translate(638,440)">
+      <circle cx="0"  cy="0"  r="14" fill="#d4c890"/>
+      <circle cx="5"  cy="-2" r="11" fill="#f0ede6"/>
+    </g>
+    <path d="M 0 320 Q 70 220 180 240" fill="none" stroke="#4a6fa5" stroke-width="0.8" stroke-dasharray="4 7" opacity="0.11"/>
+    <path d="M 680 750 Q 610 850 510 830" fill="none" stroke="#a06020" stroke-width="0.8" stroke-dasharray="4 7" opacity="0.11"/>
+    <g opacity="0.10">
+      <circle cx="605" cy="350" r="1"   fill="#6b6050"/>
+      <circle cx="615" cy="344" r="0.7" fill="#6b6050"/>
+      <circle cx="622" cy="357" r="1"   fill="#6b6050"/>
+      <circle cx="609" cy="363" r="0.6" fill="#6b6050"/>
+    </g>
+  </svg>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="logo">
+      <div class="logo-icon">🔭</div>
+      Stellara
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#" class="active">Articles</a></li>
+      <li><a href="#">Deep Sky</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-eyebrow">✦ Explore the universe</div>
+    <h1 class="page-title">All <span>Articles</span></h1>
+    <p class="page-sub">Browse, filter and discover stories about the cosmos — at your own pace.</p>
+  </div>
+
+  <!-- CONTENT: SIDEBAR + ARTICLES -->
+  <div class="content-wrap">
+
+    <!-- SIDEBAR FACETS -->
+    <aside class="sidebar">
+
+      <!-- Search -->
+      <div class="facet-card">
+        <div class="facet-title">🔍 Search</div>
+        <input class="search-box" type="text" placeholder="Search articles..." id="search-input"/>
+      </div>
+
+      <!-- Sort -->
+      <div class="facet-card">
+        <div class="facet-title">↕ Sort by</div>
+        <select class="sort-select" id="sort-select">
+          <option value="newest">Date — newest first</option>
+          <option value="oldest">Date — oldest first</option>
+          <option value="az">Title — A → Z</option>
+          <option value="za">Title — Z → A</option>
+        </select>
+      </div>
+
+      <!-- Date Range -->
+      <div class="facet-card">
+        <div class="facet-title">📅 Date range</div>
+        <label class="date-label">From</label>
+        <input class="date-input" type="date" id="date-from" value="2024-01-01"/>
+        <label class="date-label">To</label>
+        <input class="date-input" type="date" id="date-to" value="2026-12-31"/>
+      </div>
+
+      <!-- Categories -->
+      <div class="facet-card">
+        <div class="facet-title">🏷 Category</div>
+        <div class="cat-list" id="cat-list">
+          <label class="cat-item">
+            <input type="checkbox" value="planets" checked/><span class="cat-item-label">🪐 Planets</span><span class="cat-count">5</span>
+          </label>
+          <label class="cat-item">
+            <input type="checkbox" value="deepsky" checked/><span class="cat-item-label">🌌 Deep Sky</span><span class="cat-count">4</span>
+          </label>
+          <label class="cat-item">
+            <input type="checkbox" value="events" checked/><span class="cat-item-label">🌠 Events</span><span class="cat-count">4</span>
+          </label>
+          <label class="cat-item">
+            <input type="checkbox" value="science" checked/><span class="cat-item-label">🔬 Space Science</span><span class="cat-count">5</span>
+          </label>
+          <label class="cat-item">
+            <input type="checkbox" value="history" checked/><span class="cat-item-label">📜 History</span><span class="cat-count">2</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="clear-btn" id="clear-btn">✕ Clear all filters</button>
+    </aside>
+
+    <!-- ARTICLES COLUMN -->
+    <div class="articles-col">
+      <div class="results-bar">
+        <div class="results-count" id="results-count"><strong>20</strong> articles found</div>
+        <div class="view-toggle">
+          <button class="view-btn active" title="List view">☰</button>
+          <button class="view-btn" title="Grid view">⊞</button>
+        </div>
+      </div>
+
+      <div class="article-list" id="article-list"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ALL_ARTICLES = [
+  { id:1,  title:"Saturn's Rings Are Slowly Disappearing",         cat:"planets", date:"2026-05-15", author:"Rendy Darma",    read:"8 min",  excerpt:"Scientists have discovered that Saturn's iconic rings are thinning over time.",        thumb:"saturn"   },
+  { id:2,  title:"The Pillars of Creation — A Star Nursery",       cat:"deepsky", date:"2026-04-20", author:"Rendy Darma",    read:"6 min",  excerpt:"One of the most iconic images in astronomy and what it tells us about star birth.",    thumb:"pillars"  },
+  { id:3,  title:"Solar Maximum 2026 — What It Means for You",     cat:"science", date:"2026-04-10", author:"Rendy Darma",    read:"5 min",  excerpt:"The sun is at its most active. Here's what you might see in the night sky.",          thumb:"sun"      },
+  { id:4,  title:"Why Is Mars Red? The Simple Answer",             cat:"planets", date:"2026-03-28", author:"Rendy Darma",    read:"4 min",  excerpt:"Rust. Lots and lots of rust. But the full story is even more interesting.",           thumb:"mars"     },
+  { id:5,  title:"Best Meteor Showers to Watch in 2026",           cat:"events",  date:"2026-03-15", author:"Rendy Darma",    read:"3 min",  excerpt:"Mark these dates and go outside — no telescope needed. Just your eyes.",              thumb:"meteor"   },
+  { id:6,  title:"Jupiter's Great Red Spot: Still Shrinking?",     cat:"planets", date:"2026-02-22", author:"Rendy Darma",    read:"5 min",  excerpt:"The famous storm has been raging for centuries. But is it finally winding down?",     thumb:"jupiter"  },
+  { id:7,  title:"How Black Holes Actually Work",                  cat:"science", date:"2026-02-10", author:"Rendy Darma",    read:"9 min",  excerpt:"Black holes are one of the most misunderstood phenomena in all of science.",          thumb:"blackhole"},
+  { id:8,  title:"The James Webb Telescope's Greatest Hits So Far",cat:"deepsky", date:"2026-01-30", author:"Rendy Darma",    read:"7 min",  excerpt:"A curated tour of the most breathtaking images from Webb and what they reveal.",      thumb:"webb"     },
+  { id:9,  title:"Total Solar Eclipse Guide for Beginners",        cat:"events",  date:"2026-01-18", author:"Rendy Darma",    read:"4 min",  excerpt:"Everything you need to know before, during, and after a total solar eclipse.",       thumb:"eclipse"  },
+  { id:10, title:"Venus — Earth's Strange Evil Twin",              cat:"planets", date:"2025-12-20", author:"Rendy Darma",    read:"6 min",  excerpt:"It's almost the same size as Earth, yet it couldn't be more different.",             thumb:"venus"    },
+  { id:11, title:"Neutron Stars — Nature's Most Extreme Objects",  cat:"science", date:"2025-12-05", author:"Rendy Darma",    read:"8 min",  excerpt:"Squeezed to impossibly dense states, neutron stars push physics to its limits.",     thumb:"neutron"  },
+  { id:12, title:"Andromeda Is Heading Straight for Us",           cat:"deepsky", date:"2025-11-18", author:"Rendy Darma",    read:"5 min",  excerpt:"In about 4 billion years, our galaxy and Andromeda will collide. Here's what happens.",thumb:"andromeda"},
+  { id:13, title:"The Northern Lights — A Complete Guide",         cat:"events",  date:"2025-11-02", author:"Rendy Darma",    read:"6 min",  excerpt:"Aurora borealis explained simply — where to see it, why it happens, what to expect.", thumb:"aurora"   },
+  { id:14, title:"How Astronomers Measure Cosmic Distances",       cat:"science", date:"2025-10-14", author:"Rendy Darma",    read:"7 min",  excerpt:"Space is unimaginably vast. Here's the clever ladder of methods used to measure it.", thumb:"distance" },
+  { id:15, title:"The Moon — Our Oldest Companion",                cat:"planets", date:"2025-09-30", author:"Rendy Darma",    read:"5 min",  excerpt:"Earth's only natural satellite, and everything fascinating it's quietly been doing.", thumb:"moon"     },
+  { id:16, title:"Hubble vs Webb — Which Is Really Better?",       cat:"deepsky", date:"2025-09-12", author:"Rendy Darma",    read:"6 min",  excerpt:"Two iconic space telescopes, two very different visions of the universe.",           thumb:"hubble"   },
+  { id:17, title:"The First Moon Landing — 1969 Revisited",        cat:"history", date:"2025-08-20", author:"Rendy Darma",    read:"8 min",  excerpt:"Fifty-six years on, the Apollo 11 mission still captures our imagination.",           thumb:"apollo"   },
+  { id:18, title:"Exoplanets — Are Any of Them Like Earth?",       cat:"science", date:"2025-08-05", author:"Rendy Darma",    read:"7 min",  excerpt:"Thousands of planets orbit other stars. Some might even have liquid water.",         thumb:"exoplanet"},
+  { id:19, title:"Perseid Meteor Shower — Your Viewing Guide",     cat:"events",  date:"2025-07-22", author:"Rendy Darma",    read:"3 min",  excerpt:"The Perseids are one of the most reliable annual shows in the night sky.",           thumb:"perseid"  },
+  { id:20, title:"The Space Race — A Brief History",               cat:"history", date:"2025-07-04", author:"Rendy Darma",    read:"9 min",  excerpt:"From Sputnik to the Moon, the Cold War rivalry that launched the space age.",        thumb:"sputnik"  },
+];
+
+const THUMBS = {
+  saturn:    {bg:"#e8e4dc", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#e8e4dc"/><circle cx="55" cy="45" r="22" fill="#d4c090"/><ellipse cx="55" cy="45" rx="45" ry="7" fill="none" stroke="#a09060" stroke-width="1.8" opacity="0.7"/><circle cx="20" cy="18" r="1" fill="#9a9080"/><circle cx="90" cy="25" r="0.8" fill="#9a9080"/>` }},
+  pillars:   {bg:"#1a1830", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#1a1830"/><rect x="25" y="8" width="10" height="76" rx="3" fill="#3a3060"/><rect x="45" y="18" width="8" height="68" rx="2" fill="#2e2850"/><rect x="62" y="12" width="9" height="72" rx="3" fill="#342c58"/><circle cx="18" cy="12" r="1" fill="white" opacity="0.7"/><circle cx="90" cy="8" r="0.8" fill="white" opacity="0.8"/><circle cx="30" cy="10" r="2.5" fill="#a080e0" opacity="0.5"/>` }},
+  sun:       {bg:"#1e1008", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#1e1008"/><circle cx="55" cy="45" r="26" fill="#e8a020"/><circle cx="55" cy="45" r="20" fill="#f0c030"/><line x1="55" y1="45" x2="55" y2="8" stroke="#e8a020" stroke-width="1.5" opacity="0.5"/><line x1="55" y1="45" x2="55" y2="82" stroke="#e8a020" stroke-width="1.5" opacity="0.5"/><line x1="55" y1="45" x2="18" y2="45" stroke="#e8a020" stroke-width="1.5" opacity="0.5"/><line x1="55" y1="45" x2="92" y2="45" stroke="#e8a020" stroke-width="1.5" opacity="0.5"/>` }},
+  mars:      {bg:"#120808", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#120808"/><circle cx="55" cy="45" r="26" fill="#c84020"/><ellipse cx="46" cy="40" rx="6" ry="4" fill="#a03018" opacity="0.5"/><ellipse cx="62" cy="52" rx="8" ry="3" fill="#b03820" opacity="0.4"/><ellipse cx="55" cy="22" rx="7" ry="3" fill="white" opacity="0.55"/><circle cx="85" cy="25" r="4" fill="#888070"/>` }},
+  meteor:    {bg:"#080d18", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080d18"/><line x1="90" y1="5" x2="45" y2="55" stroke="white" stroke-width="1.5" opacity="0.85" stroke-linecap="round"/><circle cx="45" cy="55" r="2" fill="white"/><line x1="80" y1="5" x2="40" y2="45" stroke="white" stroke-width="1" opacity="0.6" stroke-linecap="round"/><circle cx="10" cy="15" r="1" fill="white" opacity="0.6"/><circle cx="25" cy="35" r="0.8" fill="white" opacity="0.5"/><rect x="0" y="72" width="110" height="18" fill="#1a2a50" opacity="0.5"/>` }},
+  jupiter:   {bg:"#1a1008", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#1a1008"/><circle cx="55" cy="45" r="28" fill="#c8a060"/><ellipse cx="55" cy="38" rx="26" ry="4" fill="#b89050" opacity="0.6"/><ellipse cx="55" cy="52" rx="24" ry="3" fill="#d0b070" opacity="0.5"/><ellipse cx="42" cy="48" rx="7" ry="5" fill="#c04020" opacity="0.7"/>` }},
+  blackhole: {bg:"#080810", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080810"/><circle cx="55" cy="45" r="18" fill="#050508"/><circle cx="55" cy="45" r="26" fill="none" stroke="#f0c030" stroke-width="1.5" opacity="0.4"/><circle cx="55" cy="45" r="32" fill="none" stroke="#c08020" stroke-width="1" opacity="0.25"/><circle cx="10" cy="10" r="1" fill="white" opacity="0.6"/><circle cx="95" cy="20" r="0.8" fill="white" opacity="0.5"/>` }},
+  webb:      {bg:"#0a0c18", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#0a0c18"/><polygon points="55,15 68,35 55,30 42,35" fill="#b0c0e0" opacity="0.8"/><rect x="42" y="35" width="26" height="18" rx="2" fill="#a0b0d0" opacity="0.7"/><circle cx="25" cy="20" r="1.2" fill="white" opacity="0.7"/><circle cx="85" cy="15" r="1" fill="white" opacity="0.6"/><circle cx="70" cy="60" r="8" fill="#2a1e50" opacity="0.5"/><circle cx="70" cy="60" r="4" fill="#4a3080" opacity="0.7"/>` }},
+  eclipse:   {bg:"#050510", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#050510"/><circle cx="55" cy="45" r="28" fill="#f0c030" opacity="0.15"/><circle cx="55" cy="45" r="22" fill="#f0c030" opacity="0.2"/><circle cx="55" cy="45" r="18" fill="#060610"/><circle cx="55" cy="45" r="22" fill="none" stroke="#f0c030" stroke-width="2" opacity="0.5"/><circle cx="15" cy="15" r="1" fill="white" opacity="0.7"/><circle cx="90" cy="12" r="0.8" fill="white" opacity="0.6"/>` }},
+  venus:     {bg:"#1a1208", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#1a1208"/><circle cx="55" cy="45" r="24" fill="#e8c870"/><circle cx="55" cy="45" r="22" fill="#d0b058" opacity="0.6"/><ellipse cx="48" cy="38" rx="8" ry="5" fill="#e0c060" opacity="0.4"/><circle cx="15" cy="18" r="1" fill="white" opacity="0.5"/>` }},
+  neutron:   {bg:"#080818", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080818"/><circle cx="55" cy="45" r="14" fill="#a0c0e0"/><circle cx="55" cy="45" r="10" fill="#c0d8f0"/><line x1="55" y1="10" x2="55" y2="80" stroke="#60a0e0" stroke-width="1" opacity="0.3"/><ellipse cx="55" cy="45" rx="32" ry="8" fill="none" stroke="#6090c0" stroke-width="0.8" opacity="0.4"/><circle cx="20" cy="15" r="1" fill="white" opacity="0.6"/>` }},
+  andromeda: {bg:"#080c18", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080c18"/><ellipse cx="55" cy="45" rx="40" ry="18" fill="#2a2850" opacity="0.8"/><ellipse cx="55" cy="45" rx="22" ry="10" fill="#4a4080" opacity="0.7"/><ellipse cx="55" cy="45" rx="10" ry="5" fill="#8070c0" opacity="0.8"/><circle cx="15" cy="12" r="1" fill="white" opacity="0.6"/><circle cx="90" cy="70" r="0.8" fill="white" opacity="0.5"/>` }},
+  aurora:    {bg:"#080f10", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080f10"/><path d="M0 60 Q28 30 55 50 Q82 70 110 40" fill="none" stroke="#40c080" stroke-width="3" opacity="0.6"/><path d="M0 70 Q28 45 55 60 Q82 75 110 55" fill="none" stroke="#50d090" stroke-width="2" opacity="0.4"/><path d="M0 55 Q28 25 55 42 Q82 60 110 30" fill="none" stroke="#60e8a0" stroke-width="1.5" opacity="0.3"/><rect x="0" y="78" width="110" height="12" fill="#0a1a10" opacity="0.7"/><circle cx="20" cy="12" r="0.8" fill="white" opacity="0.6"/>` }},
+  distance:  {bg:"#0a0c14", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#0a0c14"/><line x1="10" y1="45" x2="100" y2="45" stroke="#8090b0" stroke-width="1" opacity="0.5" stroke-dasharray="4 4"/><circle cx="10" cy="45" r="5" fill="#4a6fa5"/><circle cx="55" cy="45" r="8" fill="#c84020"/><circle cx="100" cy="45" r="12" fill="#d4c090"/><circle cx="20" cy="20" r="1" fill="white" opacity="0.6"/><circle cx="85" cy="15" r="0.8" fill="white" opacity="0.5"/>` }},
+  moon:      {bg:"#101010", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#101010"/><circle cx="55" cy="45" r="26" fill="#c8c0b0"/><circle cx="44" cy="38" rx="5" ry="5" r="5" fill="#b0a898" opacity="0.6"/><circle cx="65" cy="50" r="4" fill="#b8b0a0" opacity="0.5"/><circle cx="50" cy="56" r="3" fill="#c0b8a8" opacity="0.4"/><circle cx="15" cy="15" r="1" fill="white" opacity="0.7"/>` }},
+  hubble:    {bg:"#080c18", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080c18"/><rect x="38" y="32" width="34" height="26" rx="4" fill="#9090a8"/><rect x="8"  y="40" width="28" height="10" rx="2" fill="#707090"/><rect x="74" y="40" width="28" height="10" rx="2" fill="#707090"/><circle cx="30" cy="55" r="6" fill="#2040a0" opacity="0.6"/><circle cx="18" cy="15" r="1" fill="white" opacity="0.6"/>` }},
+  apollo:    {bg:"#0a0c10", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#0a0c10"/><rect x="0" y="72" width="110" height="18" fill="#c8c0a8" opacity="0.9"/><rect x="45" y="40" width="20" height="32" rx="3" fill="#d0c890"/><polygon points="55,20 68,40 42,40" fill="#c0b870"/><rect x="30" y="55" width="15" height="4" rx="1" fill="#b0a860"/><rect x="65" y="55" width="15" height="4" rx="1" fill="#b0a860"/><circle cx="20" cy="15" r="1" fill="white" opacity="0.6"/>` }},
+  exoplanet: {bg:"#080c14", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080c14"/><circle cx="25" cy="45" r="12" fill="#f0c030" opacity="0.9"/><circle cx="75" cy="45" r="10" fill="#4a8a40"/><circle cx="75" cy="45" r="8" fill="#5a9a50"/><ellipse cx="75" cy="45" rx="18" ry="4" fill="none" stroke="#4a8a40" stroke-width="0.8" opacity="0.4"/><circle cx="90" cy="15" r="1" fill="white" opacity="0.5"/>` }},
+  perseid:   {bg:"#060a14", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#060a14"/><line x1="85" y1="5"  x2="40" y2="50" stroke="white" stroke-width="1.5" opacity="0.9" stroke-linecap="round"/><circle cx="40" cy="50" r="1.8" fill="white"/><line x1="75" y1="5"  x2="35" y2="42" stroke="white" stroke-width="1"   opacity="0.65" stroke-linecap="round"/><line x1="95" y1="10" x2="60" y2="58" stroke="white" stroke-width="1.2" opacity="0.7"  stroke-linecap="round"/><circle cx="12" cy="12" r="1" fill="white" opacity="0.7"/><circle cx="28" cy="25" r="0.8" fill="white" opacity="0.5"/>` }},
+  sputnik:   {bg:"#080810", fn: s => { s.innerHTML=`<rect width="110" height="90" fill="#080810"/><circle cx="55" cy="45" r="10" fill="#b0b8c8"/><line x1="55" y1="45" x2="35" y2="25" stroke="#9098a8" stroke-width="1.2"/><line x1="55" y1="45" x2="75" y2="25" stroke="#9098a8" stroke-width="1.2"/><line x1="55" y1="45" x2="30" y2="55" stroke="#9098a8" stroke-width="1.2"/><line x1="55" y1="45" x2="80" y2="55" stroke="#9098a8" stroke-width="1.2"/><path d="M 20 70 Q 55 50 90 70" fill="none" stroke="#4a6fa5" stroke-width="0.8" opacity="0.4" stroke-dasharray="3 4"/><circle cx="18" cy="15" r="1" fill="white" opacity="0.6"/>` }},
+};
+
+const TAG_CLASS = { planets:'tag-planets', deepsky:'tag-deepsky', events:'tag-events', science:'tag-science', history:'tag-history' };
+const TAG_LABEL = { planets:'🪐 Planets', deepsky:'🌌 Deep Sky', events:'🌠 Events', science:'🔬 Space Science', history:'📜 History' };
+
+const PER_PAGE = 6;
+let currentPage = 1;
+
+function getFilters() {
+  const q    = document.getElementById('search-input').value.toLowerCase();
+  const sort = document.getElementById('sort-select').value;
+  const from = document.getElementById('date-from').value;
+  const to   = document.getElementById('date-to').value;
+  const cats = [...document.querySelectorAll('#cat-list input:checked')].map(i => i.value);
+  return { q, sort, from, to, cats };
+}
+
+function applyFilters() {
+  const { q, sort, from, to, cats } = getFilters();
+  let list = ALL_ARTICLES.filter(a => {
+    if (!cats.includes(a.cat)) return false;
+    if (q && !a.title.toLowerCase().includes(q) && !a.excerpt.toLowerCase().includes(q)) return false;
+    if (from && a.date < from) return false;
+    if (to   && a.date > to)   return false;
+    return true;
+  });
+  if (sort === 'newest') list.sort((a,b) => b.date.localeCompare(a.date));
+  if (sort === 'oldest') list.sort((a,b) => a.date.localeCompare(b.date));
+  if (sort === 'az')     list.sort((a,b) => a.title.localeCompare(b.title));
+  if (sort === 'za')     list.sort((a,b) => b.title.localeCompare(a.title));
+  return list;
+}
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+}
+
+function makeSVG(key) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox','0 0 110 90');
+  svg.setAttribute('width','110');
+  svg.setAttribute('height','90');
+  svg.setAttribute('preserveAspectRatio','xMidYMid slice');
+  if (THUMBS[key]) THUMBS[key].fn(svg);
+  else {
+    svg.innerHTML = `<rect width="110" height="90" fill="#e8e4dc"/><circle cx="55" cy="45" r="20" fill="#c8c0b0"/>`;
+  }
+  return svg;
+}
+
+function render() {
+  const filtered = applyFilters();
+  const total    = filtered.length;
+  const pages    = Math.max(1, Math.ceil(total / PER_PAGE));
+  if (currentPage > pages) currentPage = 1;
+
+  document.getElementById('results-count').innerHTML =
+    `<strong>${total}</strong> article${total !== 1 ? 's' : ''} found`;
+
+  const slice = filtered.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
+  const list  = document.getElementById('article-list');
+  list.innerHTML = '';
+
+  if (slice.length === 0) {
+    list.innerHTML = `<div class="no-results"><div class="no-results-icon">🔭</div><div class="no-results-text">No articles match your filters.<br>Try adjusting the search or categories.</div></div>`;
+  } else {
+    slice.forEach(a => {
+      const row = document.createElement('div');
+      row.className = 'article-row';
+
+      const thumbDiv = document.createElement('div');
+      thumbDiv.className = 'article-row-thumb';
+      thumbDiv.appendChild(makeSVG(a.thumb));
+
+      const body = document.createElement('div');
+      body.className = 'article-row-body';
+      body.innerHTML = `
+        <div class="article-row-top">
+          <span class="tag-pill ${TAG_CLASS[a.cat]}">${TAG_LABEL[a.cat]}</span>
+          <span class="article-row-date">${formatDate(a.date)}</span>
+        </div>
+        <div class="article-row-title">${a.title}</div>
+        <div class="article-row-excerpt">${a.excerpt}</div>
+        <div class="article-row-meta">
+          <span>${a.author}</span>
+          <div class="meta-dot"></div>
+          <span>${a.read}</span>
+        </div>`;
+
+      row.appendChild(thumbDiv);
+      row.appendChild(body);
+      list.appendChild(row);
+    });
+  }
+
+  renderPagination(pages);
+}
+
+function renderPagination(pages) {
+  const pg = document.getElementById('pagination');
+  pg.innerHTML = '';
+  if (pages <= 1) return;
+
+  const prev = document.createElement('button');
+  prev.className = 'page-btn' + (currentPage === 1 ? ' disabled' : '');
+  prev.textContent = '← Prev';
+  prev.onclick = () => { if (currentPage > 1) { currentPage--; render(); } };
+  pg.appendChild(prev);
+
+  for (let i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || Math.abs(i - currentPage) <= 1) {
+      const btn = document.createElement('button');
+      btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+      btn.textContent = i;
+      btn.onclick = (function(p){ return function(){ currentPage = p; render(); }; })(i);
+      pg.appendChild(btn);
+    } else if (Math.abs(i - currentPage) === 2) {
+      const ell = document.createElement('span');
+      ell.className = 'page-ellipsis';
+      ell.textContent = '…';
+      pg.appendChild(ell);
+    }
+  }
+
+  const next = document.createElement('button');
+  next.className = 'page-btn' + (currentPage === pages ? ' disabled' : '');
+  next.textContent = 'Next →';
+  next.onclick = () => { if (currentPage < pages) { currentPage++; render(); } };
+  pg.appendChild(next);
+}
+
+document.getElementById('search-input').addEventListener('input',  () => { currentPage=1; render(); });
+document.getElementById('sort-select').addEventListener('change',  () => { currentPage=1; render(); });
+document.getElementById('date-from').addEventListener('change',    () => { currentPage=1; render(); });
+document.getElementById('date-to').addEventListener('change',      () => { currentPage=1; render(); });
+document.getElementById('cat-list').addEventListener('change',     () => { currentPage=1; render(); });
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  document.getElementById('search-input').value = '';
+  document.getElementById('sort-select').value  = 'newest';
+  document.getElementById('date-from').value    = '2024-01-01';
+  document.getElementById('date-to').value      = '2026-12-31';
+  document.querySelectorAll('#cat-list input').forEach(i => i.checked = true);
+  currentPage = 1;
+  render();
+});
+
+document.querySelectorAll('.view-btn').forEach(b => {
+  b.addEventListener('click', function() {
+    document.querySelectorAll('.view-btn').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+render();
+</script>

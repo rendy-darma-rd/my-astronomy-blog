@@ -1,0 +1,219 @@
+
+---
+const { getCollection } = await import('astro:content');
+const posts = await getCollection('blog');
+// sort newest first
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const featured = sortedPosts[0];
+const cards = sortedPosts.slice(1, 5);
+const featuredTag = featured ? resolveTag(featured.data) : null;
+
+const TAG_MAP = {
+  planets: { label: 'Planets', class: 'tag-planets', emoji: '🪐' },
+  deepsky: { label: 'Deep Sky', class: 'tag-deepsky', emoji: '🔭' },
+  science: { label: 'Science', class: 'tag-science', emoji: '🔬' },
+  events: { label: 'Events', class: 'tag-events', emoji: '📅' },
+};
+
+function resolveTag(data: any) {
+  const raw = (data?.category || (data?.tags && data.tags[0]) || '').toString().toLowerCase();
+  if (!raw) return { label: 'Article', class: 'tag-deepsky', emoji: '' };
+  const keys = Object.keys(TAG_MAP) as Array<keyof typeof TAG_MAP>;
+  for (const k of keys) {
+    if (raw.includes(k)) return TAG_MAP[k];
+  }
+  // fallback: capitalize first word
+  const label = raw.split(/[-_\s]+/).map((s: string) => s[0]?.toUpperCase() + s.slice(1)).join(' ');
+  return { label, class: 'tag-deepsky', emoji: '' };
+}
+---
+<div class="blog">
+
+  <!-- ═══ BACKGROUND ASTRONOMY DECORATIONS ═══ -->
+  <svg class="bg-deco" viewBox="0 0 680 1600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- scattered stars of various sizes -->
+    <circle cx="30"  cy="90"  r="1.2" fill="#8a8070" opacity="0.35"/>
+    <circle cx="630" cy="140" r="1.5" fill="#8a8070" opacity="0.30"/>
+    <circle cx="55"  cy="310" r="1"   fill="#8a8070" opacity="0.28"/>
+    <circle cx="650" cy="380" r="1.2" fill="#8a8070" opacity="0.32"/>
+    <circle cx="20"  cy="520" r="1.5" fill="#8a8070" opacity="0.25"/>
+    <circle cx="660" cy="580" r="1"   fill="#8a8070" opacity="0.30"/>
+    <circle cx="40"  cy="750" r="1.2" fill="#8a8070" opacity="0.28"/>
+    <circle cx="645" cy="820" r="1.5" fill="#8a8070" opacity="0.25"/>
+    <circle cx="25"  cy="980" r="1"   fill="#8a8070" opacity="0.30"/>
+    <circle cx="655" cy="1050" r="1.2" fill="#8a8070" opacity="0.28"/>
+    <circle cx="35"  cy="1200" r="1.5" fill="#8a8070" opacity="0.25"/>
+    <circle cx="648" cy="1280" r="1"   fill="#8a8070" opacity="0.30"/>
+    <circle cx="15"  cy="1420" r="1.2" fill="#8a8070" opacity="0.28"/>
+    <circle cx="662" cy="1480" r="1.5" fill="#8a8070" opacity="0.25"/>
+
+    <!-- four-pointed star sparkles -->
+    <g opacity="0.22" transform="translate(618,200)">
+      <line x1="0" y1="-7" x2="0" y2="7" stroke="#a06020" stroke-width="1.2"/>
+      <line x1="-7" y1="0" x2="7" y2="0" stroke="#a06020" stroke-width="1.2"/>
+    </g>
+    <g opacity="0.18" transform="translate(48,460)">
+      <line x1="0" y1="-6" x2="0" y2="6" stroke="#4a6fa5" stroke-width="1"/>
+      <line x1="-6" y1="0" x2="6" y2="0" stroke="#4a6fa5" stroke-width="1"/>
+    </g>
+    <g opacity="0.20" transform="translate(635,700)">
+      <line x1="0" y1="-6" x2="0" y2="6" stroke="#a06020" stroke-width="1"/>
+      <line x1="-6" y1="0" x2="6" y2="0" stroke="#a06020" stroke-width="1"/>
+    </g>
+    <g opacity="0.18" transform="translate(30,900)">
+      <line x1="0" y1="-5" x2="0" y2="5" stroke="#4a6fa5" stroke-width="1"/>
+      <line x1="-5" y1="0" x2="5" y2="0" stroke="#4a6fa5" stroke-width="1"/>
+    </g>
+    <g opacity="0.20" transform="translate(650,1150)">
+      <line x1="0" y1="-6" x2="0" y2="6" stroke="#a06020" stroke-width="1"/>
+      <line x1="-6" y1="0" x2="6" y2="0" stroke="#a06020" stroke-width="1"/>
+    </g>
+    <g opacity="0.18" transform="translate(22,1350)">
+      <line x1="0" y1="-5" x2="0" y2="5" stroke="#4a6fa5" stroke-width="1"/>
+      <line x1="-5" y1="0" x2="5" y2="0" stroke="#4a6fa5" stroke-width="1"/>
+    </g>
+
+  </svg>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="logo">
+      <div class="logo-icon">🔭</div>
+      Stellara
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Articles</a></li>
+      <li><a href="#">Deep Sky</a></li>
+      <li><a href="#">Planets</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">🌟 Your friendly guide to the universe</div>
+    <h1 class="hero-title">Looking up at the sky<br>with <span>curiosity and joy</span></h1>
+    <p class="hero-desc">Astronomy stories written simply and warmly — for everyone from 8 to 80 who's ever wondered what's out there.</p>
+    <div class="filter-row">
+      <button class="filter-pill active">All</button>
+      <button class="filter-pill">Planets</button>
+      <button class="filter-pill">Deep Sky</button>
+      <button class="filter-pill">Events</button>
+      <button class="filter-pill">Space Science</button>
+    </div>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="section-label">
+    <span class="section-label-text">Featured</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  {featured ? (
+    <article class="featured">
+      <div class="featured-visual">
+        {featured.data.heroImage ? (
+          <img src={featured.data.heroImage.src ?? featured.data.heroImage} alt={featured.data.title} />
+        ) : (
+          <svg viewBox="0 0 560 200" preserveAspectRatio="xMidYMid slice">
+            <rect width="560" height="200" fill="#e8e4dc"/>
+            <circle cx="280" cy="100" r="100" fill="#d8d0c0" opacity="0.5"/>
+            <circle cx="280" cy="100" r="60"  fill="#ccc4b0" opacity="0.4"/>
+            <circle cx="280" cy="100" r="42"  fill="#d4c090"/>
+            <ellipse cx="280" cy="95"  rx="40" ry="8" fill="#c8b080" opacity="0.5"/>
+            <ellipse cx="280" cy="108" rx="38" ry="6" fill="#c0a870" opacity="0.4"/>
+            <ellipse cx="280" cy="100" rx="90" ry="14" fill="none" stroke="#a09060" stroke-width="2.5" opacity="0.7"/>
+            <ellipse cx="280" cy="100" rx="70" ry="10" fill="none" stroke="#b8a070" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="400" cy="80" r="7" fill="#d8d0c0"/>
+          </svg>
+        )}
+      </div>
+      <div class="featured-body">
+        {featuredTag ? (
+          <span class={`tag-pill ${featuredTag.class}`}>{featuredTag.emoji ? featuredTag.emoji + ' ' : ''}{featuredTag.label}</span>
+        ) : null}
+        <div class="featured-title"><a href={`/blog/${featured.id}`}>{featured.data.title}</a></div>
+        <div class="featured-excerpt">{featured.data.description}</div>
+        <div class="article-meta">
+          <span>{featured.data.pubDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+          <a class="read-link" href={`/blog/${featured.id}`}>Read article →</a>
+        </div>
+      </div>
+    </article>
+  ) : null}
+
+  <!-- MORE ARTICLES -->
+  <div class="section-label">
+    <span class="section-label-text">More articles</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="cards-grid">
+    {cards.map(post => {
+      const t = resolveTag(post.data);
+      return (
+        <article class="card">
+          <div class="card-thumb">
+            {post.data.heroImage ? (
+              <img src={post.data.heroImage.src ?? post.data.heroImage} alt={post.data.title} />
+            ) : (
+              <div style="width:100%;height:90px;background:#e8e4dc"></div>
+            )}
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href={`/blog/${post.id}`}>{post.data.title}</a></div>
+            <div class="card-excerpt">{post.data.description}</div>
+            <div class="card-meta">
+              <span class={`tag-pill ${t.class}`} style="padding:2px 8px;font-size:10px;">{t.emoji ? t.emoji + ' ' : ''}{t.label}</span>
+              <span>{post.data.pubDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  <!-- FUN FACT -->
+  <div class="fun-fact">
+    <div class="fun-fact-icon">💡</div>
+    <div>
+      <div class="fun-fact-label">Did you know?</div>
+      <div class="fun-fact-text">Light from the Sun takes about 8 minutes to reach Earth. So when you look at the Sun (safely!), you're actually seeing it as it was 8 minutes ago.</div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter">
+    <span class="newsletter-emoji">📬</span>
+    <div class="newsletter-title">Get a new cosmic story every week</div>
+    <div class="newsletter-sub">No jargon, no overwhelm — just one friendly astronomy story, delivered to your inbox.</div>
+    <div class="input-row">
+      <input class="email-input" type="email" placeholder="your@email.com"/>
+      <button class="sub-btn">Subscribe</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-text">© 2026 Stellara · Made with curiosity ✨</div>
+    <div class="footer-links">
+      <a href="#">Twitter</a>
+      <a href="#">RSS</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      const el = e.currentTarget;
+      if (el && 'classList' in el) {
+        (el as Element).classList.add('active');
+      }
+    });
+  });
+</script>

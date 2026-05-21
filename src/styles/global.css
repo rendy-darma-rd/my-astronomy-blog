@@ -3,7 +3,7 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
-
+	min-height: 360px;
 :root {
 	--accent: #2337ff;
 	--accent-dark: #000d8a;
@@ -11,7 +11,7 @@
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
+	aspect-ratio: 3 / 4;
 	--box-shadow:
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
 		0 16px 32px rgba(var(--gray), 33%);
@@ -26,8 +26,8 @@ body {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+	font-size: 24px;
+	line-height: 1.8;
 }
 main {
 	width: 720px;
@@ -139,3 +139,302 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+/* Styles migrated from design/astronomy_blog_final_design.html */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.blog {
+	font-family: 'Nunito', sans-serif;
+	background: #f5f3ef;
+	color: #2d2d2d;
+	min-height: 100vh;
+	position: relative;
+	overflow: hidden;
+}
+
+/* ── decorative background canvas ── */
+.bg-deco {
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.nav {
+	position: relative; z-index: 10;
+	display: flex; align-items: center; justify-content: space-between;
+	padding: 1.1rem 2rem;
+	background: rgba(245,243,239,0.94);
+	backdrop-filter: blur(6px);
+	border-bottom: 1px solid #e2ddd6;
+}
+
+.logo {
+	font-family: 'Lora', serif; font-size: 28px; color: #3a3a3a;
+	display: flex; align-items: center; gap: 10px;
+}
+
+.logo-icon {
+	width: 44px; height: 44px; background: #e8e0d0;
+	border-radius: 50%; display: flex; align-items: center; justify-content: center;
+	font-size: 20px; border: 1.5px solid #d4c9b5;
+}
+
+.nav-links { display: flex; gap: 2.2rem; list-style: none; }
+.nav-links a { font-size: 20px; font-weight: 700; color: #7a7060; text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: #4a6fa5; }
+
+.hero {
+	position: relative; z-index: 5;
+	text-align: center; padding: 3rem 2rem 2rem;
+	background: linear-gradient(180deg, #eceae4 0%, #f5f3ef 100%);
+	border-bottom: 1px solid #e2ddd6;
+}
+
+.hero-badge {
+	display: inline-flex; align-items: center; gap: 6px;
+	background: #e0d9cc; border-radius: 20px; padding: 5px 14px;
+	font-size: 12px; color: #6b6050; letter-spacing: 0.06em;
+	margin-bottom: 1.2rem; font-weight: 500;
+}
+
+.hero-title {
+	font-family: 'Lora', serif; font-size: 44px; font-weight: 600;
+	color: #2a2420; line-height: 1.2; margin-bottom: 0.8rem;
+	max-width: 520px; margin-left: auto; margin-right: auto;
+}
+
+.hero-title span { color: #4a6fa5; font-style: italic; }
+
+.hero-desc {
+	font-size: 18px; color: #7a7060; font-weight: 400;
+	line-height: 1.8; max-width: 520px; margin: 0 auto 1.5rem;
+}
+
+.filter-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+
+.filter-pill {
+	padding: 6px 16px; border-radius: 20px; border: 1.5px solid #d4cfc7;
+	background: transparent; font-family: 'Nunito', sans-serif;
+	font-size: 13px; font-weight: 500; color: #6b6050; cursor: pointer; transition: all 0.2s;
+}
+.filter-pill:hover { border-color: #4a6fa5; color: #4a6fa5; background: rgba(74,111,165,0.06); }
+.filter-pill.active { background: #4a6fa5; border-color: #4a6fa5; color: #fff; }
+
+.section-label {
+	display: flex; align-items: center; gap: 12px;
+	padding: 1.5rem 2rem 0.8rem; position: relative; z-index: 5;
+}
+.section-label-text { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #a09888; font-weight: 600; white-space: nowrap; }
+.section-label-line { flex: 1; height: 1px; background: #e2ddd6; }
+
+.featured {
+	position: relative; z-index: 5;
+	/* keep consistent gutters but constrain width and center */
+	width: calc(100% - 4rem);
+	max-width: 1200px;
+	margin: 0 auto 1.5rem;
+	border-radius: 20px; overflow: hidden; border: 1px solid #e2ddd6;
+	background: #fff; box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+	cursor: pointer; transition: box-shadow 0.3s, transform 0.3s;
+}
+
+/* Featured layout: visual on left, content on right for desktop */
+.featured {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	gap: 1.25rem;
+}
+
+.featured-visual {
+	flex: 0 0 55%;
+	min-width: 320px;
+}
+
+.featured-visual img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.featured-body {
+	flex: 1 1 60%;
+	padding: 1.4rem 1.6rem 1.6rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.featured { box-shadow: 0 6px 28px rgba(0,0,0,0.08); }
+.featured:hover { box-shadow: 0 14px 48px rgba(0,0,0,0.14); transform: translateY(-4px); }
+
+.featured-visual {
+	width: 100%;
+	/* make the featured visual a bit taller so it reads larger */
+	aspect-ratio: 560 / 320;
+	background: #e8e4dc;
+	position: relative; overflow: hidden;
+}
+
+.featured-body { padding: 2.2rem 2rem 2.2rem; }
+
+.tag-pill {
+	display: inline-block; padding: 6px 14px; border-radius: 12px;
+	font-size: 14px; font-weight: 700; letter-spacing: 0.08em;
+	text-transform: uppercase; margin-bottom: 0.6rem;
+}
+.tag-planets { background: #fef0d8; color: #a06020; }
+.tag-deepsky { background: #dde8f8; color: #2a5090; }
+.tag-science { background: #ddf5ec; color: #1a7050; }
+.tag-events  { background: #f0ddf8; color: #702090; }
+
+.featured-title {
+	font-family: 'Lora', serif; font-size: 40px; font-weight: 700;
+	color: #2a2420; line-height: 1.15; margin-bottom: 0.6rem;
+}
+.featured-excerpt {
+	font-size: 18px; color: #7a7060; line-height: 1.6; margin-bottom: 1rem; font-weight: 400;
+}
+.article-meta {
+	display: flex; align-items: center; gap: 10px; font-size: 14px; color: #a09888;
+}
+.meta-sep { color: #d4cfc7; }
+.read-link {
+	margin-left: auto; font-size: 16px; font-weight: 700; color: #4a6fa5;
+	text-decoration: none; display: flex; align-items: center; gap: 6px;
+}
+
+/* Title links (featured + cards) should look like plain headings in the design */
+.featured-title a,
+.card-title a {
+	color: inherit;
+	text-decoration: none;
+	display: inline-block;
+}
+.featured-title a:hover,
+.card-title a:hover {
+	color: #4a6fa5;
+}
+
+/* ── cards with thumbnails ── */
+.cards-grid {
+	position: relative; z-index: 5;
+	/* Desktop: two columns but keep columns from getting too wide so cards stay portrait */
+	display: grid;
+	grid-template-columns: repeat(2, minmax(260px, 1fr));
+	gap: 1rem;
+	padding: 0 2rem; /* horizontal gutters */
+	margin-bottom: 1.5rem;
+}
+
+/* iPad / narrow-desktop: allow cards to reflow but keep two columns when possible */
+@media (max-width: 1000px) {
+	.cards-grid {
+		/* keep padding but center content with a max-width to avoid overly stretched cards on medium screens */
+		width: calc(100% - 4rem);
+		max-width: 900px;
+		margin: 0 auto 1.5rem;
+		grid-template-columns: repeat(2, minmax(280px, 1fr));
+	}
+}
+
+/* Mobile: single column */
+@media (max-width: 600px) {
+	.cards-grid {
+		grid-template-columns: 1fr;
+		padding: 0 1rem;
+		width: calc(100% - 2rem);
+		margin: 0 auto 1rem;
+	}
+	/* Stack featured on mobile */
+	.featured {
+		flex-direction: column;
+	}
+	.featured-visual {
+		flex: none;
+		width: 100%;
+		aspect-ratio: 560 / 200;
+	}
+
+	/* Keep portrait card shape on small screens too */
+	.card { min-height: 260px; }
+	.card-thumb { aspect-ratio: 3 / 4; }
+}
+
+.card {
+	background: #fff; border-radius: 14px; border: 1px solid #e2ddd6;
+	overflow: hidden; cursor: pointer; transition: all 0.18s;
+	box-shadow: 0 1px 6px rgba(0,0,0,0.035);
+	display: flex; flex-direction: column;
+	min-height: 130px;
+}
+.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.09); transform: translateY(-2px); border-color: #c8c0b4; }
+
+.card-thumb {
+	width: 100%;
+	/* keep thumbnail aspect consistent and responsive */
+	aspect-ratio: 280 / 90;
+	position: relative; overflow: hidden; flex-shrink: 0;
+}
+
+.card-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.card-body { padding: 1.2rem 1.2rem 1.2rem; display: flex; flex-direction: column; flex: 1; }
+.card-title {
+	font-family: 'Lora', serif; font-size: 22px; font-weight: 700;
+	color: #2a2420; line-height: 1.25; margin-bottom: 0.5rem;
+}
+.card-excerpt { font-size: 17px; color: #9a9080; line-height: 1.6; margin-bottom: 0.8rem; flex: 1; }
+.card-meta { font-size: 14px; color: #b0a898; display: flex; align-items: center; gap: 8px; }
+
+.fun-fact {
+	position: relative; z-index: 5; margin: 0 2rem 1.5rem;
+	border-radius: 16px; background: #e8f0f8; border: 1px solid #c8d8ec;
+	padding: 1.2rem 1.4rem; display: flex; gap: 1rem; align-items: flex-start;
+}
+.fun-fact-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.fun-fact-label { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #4a6fa5; font-weight: 600; margin-bottom: 0.3rem; }
+.fun-fact-text { font-size: 18px; color: #3a4a5a; line-height: 1.65; font-weight: 400; }
+
+.newsletter {
+	position: relative; z-index: 5; margin: 0 2rem 1.5rem;
+	border-radius: 20px; background: #fff; border: 1px solid #e2ddd6;
+	padding: 1.6rem; text-align: center; box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+}
+.newsletter-emoji { font-size: 28px; margin-bottom: 0.6rem; display: block; }
+.newsletter-title { font-family: 'Lora', serif; font-size: 24px; font-weight: 600; color: #2a2420; margin-bottom: 0.5rem; }
+.newsletter-sub { font-size: 16px; color: #9a9080; margin-bottom: 1rem; line-height: 1.6; }
+.input-row { display: flex; gap: 10px; }
+.email-input {
+	flex: 1; padding: 12px 16px; border-radius: 10px;
+	border: 1.5px solid #d4cfc7; background: #f9f7f4;
+	font-family: 'Nunito', sans-serif; font-size: 16px; color: #2d2d2d;
+	outline: none; transition: border-color 0.2s;
+}
+.email-input:focus { border-color: #4a6fa5; background: #fff; }
+.email-input::placeholder { color: #b8b0a0; }
+.sub-btn {
+	padding: 12px 20px; border-radius: 10px; border: none;
+	background: #4a6fa5; color: #fff; font-family: 'Nunito', sans-serif;
+	font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s;
+}
+.sub-btn:hover { background: #3a5f95; }
+
+.footer {
+	position: relative; z-index: 5;
+	display: flex; align-items: center; justify-content: space-between;
+	padding: 1rem 2rem; border-top: 1px solid #e2ddd6; background: #eceae4;
+}
+.footer-text { font-size: 14px; color: #a09888; }
+.footer-links { display: flex; gap: 1rem; }
+.footer-links a { font-size: 12px; color: #a09888; text-decoration: none; }
+.footer-links a:hover { color: #4a6fa5; }
+
