@@ -229,6 +229,14 @@ hr {
 }
 .section-label-text { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #a09888; font-weight: 600; white-space: nowrap; }
 .section-label-line { flex: 1; height: 1px; background: #e2ddd6; }
+.view-all-btn {
+	padding: 8px 16px; border-radius: 10px;
+	background: #4a6fa5; color: #fff;
+	font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
+	text-decoration: none; white-space: nowrap;
+	transition: background 0.2s;
+}
+.view-all-btn:hover { background: #3a5f95; }
 
 .featured {
 	position: relative; z-index: 5;
@@ -285,6 +293,7 @@ hr {
 	display: inline-block; padding: 6px 14px; border-radius: 12px;
 	font-size: 14px; font-weight: 700; letter-spacing: 0.08em;
 	text-transform: uppercase; margin-bottom: 0.6rem;
+	width: fit-content; max-width: max-content;
 }
 .tag-planets { background: #fef0d8; color: #a06020; }
 .tag-deepsky { background: #dde8f8; color: #2a5090; }
@@ -393,7 +402,21 @@ hr {
 	color: #2a2420; line-height: 1.25; margin-bottom: 0.5rem;
 }
 .card-excerpt { font-size: 17px; color: #9a9080; line-height: 1.6; margin-bottom: 0.8rem; flex: 1; }
-.card-meta { font-size: 14px; color: #b0a898; display: flex; align-items: center; gap: 8px; }
+.card-meta { 
+	font-size: 14px; color: #b0a898; 
+	display: flex; align-items: center; justify-content: space-between; 
+	gap: 8px; margin-bottom: 0.6rem;
+}
+.card-date { 
+	margin-left: auto; 
+	white-space: nowrap;
+}
+.card-read-link {
+	font-size: 14px; font-weight: 600; color: #4a6fa5;
+	text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+	transition: color 0.2s;
+}
+.card-read-link:hover { color: #3a5f95; }
 
 .fun-fact {
 	position: relative; z-index: 5; margin: 0 2rem 1.5rem;
