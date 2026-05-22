@@ -134,7 +134,7 @@ function resolveTag(data: any) {
         <div class="featured-excerpt">{featured.data.description}</div>
         <div class="article-meta">
           <span>{featured.data.pubDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-          <a class="read-link" href={`/blog/${featured.id}`}>Read article →</a>
+          <a class="read-link" href={`/blog/${featured.id}`}>Baca artikel →</a>
         </div>
       </div>
     </article>
@@ -142,8 +142,9 @@ function resolveTag(data: any) {
 
   <!-- MORE ARTICLES -->
   <div class="section-label">
-    <span class="section-label-text">Latest articles</span>
+    <span class="section-label-text">Artikel Terbaru</span>
     <div class="section-label-line"></div>
+    <a href="/blog" class="view-all-btn">Lihat Semua</a>
   </div>
 
   <div class="cards-grid">
@@ -163,8 +164,9 @@ function resolveTag(data: any) {
             <div class="card-excerpt">{post.data.description}</div>
             <div class="card-meta">
               <span class={`tag-pill ${t.class}`} style="padding:2px 8px;font-size:10px;">{t.emoji ? t.emoji + ' ' : ''}{t.label}</span>
-              <span>{post.data.pubDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+              <span class="card-date">{post.data.pubDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
             </div>
+            <a href={`/blog/${post.id}`} class="card-read-link">Baca artikel →</a>
           </div>
         </article>
       );
