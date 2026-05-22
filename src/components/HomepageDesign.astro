@@ -1,5 +1,7 @@
 
 ---
+import { Image } from 'astro:assets';
+
 const { getCollection } = await import('astro:content');
 const posts = await getCollection('blog');
 // sort newest first
@@ -25,6 +27,42 @@ function resolveTag(data: any) {
   // fallback: capitalize first word
   const label = raw.split(/[-_\s]+/).map((s: string) => s[0]?.toUpperCase() + s.slice(1)).join(' ');
   return { label, class: 'tag-deepsky', emoji: '' };
+}
+
+// Import all images from content/blog directory
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
+
+function getImageSrc(post: any) {
+  const heroImage = post.data.heroImage;
+  if (!heroImage) return null;
+  
+  // If it's already an image object
+  if (typeof heroImage === 'object' && heroImage.src) {
+    return heroImage;
+  }
+  
+  // If it's a string, look up the image from the glob imports
+  if (typeof heroImage === 'string') {
+    // The post.id is like "mengapa-langit-malam-begitu-gelap.mdoc"
+    // We need to extract the directory name (without .mdoc extension)
+    const postIdWithoutExt = post.id.replace(/\.(mdoc|md|mdx)$/, '');
+    
+    // Try with the post directory
+    const imagePath = `/src/content/blog/${postIdWithoutExt}/${heroImage}`;
+    const imageModule = images[imagePath];
+    if (imageModule && imageModule.default) {
+      return imageModule.default;
+    }
+    
+    // Try without directory (fallback)
+    const fallbackPath = `/src/content/blog/${heroImage}`;
+    const fallbackModule = images[fallbackPath];
+    if (fallbackModule && fallbackModule.default) {
+      return fallbackModule.default;
+    }
+  }
+  
+  return null;
 }
 ---
 <div class="blog">
@@ -110,8 +148,12 @@ function resolveTag(data: any) {
   {featured ? (
     <article class="featured">
       <div class="featured-visual">
-        {featured.data.heroImage ? (
-          <img src={featured.data.heroImage.src ?? featured.data.heroImage} alt={featured.data.title} />
+        {getImageSrc(featured) ? (
+          <Image 
+            src={getImageSrc(featured)!} 
+            alt={featured.data.title}
+            style="width: 100%; height: 100%; object-fit: cover; display: block;"
+          />
         ) : (
           <svg viewBox="0 0 560 200" preserveAspectRatio="xMidYMid slice">
             <rect width="560" height="200" fill="#e8e4dc"/>
@@ -150,11 +192,16 @@ function resolveTag(data: any) {
   <div class="cards-grid">
     {cards.map(post => {
       const t = resolveTag(post.data);
+      const imgSrc = getImageSrc(post);
       return (
         <article class="card">
           <div class="card-thumb">
-            {post.data.heroImage ? (
-              <img src={post.data.heroImage.src ?? post.data.heroImage} alt={post.data.title} />
+            {imgSrc ? (
+              <Image 
+                src={imgSrc} 
+                alt={post.data.title}
+                style="width: 100%; height: 100%; object-fit: cover; display: block;"
+              />
             ) : (
               <div style="width:100%;height:90px;background:#e8e4dc"></div>
             )}
