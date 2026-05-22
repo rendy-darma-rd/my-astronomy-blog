@@ -1,9 +1,11 @@
+/* Styles migrated from design/astronomy_blog_final_design.html */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap');
+
 /*
   The CSS in this style tag is based off of Bear Blog's default CSS.
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
-	min-height: 360px;
 :root {
 	--accent: #2337ff;
 	--accent-dark: #000d8a;
@@ -11,7 +13,6 @@
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
-	aspect-ratio: 3 / 4;
 	--box-shadow:
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
 		0 16px 32px rgba(var(--gray), 33%);
@@ -139,9 +140,6 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
-
-/* Styles migrated from design/astronomy_blog_final_design.html */
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap');
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -295,10 +293,14 @@ hr {
 	text-transform: uppercase; margin-bottom: 0.6rem;
 	width: fit-content; max-width: max-content;
 }
-.tag-planets { background: #fef0d8; color: #a06020; }
-.tag-deepsky { background: #dde8f8; color: #2a5090; }
-.tag-science { background: #ddf5ec; color: #1a7050; }
-.tag-events  { background: #f0ddf8; color: #702090; }
+.tag-benda-kecil { background: #e8f4f8; color: #1a6b7d; }
+.tag-planet { background: #ffe8d5; color: #d84315; }
+.tag-bintang { background: #fffacd; color: #f57f17; }
+.tag-gugus-bintang { background: #ffe6f0; color: #c2185b; }
+.tag-galaksi { background: #dde8f8; color: #2a5090; }
+.tag-alam-semesta { background: #e3d5f8; color: #4a148c; }
+.tag-misi-antariksa { background: #ddf5ec; color: #1a7050; }
+.tag-sejarah { background: #fce4ec; color: #ad1457; }
 
 .featured-title {
 	font-family: 'Lora', serif; font-size: 40px; font-weight: 700;

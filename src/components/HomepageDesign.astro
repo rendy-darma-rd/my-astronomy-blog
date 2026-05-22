@@ -4,30 +4,49 @@ import { Image } from 'astro:assets';
 
 const { getCollection } = await import('astro:content');
 const posts = await getCollection('blog');
+
+const TAG_MAP = {
+  'benda-kecil': { label: 'Benda Kecil', class: 'tag-benda-kecil' },
+  'planet': { label: 'Planet', class: 'tag-planet' },
+  'bintang': { label: 'Bintang', class: 'tag-bintang' },
+  'gugus-bintang': { label: 'Gugus Bintang', class: 'tag-gugus-bintang' },
+  'galaksi': { label: 'Galaksi', class: 'tag-galaksi' },
+  'alam-semesta': { label: 'Alam Semesta', class: 'tag-alam-semesta' },
+  'misi-antariksa': { label: 'Misi Antariksa', class: 'tag-misi-antariksa' },
+  'sejarah': { label: 'Sejarah', class: 'tag-sejarah' },
+};
+
+function resolveTag(data: any) {
+  // Use the topic field if available
+  if (data?.topic) {
+    const topic = data.topic.toLowerCase();
+    const keys = Object.keys(TAG_MAP) as Array<keyof typeof TAG_MAP>;
+    for (const k of keys) {
+      if (topic === k) return TAG_MAP[k];
+    }
+  }
+  
+  // Fallback: try to resolve from category or tags
+  const raw = (data?.category || (data?.tags && data.tags[0]) || '').toString().toLowerCase();
+  if (raw) {
+    const keys = Object.keys(TAG_MAP) as Array<keyof typeof TAG_MAP>;
+    for (const k of keys) {
+      if (raw.includes(k)) return TAG_MAP[k];
+    }
+    // fallback: capitalize first word
+    const label = raw.split(/[-_\s]+/).map((s: string) => s[0]?.toUpperCase() + s.slice(1)).join(' ');
+    return { label, class: 'tag-deepsky' };
+  }
+  
+  // Default fallback
+  return { label: 'Article', class: 'tag-deepsky' };
+}
+
 // sort newest first
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 const featured = sortedPosts[0];
 const cards = sortedPosts.slice(1, 5);
 const featuredTag = featured ? resolveTag(featured.data) : null;
-
-const TAG_MAP = {
-  planets: { label: 'Planets', class: 'tag-planets', emoji: '🪐' },
-  deepsky: { label: 'Deep Sky', class: 'tag-deepsky', emoji: '🔭' },
-  science: { label: 'Science', class: 'tag-science', emoji: '🔬' },
-  events: { label: 'Events', class: 'tag-events', emoji: '📅' },
-};
-
-function resolveTag(data: any) {
-  const raw = (data?.category || (data?.tags && data.tags[0]) || '').toString().toLowerCase();
-  if (!raw) return { label: 'Article', class: 'tag-deepsky', emoji: '' };
-  const keys = Object.keys(TAG_MAP) as Array<keyof typeof TAG_MAP>;
-  for (const k of keys) {
-    if (raw.includes(k)) return TAG_MAP[k];
-  }
-  // fallback: capitalize first word
-  const label = raw.split(/[-_\s]+/).map((s: string) => s[0]?.toUpperCase() + s.slice(1)).join(' ');
-  return { label, class: 'tag-deepsky', emoji: '' };
-}
 
 // Import all images from content/blog directory
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
@@ -35,11 +54,6 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/*
 function getImageSrc(post: any) {
   const heroImage = post.data.heroImage;
   if (!heroImage) return null;
-  
-  // If it's already an image object
-  if (typeof heroImage === 'object' && heroImage.src) {
-    return heroImage;
-  }
   
   // If it's a string, look up the image from the glob imports
   if (typeof heroImage === 'string') {
@@ -170,7 +184,7 @@ function getImageSrc(post: any) {
       </div>
       <div class="featured-body">
         {featuredTag ? (
-          <span class={`tag-pill ${featuredTag.class}`}>{featuredTag.emoji ? featuredTag.emoji + ' ' : ''}{featuredTag.label}</span>
+          <span class={`tag-pill ${featuredTag.class}`}>{featuredTag.label}</span>
         ) : null}
         <div class="featured-title"><a href={`/blog/${featured.id}`}>{featured.data.title}</a></div>
         <div class="featured-excerpt">{featured.data.description}</div>
@@ -210,7 +224,7 @@ function getImageSrc(post: any) {
             <div class="card-title"><a href={`/blog/${post.id}`}>{post.data.title}</a></div>
             <div class="card-excerpt">{post.data.description}</div>
             <div class="card-meta">
-              <span class={`tag-pill ${t.class}`} style="padding:2px 8px;font-size:10px;">{t.emoji ? t.emoji + ' ' : ''}{t.label}</span>
+              <span class={`tag-pill ${t.class}`} style="padding:2px 8px;font-size:10px;">{t.label}</span>
               <span class="card-date">{post.data.pubDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
             </div>
             <a href={`/blog/${post.id}`} class="card-read-link">Baca artikel →</a>
