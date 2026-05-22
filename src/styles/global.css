@@ -348,6 +348,15 @@ hr {
 		margin: 0 auto 1.5rem;
 		grid-template-columns: repeat(2, 1fr);
 	}
+	
+	/* Ensure thumbnails remain properly sized on tablet */
+	.card-thumb {
+		aspect-ratio: 16 / 9;
+	}
+	
+	.card {
+		min-height: 240px;
+	}
 }
 
 /* Mobile: single column */
@@ -369,8 +378,8 @@ hr {
 	}
 
 	/* Keep portrait card shape on small screens too */
-	.card { min-height: 260px; }
-	.card-thumb { aspect-ratio: 3 / 4; }
+	.card { min-height: 320px; }
+	.card-thumb { aspect-ratio: 16 / 9; }
 }
 
 .card {
@@ -378,14 +387,14 @@ hr {
 	overflow: hidden; cursor: pointer; transition: all 0.18s;
 	box-shadow: 0 1px 6px rgba(0,0,0,0.035);
 	display: flex; flex-direction: column;
-	min-height: 130px;
+	min-height: 200px;
 }
 .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.09); transform: translateY(-2px); border-color: #c8c0b4; }
 
 .card-thumb {
 	width: 100%;
-	/* keep thumbnail aspect consistent and responsive */
-	aspect-ratio: 280 / 90;
+	/* Better aspect ratio for thumbnails - wider landscape format */
+	aspect-ratio: 16 / 9;
 	position: relative; overflow: hidden; flex-shrink: 0;
 }
 
