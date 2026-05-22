@@ -13,8 +13,20 @@ type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
 const { Content } = await render(post);
+
+// Load all images from content folders
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
+
+function getImageSrc(post: any) {
+	if (!post.data.heroImage) return null;
+	const imagePath = `/src/content/blog/${post.id}/${post.data.heroImage}`;
+	const imageModule = images[imagePath];
+	return imageModule ? imageModule.default : null;
+}
+
+const heroImageSrc = getImageSrc(post);
 ---
 
-<BlogPost {...post.data}>
+<BlogPost {...post.data} heroImage={heroImageSrc}>
 	<Content />
 </BlogPost>
