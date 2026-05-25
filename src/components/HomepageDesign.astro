@@ -90,12 +90,20 @@ function truncateText(text: string, maxLength: number = 120): string {
 
   <!-- NAV -->
   <nav class="nav">
-    <div class="logo">
+    <a href="/" class="logo">
       <div class="logo-icon">🔭</div>
-      Stellara
-    </div>
-    <ul class="nav-links">
-      <li><a href="#">Tentang Kami</a></li>
+      <span>Stellara</span>
+    </a>
+    
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/artikel">Artikel</a></li>
+      <li><a href="/about">Tentang Kami</a></li>
     </ul>
   </nav>
 
@@ -147,7 +155,7 @@ function truncateText(text: string, maxLength: number = 120): string {
           <span class={`tag-pill ${featuredTag.class}`}>{featuredTag.label}</span>
         ) : null}
         <div class="featured-title"><a href={`/blog/${featured.id}`}>{featured.data.title}</a></div>
-        <div class="featured-excerpt">{truncateText(featured.data.description, 100)}</div>
+        <div class="featured-excerpt">{truncateText(featured.data.description, 150)}</div>
         <div class="article-meta">
           <span>{featured.data.pubDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
           <a class="read-link" href={`/blog/${featured.id}`}>Baca artikel →</a>
@@ -160,7 +168,7 @@ function truncateText(text: string, maxLength: number = 120): string {
   <div class="section-label">
     <span class="section-label-text">Artikel Terbaru</span>
     <div class="section-label-line"></div>
-    <a href="/blog" class="view-all-btn">Lihat Semua</a>
+    <a href="/artikel" class="view-all-btn">Lihat Semua</a>
   </div>
 
   <div class="cards-grid">
@@ -227,6 +235,25 @@ function truncateText(text: string, maxLength: number = 120): string {
 </div>
 
 <script>
+  // Hamburger menu toggle
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('nav-links');
+  
+  hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks?.classList.toggle('active');
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.nav')) {
+      hamburger?.classList.remove('active');
+      navLinks?.classList.remove('active');
+    }
+  });
+
+  // Filter pills
   document.querySelectorAll('.filter-pill').forEach(pill => {
     pill.addEventListener('click', (e) => {
       document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
@@ -237,3 +264,112 @@ function truncateText(text: string, maxLength: number = 120): string {
     });
   });
 </script>
+
+<style>
+  .logo {
+    font-family: 'Lora', serif;
+    font-size: 28px;
+    color: #3a3a3a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    z-index: 11;
+  }
+
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    background: #e8e0d0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border: 1.5px solid #d4c9b5;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    color: #7a7060;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: #4a6fa5;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 11;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #7a7060;
+    border-radius: 3px;
+    transition: all 0.3s;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  @media (max-width: 768px) {
+    .hamburger {
+      display: flex;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 60px;
+      right: 0;
+      transform: translateX(100%);
+      flex-direction: column;
+      background: rgba(245, 243, 239, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      gap: 1.5rem;
+      border-radius: 14px 0 0 14px;
+      border: 1px solid #e2ddd6;
+      border-right: none;
+      box-shadow: -4px 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      min-width: 200px;
+      max-width: 280px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      font-size: 18px;
+    }
+  }
+</style>
