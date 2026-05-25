@@ -152,14 +152,6 @@ hr {
 	overflow: hidden;
 }
 
-/* ── decorative background canvas ── */
-.bg-deco {
-	position: absolute;
-	top: 0; left: 0; right: 0; bottom: 0;
-	pointer-events: none;
-	z-index: 0;
-}
-
 .nav {
 	position: relative; z-index: 10;
 	display: flex; align-items: center; justify-content: space-between;
@@ -376,7 +368,7 @@ hr {
 	.featured-visual {
 		flex: none;
 		width: 100%;
-		aspect-ratio: 560 / 200;
+		aspect-ratio: 16 / 9;
 	}
 
 	/* Keep portrait card shape on small screens too */
