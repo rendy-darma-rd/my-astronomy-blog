@@ -1,0 +1,704 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// Load all images from content folders
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
+
+function getImageSrc(post: any) {
+	if (!post.data.heroImage) return null;
+	const imagePath = `/src/content/blog/${post.id}/${post.data.heroImage}`;
+	const imageModule = images[imagePath];
+	return imageModule ? imageModule.default : null;
+}
+
+const TAG_MAP = {
+	'benda-kecil': { label: 'Benda Kecil', emoji: '☄️' },
+	'planet': { label: 'Planet', emoji: '🪐' },
+	'bintang': { label: 'Bintang', emoji: '⭐' },
+	'gugus-bintang': { label: 'Gugus Bintang', emoji: '✨' },
+	'galaksi': { label: 'Galaksi', emoji: '🌌' },
+	'alam-semesta': { label: 'Alam Semesta', emoji: '🌠' },
+	'misi-antariksa': { label: 'Misi Antariksa', emoji: '🚀' },
+	'sejarah': { label: 'Sejarah', emoji: '📜' },
+};
+
+// Count articles per topic
+const topicCounts = posts.reduce((acc, post) => {
+	const topic = post.data.topic || 'planet';
+	acc[topic] = (acc[topic] || 0) + 1;
+	return acc;
+}, {} as Record<string, number>);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Artikel - Stellara" description="Browse all astronomy articles" />
+	</head>
+	<body>
+		<Header />
+		
+		<div class="page-wrapper">
+			<!-- PAGE HEADER -->
+			<div class="page-header">
+				<div class="page-eyebrow">✦ Explore the universe</div>
+				<h1 class="page-title">Semua <span>Artikel</span></h1>
+				<p class="page-sub">Jelajahi, filter, dan temukan cerita tentang kosmos — sesuai keinginan Anda.</p>
+			</div>
+
+			<!-- CONTENT: SIDEBAR + ARTICLES -->
+			<div class="content-wrap">
+				<!-- SIDEBAR FACETS -->
+				<aside class="sidebar">
+					<!-- Search -->
+					<div class="facet-card">
+						<div class="facet-title">🔍 Cari</div>
+						<input class="search-box" type="text" placeholder="Cari artikel..." id="search-input"/>
+					</div>
+
+					<!-- Sort -->
+					<div class="facet-card">
+						<div class="facet-title">↕ Urutkan</div>
+						<select class="sort-select" id="sort-select">
+							<option value="newest">Tanggal — terbaru dulu</option>
+							<option value="oldest">Tanggal — terlama dulu</option>
+							<option value="az">Judul — A → Z</option>
+							<option value="za">Judul — Z → A</option>
+						</select>
+					</div>
+
+					<!-- Topics -->
+					<div class="facet-card">
+						<div class="facet-title">🏷 Topik</div>
+						<div class="cat-list" id="cat-list">
+							{Object.entries(TAG_MAP).map(([value, { label, emoji }]) => (
+								<label class="cat-item">
+									<input type="checkbox" value={value} checked data-topic={value}/>
+									<span class="cat-item-label">{emoji} {label}</span>
+									<span class="cat-count">{topicCounts[value] || 0}</span>
+								</label>
+							))}
+						</div>
+					</div>
+
+					<button class="clear-btn" id="clear-btn">✕ Reset semua filter</button>
+				</aside>
+
+				<!-- ARTICLES COLUMN -->
+				<div class="articles-col">
+					<div class="results-bar">
+						<div class="results-count" id="results-count">
+							<strong>{posts.length}</strong> artikel ditemukan
+						</div>
+					</div>
+
+					<div class="article-list" id="article-list">
+						{posts.map(post => {
+							const imageSrc = getImageSrc(post);
+							const topicData = TAG_MAP[post.data.topic as keyof typeof TAG_MAP] || TAG_MAP['planet'];
+							const tagClass = `tag-${post.data.topic || 'planet'}`;
+							
+							return (
+								<article class="article-row" data-topic={post.data.topic} data-title={post.data.title.toLowerCase()} data-date={post.data.pubDate.toISOString()}>
+									<div class="article-row-thumb">
+										{imageSrc ? (
+											<Image 
+												src={imageSrc} 
+												alt={post.data.title}
+												width={110}
+												height={90}
+												style="width: 100%; height: 100%; object-fit: cover;"
+											/>
+										) : (
+											<div style="width: 110px; height: 90px; background: #e8e4dc;"></div>
+										)}
+									</div>
+									<div class="article-row-body">
+										<div class="article-row-top">
+											<span class={`tag-pill ${tagClass}`}>
+												{topicData.emoji} {topicData.label}
+											</span>
+											<span class="article-row-date">
+												{post.data.pubDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
+											</span>
+										</div>
+										<a href={`/blog/${post.id}`} class="article-row-title">{post.data.title}</a>
+										<div class="article-row-excerpt">{post.data.description}</div>
+									</div>
+								</article>
+							);
+						})}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<Footer />
+
+		<script>
+			const searchInput = document.getElementById('search-input') as HTMLInputElement;
+			const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
+			const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+			const resultsCount = document.getElementById('results-count') as HTMLElement;
+			const articleList = document.getElementById('article-list') as HTMLElement;
+			const checkboxes = document.querySelectorAll('#cat-list input[type="checkbox"]');
+
+			function applyFilters() {
+				const searchTerm = searchInput.value.toLowerCase();
+				const sortValue = sortSelect.value;
+				const selectedTopics = Array.from(checkboxes)
+					.filter(cb => (cb as HTMLInputElement).checked)
+					.map(cb => (cb as HTMLInputElement).value);
+
+				const allArticles = Array.from(articleList.querySelectorAll('.article-row')) as HTMLElement[];
+				
+				// Filter
+				const visibleArticles = allArticles.filter(article => {
+					const topic = article.dataset.topic;
+					const title = article.dataset.title || '';
+					const excerpt = article.querySelector('.article-row-excerpt')?.textContent?.toLowerCase() || '';
+					
+					const matchesTopic = selectedTopics.includes(topic || '');
+					const matchesSearch = !searchTerm || title.includes(searchTerm) || excerpt.includes(searchTerm);
+					
+					return matchesTopic && matchesSearch;
+				});
+
+				// Sort
+				const sorted = [...visibleArticles].sort((a, b) => {
+					const dateA = new Date(a.dataset.date || '');
+					const dateB = new Date(b.dataset.date || '');
+					const titleA = a.dataset.title || '';
+					const titleB = b.dataset.title || '';
+
+					switch (sortValue) {
+						case 'newest': return dateB.getTime() - dateA.getTime();
+						case 'oldest': return dateA.getTime() - dateB.getTime();
+						case 'az': return titleA.localeCompare(titleB);
+						case 'za': return titleB.localeCompare(titleA);
+						default: return 0;
+					}
+				});
+
+				// Hide all first
+				allArticles.forEach(article => {
+					article.style.display = 'none';
+				});
+
+				// Show filtered and sorted
+				sorted.forEach(article => {
+					article.style.display = 'flex';
+					articleList.appendChild(article); // Reorder in DOM
+				});
+
+				// Update count
+				const count = sorted.length;
+				resultsCount.innerHTML = `<strong>${count}</strong> artikel ditemukan`;
+
+				// Show no results message
+				if (count === 0) {
+					const noResults = document.createElement('div');
+					noResults.className = 'no-results';
+					noResults.innerHTML = `
+						<div class="no-results-icon">🔭</div>
+						<div class="no-results-text">Tidak ada artikel yang sesuai dengan filter Anda.<br>Coba sesuaikan pencarian atau topik.</div>
+					`;
+					articleList.appendChild(noResults);
+				}
+			}
+
+			// Event listeners
+			searchInput.addEventListener('input', applyFilters);
+			sortSelect.addEventListener('change', applyFilters);
+			checkboxes.forEach(cb => cb.addEventListener('change', applyFilters));
+			
+			clearBtn.addEventListener('click', () => {
+				searchInput.value = '';
+				sortSelect.value = 'newest';
+				checkboxes.forEach(cb => { (cb as HTMLInputElement).checked = true; });
+				applyFilters();
+			});
+		</script>
+
+		<style>
+			.page-wrapper {
+				font-family: 'Nunito', sans-serif;
+				background: #f5f3ef;
+				min-height: 100vh;
+				overflow-x: hidden;
+			}
+
+			.page-header {
+				position: relative;
+				z-index: 5;
+				background: linear-gradient(180deg, #eceae4 0%, #f5f3ef 100%);
+				border-bottom: 1px solid #e2ddd6;
+				padding: 2rem 2rem 1.5rem;
+				text-align: center;
+			}
+
+			.page-eyebrow {
+				font-size: 11px;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				color: #a09888;
+				font-weight: 600;
+				margin-bottom: 0.5rem;
+			}
+
+			.page-title {
+				font-family: 'Lora', serif;
+				font-size: 30px;
+				font-weight: 600;
+				color: #2a2420;
+				margin-bottom: 0.4rem;
+			}
+
+			.page-title span {
+				color: #4a6fa5;
+				font-style: italic;
+			}
+
+			.page-sub {
+				font-size: 14px;
+				color: #9a9080;
+				font-weight: 400;
+			}
+
+			.content-wrap {
+				position: relative;
+				z-index: 5;
+				display: grid;
+				grid-template-columns: 240px 1fr;
+				gap: 1.5rem;
+				padding: 1.5rem 2rem 2rem;
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			/* SIDEBAR */
+			.sidebar {
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			.facet-card {
+				background: #fff;
+				border-radius: 14px;
+				border: 1px solid #e2ddd6;
+				padding: 1rem 1.1rem;
+				box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+			}
+
+			.facet-title {
+				font-size: 11px;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
+				color: #a09888;
+				font-weight: 700;
+				margin-bottom: 0.8rem;
+			}
+
+			.search-box,
+			.sort-select {
+				width: 100%;
+				padding: 8px 10px;
+				border-radius: 8px;
+				border: 1.5px solid #d4cfc7;
+				background: #f9f7f4;
+				font-family: 'Nunito', sans-serif;
+				font-size: 13px;
+				color: #2d2d2d;
+				outline: none;
+				transition: border-color 0.2s;
+			}
+
+			.search-box:focus,
+			.sort-select:focus {
+				border-color: #4a6fa5;
+				background: #fff;
+			}
+
+			.search-box::placeholder {
+				color: #b8b0a0;
+			}
+
+			.sort-select {
+				cursor: pointer;
+				appearance: none;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a09888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: right 10px center;
+			}
+
+			.cat-list {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+
+			.cat-item {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 5px 6px;
+				border-radius: 7px;
+				cursor: pointer;
+				transition: background 0.15s;
+			}
+
+			.cat-item:hover {
+				background: #f5f3ef;
+			}
+
+			.cat-item input[type='checkbox'] {
+				accent-color: #4a6fa5;
+				width: 14px;
+				height: 14px;
+				cursor: pointer;
+			}
+
+			.cat-item-label {
+				font-size: 13px;
+				color: #5a5040;
+				flex: 1;
+				cursor: pointer;
+			}
+
+			.cat-count {
+				font-size: 11px;
+				color: #b0a898;
+				background: #f0ede8;
+				border-radius: 8px;
+				padding: 1px 7px;
+			}
+
+			.clear-btn {
+				width: 100%;
+				padding: 7px;
+				border-radius: 8px;
+				border: 1.5px solid #d4cfc7;
+				background: transparent;
+				font-family: 'Nunito', sans-serif;
+				font-size: 12px;
+				color: #a09888;
+				cursor: pointer;
+				transition: all 0.2s;
+				margin-top: 0.3rem;
+			}
+
+			.clear-btn:hover {
+				border-color: #4a6fa5;
+				color: #4a6fa5;
+				background: rgba(74, 111, 165, 0.05);
+			}
+
+			/* ARTICLES */
+			.articles-col {
+				display: flex;
+				flex-direction: column;
+				gap: 0;
+			}
+
+			.results-bar {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 1rem;
+			}
+
+			.results-count {
+				font-size: 13px;
+				color: #9a9080;
+			}
+
+			.results-count strong {
+				color: #4a4030;
+				font-weight: 600;
+			}
+
+			.article-list {
+				display: flex;
+				flex-direction: column;
+				gap: 0.9rem;
+			}
+
+			.article-row {
+				background: #fff;
+				border-radius: 14px;
+				border: 1px solid #e2ddd6;
+				display: flex;
+				gap: 0;
+				overflow: hidden;
+				box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+				cursor: pointer;
+				transition: all 0.2s;
+			}
+
+			.article-row:hover {
+				box-shadow: 0 4px 18px rgba(0, 0, 0, 0.09);
+				transform: translateY(-1px);
+				border-color: #c8c0b4;
+			}
+
+			.article-row-thumb {
+				width: 110px;
+				flex-shrink: 0;
+				overflow: hidden;
+			}
+
+			.article-row-body {
+				flex: 1;
+				padding: 0.9rem 1.1rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			.article-row-top {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 0.35rem;
+			}
+
+			.tag-pill {
+				display: inline-block;
+				padding: 3px 10px;
+				border-radius: 10px;
+				font-size: 10px;
+				font-weight: 700;
+				letter-spacing: 0.07em;
+				text-transform: uppercase;
+			}
+
+			.article-row-date {
+				font-size: 11px;
+				color: #b0a898;
+				margin-left: auto;
+			}
+
+			.article-row-title {
+				font-family: 'Lora', serif;
+				font-size: 15px;
+				font-weight: 600;
+				color: #2a2420;
+				line-height: 1.35;
+				margin-bottom: 0.3rem;
+				text-decoration: none;
+				display: block;
+			}
+
+			.article-row-title:hover {
+				color: #4a6fa5;
+			}
+
+			.article-row-excerpt {
+				font-size: 12px;
+				color: #9a9080;
+				line-height: 1.55;
+			}
+
+			.no-results {
+				text-align: center;
+				padding: 2.5rem 1rem;
+				color: #a09888;
+			}
+
+			.no-results-icon {
+				font-size: 36px;
+				margin-bottom: 0.8rem;
+			}
+
+			.no-results-text {
+				font-size: 14px;
+				line-height: 1.6;
+			}
+
+			@media (max-width: 900px) {
+				.content-wrap {
+					grid-template-columns: 1fr;
+					padding: 1rem;
+				}
+
+				.sidebar {
+					order: 1;
+					margin-bottom: 1.5rem;
+				}
+
+				.articles-col {
+					order: 2;
+				}
+
+				.facet-card {
+					padding: 0.8rem 1rem;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.page-header {
+					padding: 1.5rem 1rem 1rem;
+				}
+
+				.page-title {
+					font-size: 26px;
+				}
+
+				.page-sub {
+					font-size: 13px;
+				}
+
+				.article-row-thumb {
+					width: 100px;
+				}
+
+				.article-row-body {
+					padding: 0.7rem 0.9rem;
+				}
+
+				.article-row-title {
+					font-size: 14px;
+				}
+
+				.article-row-excerpt {
+					font-size: 11px;
+				}
+			}
+
+			@media (max-width: 600px) {
+				.content-wrap {
+					padding: 0.8rem;
+				}
+
+				.page-header {
+					padding: 1.2rem 1rem 0.8rem;
+				}
+
+				.page-title {
+					font-size: 22px;
+				}
+
+				.page-eyebrow {
+					font-size: 10px;
+				}
+
+				.page-sub {
+					font-size: 12px;
+					max-width: 300px;
+					margin: 0 auto;
+				}
+
+				.article-row {
+					flex-direction: column;
+				}
+
+				.article-row-thumb {
+					width: 100%;
+					height: 140px;
+				}
+
+				.article-row-body {
+					padding: 0.8rem 1rem;
+				}
+
+				.article-row-top {
+					flex-wrap: wrap;
+					gap: 6px;
+				}
+
+				.article-row-date {
+					margin-left: 0;
+					width: 100%;
+					order: 3;
+					margin-top: 2px;
+				}
+
+				.tag-pill {
+					font-size: 9px;
+					padding: 2px 8px;
+				}
+
+				.article-row-title {
+					font-size: 15px;
+					margin-bottom: 0.4rem;
+				}
+
+				.article-row-excerpt {
+					font-size: 12px;
+				}
+
+				.results-bar {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 0.5rem;
+					margin-bottom: 0.8rem;
+				}
+
+				.results-count {
+					font-size: 12px;
+				}
+
+				/* Sidebar on mobile */
+				.sidebar {
+					margin-bottom: 1rem;
+				}
+
+				.facet-card {
+					padding: 0.7rem 0.9rem;
+				}
+
+				.facet-title {
+					font-size: 10px;
+					margin-bottom: 0.6rem;
+				}
+
+				.search-box,
+				.sort-select {
+					font-size: 12px;
+					padding: 7px 9px;
+				}
+
+				.cat-item-label {
+					font-size: 12px;
+				}
+
+				.cat-count {
+					font-size: 10px;
+					padding: 1px 6px;
+				}
+
+				.clear-btn {
+					font-size: 11px;
+					padding: 6px;
+				}
+			}
+
+			@media (max-width: 400px) {
+				.page-title {
+					font-size: 20px;
+				}
+
+				.article-row-thumb {
+					height: 120px;
+				}
+
+				.content-wrap {
+					padding: 0.6rem;
+				}
+
+				.article-list {
+					gap: 0.7rem;
+				}
+			}
+		</style>
+	</body>
+</html>
