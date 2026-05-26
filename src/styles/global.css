@@ -214,6 +214,7 @@ hr {
 	padding: 6px 16px; border-radius: 20px; border: 1.5px solid #d4cfc7;
 	background: transparent; font-family: 'Nunito', sans-serif;
 	font-size: 13px; font-weight: 500; color: #6b6050; cursor: pointer; transition: all 0.2s;
+	text-decoration: none;
 }
 .filter-pill:hover { border-color: #4a6fa5; color: #4a6fa5; background: rgba(74,111,165,0.06); }
 .filter-pill.active { background: #4a6fa5; border-color: #4a6fa5; color: #fff; }

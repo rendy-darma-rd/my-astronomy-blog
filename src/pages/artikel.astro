@@ -248,6 +248,12 @@ const topicCounts = posts.reduce((acc, post) => {
 					article.style.display = 'none';
 				});
 
+				// Remove any existing no-results message
+				const existingNoResults = articleList.querySelector('.no-results');
+				if (existingNoResults) {
+					existingNoResults.remove();
+				}
+
 				// Show filtered and sorted
 				sorted.forEach(article => {
 					article.style.display = 'flex';
