@@ -356,6 +356,11 @@ hr {
 	.card {
 		min-height: 240px;
 	}
+	
+	/* Reduce featured title size on tablet */
+	.featured-title {
+		font-size: 32px;
+	}
 }
 
 /* Mobile: single column */
@@ -379,6 +384,11 @@ hr {
 	/* Keep portrait card shape on small screens too */
 	.card { min-height: 320px; }
 	.card-thumb { aspect-ratio: 16 / 9; }
+	
+	/* Reduce featured title size on mobile */
+	.featured-title {
+		font-size: 28px;
+	}
 }
 
 .card {
