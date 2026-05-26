@@ -144,12 +144,67 @@ const topicCounts = posts.reduce((acc, post) => {
 		<Footer />
 
 		<script>
+			// Read URL parameters and apply initial filter
+			const urlParams = new URLSearchParams(window.location.search);
+			const topicParam = urlParams.get('topic');
+			const searchParam = urlParams.get('search');
+			const sortParam = urlParams.get('sort');
+
 			const searchInput = document.getElementById('search-input') as HTMLInputElement;
 			const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
 			const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
 			const resultsCount = document.getElementById('results-count') as HTMLElement;
 			const articleList = document.getElementById('article-list') as HTMLElement;
 			const checkboxes = document.querySelectorAll('#cat-list input[type="checkbox"]');
+
+			// Apply initial values from URL
+			if (searchParam) {
+				searchInput.value = searchParam;
+			}
+			if (sortParam) {
+				sortSelect.value = sortParam;
+			}
+			if (topicParam) {
+				// Handle comma-separated topics or single topic
+				const selectedTopics = topicParam.split(',').map(t => t.trim());
+				checkboxes.forEach(cb => {
+					const checkbox = cb as HTMLInputElement;
+					checkbox.checked = selectedTopics.includes(checkbox.value);
+				});
+			}
+
+			function updateURL() {
+				const searchTerm = searchInput.value.trim();
+				const sortValue = sortSelect.value;
+				const selectedTopics = Array.from(checkboxes)
+					.filter(cb => (cb as HTMLInputElement).checked)
+					.map(cb => (cb as HTMLInputElement).value);
+
+				const params = new URLSearchParams();
+				
+				// Add search if not empty
+				if (searchTerm) {
+					params.set('search', searchTerm);
+				}
+				
+				// Add sort if not default
+				if (sortValue !== 'newest') {
+					params.set('sort', sortValue);
+				}
+				
+				// Add topic if only one is selected (not all)
+				if (selectedTopics.length === 1) {
+					params.set('topic', selectedTopics[0]);
+				} else if (selectedTopics.length > 1 && selectedTopics.length < checkboxes.length) {
+					// If multiple but not all topics selected, add as comma-separated
+					params.set('topic', selectedTopics.join(','));
+				}
+				
+				// Update URL without reloading
+				const queryString = params.toString();
+				const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
+				window.history.pushState({}, '', newUrl);
+			}
 
 			function applyFilters() {
 				const searchTerm = searchInput.value.toLowerCase();
@@ -213,6 +268,9 @@ const topicCounts = posts.reduce((acc, post) => {
 					`;
 					articleList.appendChild(noResults);
 				}
+
+				// Update URL with current filters
+				updateURL();
 			}
 
 			// Event listeners
@@ -224,8 +282,17 @@ const topicCounts = posts.reduce((acc, post) => {
 				searchInput.value = '';
 				sortSelect.value = 'newest';
 				checkboxes.forEach(cb => { (cb as HTMLInputElement).checked = true; });
+				
+				// Remove query string from URL
+				window.history.pushState({}, '', window.location.pathname);
+				
 				applyFilters();
 			});
+
+			// Apply initial filter if any parameters exist
+			if (topicParam || searchParam || sortParam) {
+				applyFilters();
+			}
 		</script>
 
 		<style>
