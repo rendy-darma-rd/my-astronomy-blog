@@ -14,76 +14,344 @@ type Props = Omit<CollectionEntry<'blog'>['data'], 'heroImage'> & {
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="id">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+			@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&display=swap');
+			
+			* { box-sizing: border-box; margin: 0; padding: 0; }
+
+			html {
+				overflow-x: hidden;
 			}
+
+			body {
+				font-family: 'Nunito', sans-serif !important;
+				background: #f5f3ef !important;
+				color: #2d2d2d !important;
+				min-height: 100vh;
+				overflow-x: hidden;
+				margin: 0 !important;
+				padding: 0 !important;
+				font-size: 18px !important;
+				line-height: 1.8 !important;
+			}
+
+			main {
+				position: relative;
+				z-index: 5;
+				width: 100% !important;
+				max-width: 100% !important;
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+
+			/* Article header section */
+			.article-header {
+				position: relative;
+				z-index: 5;
+				background: linear-gradient(180deg, #eceae4 0%, #f5f3ef 100%);
+				border-bottom: 1px solid #e2ddd6;
+				padding: 2.5rem 2rem 2rem;
+				text-align: center;
+			}
+
+			.article-meta-top {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 12px;
+				margin-bottom: 1.5rem;
+				font-size: 14px;
+				color: #a09888;
+			}
+
+			.meta-sep {
+				color: #d4cfc7;
+			}
+
+			.article-title {
+				font-family: 'Lora', serif;
+				font-size: 48px;
+				font-weight: 700;
+				color: #2a2420;
+				line-height: 1.2;
+				margin-bottom: 1rem;
+				max-width: 900px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.article-description {
+				font-size: 20px;
+				color: #7a7060;
+				line-height: 1.6;
+				max-width: 720px;
+				margin: 0 auto 1.5rem;
+			}
+
+			.last-updated {
+				font-size: 13px;
+				color: #b0a898;
+				font-style: italic;
+				margin-top: 0.5rem;
+			}
+
+			/* Hero image */
+			.hero-image-wrapper {
+				position: relative;
+				z-index: 5;
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 0 2rem;
+			}
+
 			.hero-image {
 				width: 100%;
+				margin: -2rem auto 3rem;
+				border-radius: 16px;
+				overflow: hidden;
+				box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 			}
+
 			.hero-image img {
 				display: block;
+				width: 100%;
+				height: auto;
+			}
+
+			/* Article content */
+			.article-content {
+				position: relative;
+				z-index: 5;
+				width: 100%;
+				max-width: 1200px;
 				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
+				padding: 3rem 4rem 4rem;
+				background: #fff;
+				border-radius: 16px;
+				box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+				margin-bottom: 3rem;
 			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+
+			/* Typography for article content */
+			.article-content :global(h1),
+			.article-content :global(h2),
+			.article-content :global(h3),
+			.article-content :global(h4),
+			.article-content :global(h5),
+			.article-content :global(h6) {
+				font-family: 'Lora', serif;
+				color: #2a2420;
+				line-height: 1.3;
+				margin-top: 2rem;
+				margin-bottom: 1rem;
+				font-weight: 700;
 			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
+
+			.article-content :global(h2) {
+				font-size: 32px;
+				border-bottom: 2px solid #e2ddd6;
+				padding-bottom: 0.5rem;
 			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
+
+			.article-content :global(h3) {
+				font-size: 26px;
 			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+
+			.article-content :global(h4) {
+				font-size: 22px;
 			}
-			.last-updated-on {
+
+			.article-content :global(p) {
+				font-size: 18px;
+				line-height: 1.8;
+				color: #4a4030;
+				margin-bottom: 1.5rem;
+			}
+
+			.article-content :global(a) {
+				color: #4a6fa5;
+				text-decoration: underline;
+				transition: color 0.2s;
+			}
+
+			.article-content :global(a:hover) {
+				color: #3a5f95;
+			}
+
+			.article-content :global(ul),
+			.article-content :global(ol) {
+				margin-bottom: 1.5rem;
+				padding-left: 2rem;
+			}
+
+			.article-content :global(li) {
+				font-size: 18px;
+				line-height: 1.8;
+				color: #4a4030;
+				margin-bottom: 0.5rem;
+			}
+
+			.article-content :global(blockquote) {
+				border-left: 4px solid #4a6fa5;
+				padding: 1rem 1.5rem;
+				margin: 1.5rem 0;
+				background: #f9f7f4;
+				border-radius: 8px;
 				font-style: italic;
+				color: #5a5040;
+			}
+
+			.article-content :global(code) {
+				background: #f5f3ef;
+				padding: 0.2rem 0.5rem;
+				border-radius: 4px;
+				font-size: 0.9em;
+				font-family: 'Monaco', 'Courier New', monospace;
+				color: #c7254e;
+			}
+
+			.article-content :global(pre) {
+				background: #2a2420;
+				color: #f5f3ef;
+				padding: 1.5rem;
+				border-radius: 8px;
+				overflow-x: auto;
+				margin-bottom: 1.5rem;
+			}
+
+			.article-content :global(pre code) {
+				background: none;
+				padding: 0;
+				color: inherit;
+			}
+
+			.article-content :global(img) {
+				max-width: 100%;
+				height: auto;
+				border-radius: 8px;
+				margin: 1.5rem 0;
+			}
+
+			.article-content :global(hr) {
+				border: none;
+				border-top: 2px solid #e2ddd6;
+				margin: 2rem 0;
+			}
+
+			.article-content :global(table) {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 1.5rem 0;
+			}
+
+			.article-content :global(th),
+			.article-content :global(td) {
+				border: 1px solid #e2ddd6;
+				padding: 0.75rem;
+				text-align: left;
+			}
+
+			.article-content :global(th) {
+				background: #f5f3ef;
+				font-weight: 600;
+				color: #2a2420;
+			}
+
+			/* Responsive adjustments */
+			@media (max-width: 1000px) {
+				.article-title {
+					font-size: 38px;
+				}
+
+				.article-description {
+					font-size: 18px;
+				}
+
+				.article-content {
+					padding: 2rem;
+				}
+			}
+
+			@media (max-width: 600px) {
+				.article-header {
+					padding: 2rem 1rem 1.5rem;
+				}
+
+				.article-title {
+					font-size: 32px;
+				}
+
+				.article-description {
+					font-size: 16px;
+				}
+
+				.hero-image-wrapper {
+					padding: 0 1rem;
+				}
+
+				.hero-image {
+					margin: -1rem auto 2rem;
+					border-radius: 12px;
+				}
+
+				.article-content {
+					padding: 2rem 1.5rem;
+					margin-bottom: 2rem;
+				}
+
+				.article-content :global(h2) {
+					font-size: 26px;
+				}
+
+				.article-content :global(h3) {
+					font-size: 22px;
+				}
+
+				.article-content :global(p),
+				.article-content :global(li) {
+					font-size: 16px;
+				}
 			}
 		</style>
 	</head>
 
 	<body>
 		<Header />
+		
 		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+			<!-- Article header -->
+			<div class="article-header">
+				<div class="article-meta-top">
+					<FormattedDate date={pubDate} />
+					{updatedDate && (
+						<>
+							<span class="meta-sep">•</span>
+							<span class="last-updated">Diperbarui <FormattedDate date={updatedDate} /></span>
+						</>
+					)}
 				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+				<h1 class="article-title">{title}</h1>
+			</div>
+
+			<!-- Hero image -->
+			{heroImage && (
+				<div class="hero-image-wrapper">
+					<div class="hero-image">
+						<Image width={1200} height={675} src={heroImage} alt={title} />
 					</div>
-					<slot />
 				</div>
+			)}
+
+			<!-- Article content -->
+			<article class="article-content">
+				<slot />
 			</article>
 		</main>
+		
 		<Footer />
 	</body>
 </html>
