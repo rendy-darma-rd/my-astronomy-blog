@@ -160,7 +160,7 @@ function truncateText(text: string, maxLength: number = 120): string {
         <div class="featured-title"><a href={`/blog/${featured.id}`}>{featured.data.title}</a></div>
         <div class="featured-excerpt">{truncateText(featured.data.description, 150)}</div>
         <div class="article-meta">
-          <span>{featured.data.pubDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+          <span>{featured.data.pubDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
           <a class="read-link" href={`/blog/${featured.id}`}>Baca artikel →</a>
         </div>
       </div>
@@ -196,7 +196,7 @@ function truncateText(text: string, maxLength: number = 120): string {
             <div class="card-excerpt">{truncateText(post.data.description, 85)}</div>
             <div class="card-meta">
               <span class={`tag-pill ${t.class}`} style="padding:2px 8px;font-size:10px;">{t.label}</span>
-              <span class="card-date">{post.data.pubDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+              <span class="card-date">{post.data.pubDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
             </div>
             <a href={`/blog/${post.id}`} class="card-read-link">Baca artikel →</a>
           </div>
