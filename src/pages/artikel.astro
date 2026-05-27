@@ -19,6 +19,13 @@ function getImageSrc(post: any) {
 	return imageModule ? imageModule.default : null;
 }
 
+// Helper function to truncate text to max characters
+function truncateText(text: string, maxLength: number = 85): string {
+	if (!text) return '';
+	if (text.length <= maxLength) return text;
+	return text.slice(0, maxLength) + '...';
+}
+
 const TAG_MAP = {
 	'benda-kecil': { label: 'Benda Kecil', emoji: '☄️' },
 	'planet': { label: 'Planet', emoji: '🪐' },
@@ -113,12 +120,12 @@ const topicCounts = posts.reduce((acc, post) => {
 											<Image 
 												src={imageSrc} 
 												alt={post.data.title}
-												width={110}
-												height={90}
+												width={180}
+												height={140}
 												style="width: 100%; height: 100%; object-fit: cover;"
 											/>
 										) : (
-											<div style="width: 110px; height: 90px; background: #e8e4dc;"></div>
+											<div style="width: 100%; height: 100%; background: #e8e4dc;"></div>
 										)}
 									</div>
 									<div class="article-row-body">
@@ -131,7 +138,7 @@ const topicCounts = posts.reduce((acc, post) => {
 											</span>
 										</div>
 										<a href={`/blog/${post.id}`} class="article-row-title">{post.data.title}</a>
-										<div class="article-row-excerpt">{post.data.description}</div>
+										<div class="article-row-excerpt">{truncateText(post.data.description, 100)}</div>
 									</div>
 								</article>
 							);
@@ -517,6 +524,7 @@ const topicCounts = posts.reduce((acc, post) => {
 				box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
 				cursor: pointer;
 				transition: all 0.2s;
+				min-height: 140px;
 			}
 
 			.article-row:hover {
@@ -526,7 +534,8 @@ const topicCounts = posts.reduce((acc, post) => {
 			}
 
 			.article-row-thumb {
-				width: 110px;
+				width: 180px;
+				height: 140px;
 				flex-shrink: 0;
 				overflow: hidden;
 			}
@@ -633,7 +642,8 @@ const topicCounts = posts.reduce((acc, post) => {
 				}
 
 				.article-row-thumb {
-					width: 100px;
+					width: 150px;
+					height: 120px;
 				}
 
 				.article-row-body {
@@ -678,7 +688,7 @@ const topicCounts = posts.reduce((acc, post) => {
 
 				.article-row-thumb {
 					width: 100%;
-					height: 140px;
+					height: 220px;
 				}
 
 				.article-row-body {
