@@ -15,7 +15,7 @@ const currentPath = Astro.url.pathname;
   </button>
   
   <ul class="nav-links" id="nav-links">
-    <li><a href="/artikel" class={currentPath === '/artikel' || currentPath.startsWith('/blog/') ? 'active' : ''}>Artikel</a></li>
+    <li><a href="/artikel" class={currentPath === '/artikel' ? 'active' : ''}>Artikel</a></li>
     <li><a href="/about" class={currentPath === '/about' ? 'active' : ''}>Tentang Kami</a></li>
   </ul>
 </nav>
