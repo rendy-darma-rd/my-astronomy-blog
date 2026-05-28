@@ -137,6 +137,9 @@ function truncateText(text: string, maxLength: number = 120): string {
           <Image 
             src={getImageSrc(featured)!} 
             alt={featured.data.title}
+            width={1200}
+            height={675}
+            quality={90}
             style="width: 100%; height: 100%; object-fit: cover; display: block;"
           />
         ) : (
@@ -185,6 +188,9 @@ function truncateText(text: string, maxLength: number = 120): string {
               <Image 
                 src={imgSrc} 
                 alt={post.data.title}
+                width={600}
+                height={300}
+                quality={90}
                 style="width: 100%; height: 100%; object-fit: cover; display: block;"
               />
             ) : (

@@ -108,7 +108,7 @@ function getImageSrc(post: any) {
 								<li>
 									<a href={`/blog/${post.id}/`}>
 										{imageSrc && (
-											<Image width={720} height={360} src={imageSrc} alt="" />
+											<Image width={960} height={540} quality={90} src={imageSrc} alt="" />
 										)}
 										<h4 class="title">{post.data.title}</h4>
 										<p class="date">
