@@ -2,12 +2,12 @@ import { config, fields, collection } from '@keystatic/core';
 
 // Use GitHub storage in production, local storage in development
 // This allows editing from production while keeping local development simple
-const storage = import.meta.env.MODE === 'production' || import.meta.env.KEYSTATIC_GITHUB_MODE === 'true'
+const storage = process.env.NODE_ENV === 'production' || process.env.KEYSTATIC_GITHUB_MODE === 'true'
   ? {
       kind: 'github' as const,
       repo: {
-        owner: import.meta.env.KEYSTATIC_GITHUB_OWNER || 'rendy-darma-rd',
-        name: import.meta.env.KEYSTATIC_GITHUB_REPO || 'my-astronomy-blog',
+        owner: process.env.KEYSTATIC_GITHUB_OWNER || 'your-github-username',
+        name: process.env.KEYSTATIC_GITHUB_REPO || 'my-astronomy-blog',
       },
     }
   : { kind: 'local' as const };
