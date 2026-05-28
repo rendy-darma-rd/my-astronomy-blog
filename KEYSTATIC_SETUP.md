@@ -63,7 +63,7 @@ You need to create a GitHub OAuth App to allow Keystatic to authenticate with Gi
 
 ### Step 3: Configure Production Environment
 
-You need to add these environment variables to your Cloudflare Pages deployment:
+You need to add these environment variables to your Cloudflare Pages deployment: 
 
 1. Go to your Cloudflare Pages dashboard
 2. Select your project
