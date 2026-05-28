@@ -7,17 +7,14 @@ import markdoc from '@astrojs/markdoc';
 import keystatic from '@keystatic/astro';
 import cloudflare from '@astrojs/cloudflare';
 
-// Only include Keystatic in development
+// Always include these integrations
 const integrations = [
   mdx(), 
   sitemap(), 
   react(), 
-  markdoc({ allowHTML: true })
+  markdoc({ allowHTML: true }),
+  keystatic() // Now enabled in both dev and production
 ];
-
-if (process.env.NODE_ENV !== 'production') {
-  integrations.push(keystatic());
-}
 
 export default defineConfig({
   site: 'https://example.com',
