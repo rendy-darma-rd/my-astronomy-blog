@@ -444,7 +444,7 @@ hr {
 }
 .fun-fact-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
 .fun-fact-label { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #4a6fa5; font-weight: 600; margin-bottom: 0.3rem; }
-.fun-fact-text { font-size: 18px; color: #3a4a5a; line-height: 1.65; font-weight: 400; }
+.fun-fact-text { font-size: 18px; color: #3a4a5a; line-height: 1.65; font-weight: 400; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
 
 .newsletter {
 	position: relative; z-index: 5; margin: 0 2rem 1.5rem;
