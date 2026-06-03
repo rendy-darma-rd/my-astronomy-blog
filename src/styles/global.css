@@ -205,7 +205,17 @@ hr {
 
 .hero-desc {
 	font-size: 18px; color: #7a7060; font-weight: 400;
-	line-height: 1.8; max-width: 520px; margin: 0 auto 1.5rem;
+	line-height: 1.8; max-width: 650px; margin: 0 auto 1.5rem;
+}
+
+.hero-desc-long {
+	max-width: 800px;
+}
+
+@media (max-width: 768px) {
+	.hero-desc-long {
+		max-width: 650px;
+	}
 }
 
 .filter-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
