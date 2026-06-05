@@ -181,7 +181,7 @@ hr {
 }
 
 .nav-links { display: flex; gap: 2.2rem; list-style: none; }
-.nav-links a { font-family: 'Nunito', sans-serif; font-size: 20px; color: #7a7060; text-decoration: none; transition: color 0.2s; }
+.nav-links a { font-family: 'Nunito', sans-serif; font-size: 20px; color: #4a4034; text-decoration: none; transition: color 0.2s; }
 .nav-links a:hover { color: #4a6fa5; }
 
 .hero {
@@ -194,7 +194,7 @@ hr {
 .hero-badge {
 	display: inline-flex; align-items: center; gap: 6px;
 	background: #e0d9cc; border-radius: 20px; padding: 5px 14px;
-	font-size: 18px; color: #6b6050; letter-spacing: 0.06em;
+	font-size: 18px; color: #4a4034; letter-spacing: 0.06em;
 	margin-bottom: 1.2rem; font-weight: 500;
 }
 
@@ -207,7 +207,7 @@ hr {
 .hero-title span { color: #4a6fa5; font-style: italic; }
 
 .hero-desc {
-	font-size: 18px; color: #7a7060; font-weight: 400;
+	font-size: 18px; color: #4a4034; font-weight: 400;
 	line-height: 1.8; max-width: 1300px; margin: 0 auto 1.5rem;
 }
 
@@ -229,7 +229,7 @@ hr {
 .filter-pill {
 	padding: 6px 16px; border-radius: 20px; border: 1.5px solid #d4cfc7;
 	background: transparent; font-family: 'Nunito', sans-serif;
-	font-size: 13px; font-weight: 500; color: #6b6050; cursor: pointer; transition: all 0.2s;
+	font-size: 13px; font-weight: 500; color: #4a4034; cursor: pointer; transition: all 0.2s;
 	text-decoration: none;
 }
 .filter-pill:hover { border-color: #4a6fa5; color: #4a6fa5; background: rgba(74,111,165,0.06); }
@@ -239,7 +239,7 @@ hr {
 	display: flex; align-items: center; gap: 12px;
 	padding: 1.5rem 2rem 0.8rem; position: relative; z-index: 5;
 }
-.section-label-text { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #a09888; font-weight: 600; white-space: nowrap; }
+.section-label-text { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #6e5f52; font-weight: 600; white-space: nowrap; }
 .section-label-line { flex: 1; height: 1px; background: #e2ddd6; }
 .view-all-btn {
 	padding: 8px 16px; border-radius: 10px;
@@ -308,8 +308,8 @@ hr {
 	width: fit-content; max-width: max-content;
 }
 .tag-benda-kecil { background: #e8f4f8; color: #1a6b7d; }
-.tag-planet { background: #ffe8d5; color: #d84315; }
-.tag-bintang { background: #fffacd; color: #f57f17; }
+.tag-planet { background: #ffe8d5; color: #b8340f; }
+.tag-bintang { background: #fffacd; color: #d66d00; }
 .tag-gugus-bintang { background: #ffe6f0; color: #c2185b; }
 .tag-galaksi { background: #dde8f8; color: #2a5090; }
 .tag-alam-semesta { background: #e3d5f8; color: #4a148c; }
@@ -321,10 +321,10 @@ hr {
 	color: #2a2420; line-height: 1.15; margin-bottom: 0.6rem;
 }
 .featured-excerpt {
-	font-size: 18px; color: #7a7060; line-height: 1.6; margin-bottom: 1rem; font-weight: 400;
+	font-size: 18px; color: #4a4034; line-height: 1.6; margin-bottom: 1rem; font-weight: 400;
 }
 .article-meta {
-	display: flex; align-items: center; gap: 10px; font-size: 14px; color: #a09888;
+	display: flex; align-items: center; gap: 10px; font-size: 14px; color: #6e5f52;
 }
 .meta-sep { color: #d4cfc7; }
 .read-link {
@@ -436,9 +436,9 @@ hr {
 	font-family: 'Lora', serif; font-size: 22px; font-weight: 700;
 	color: #2a2420; line-height: 1.25; margin-bottom: 0.5rem;
 }
-.card-excerpt { font-size: 17px; color: #9a9080; line-height: 1.6; margin-bottom: 0.8rem; flex: 1; }
+.card-excerpt { font-size: 17px; color: #6e5f52; line-height: 1.6; margin-bottom: 0.8rem; flex: 1; }
 .card-meta { 
-	font-size: 14px; color: #b0a898; 
+	font-size: 14px; color: #6e5f52; 
 	display: flex; align-items: center; justify-content: space-between; 
 	gap: 8px; margin-bottom: 0.6rem;
 }
@@ -459,8 +459,8 @@ hr {
 	padding: 1.2rem 1.4rem; display: flex; gap: 1rem; align-items: flex-start;
 }
 .fun-fact-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
-.fun-fact-label { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #4a6fa5; font-weight: 600; margin-bottom: 0.3rem; }
-.fun-fact-text { font-size: 18px; color: #3a4a5a; line-height: 1.65; font-weight: 400; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
+.fun-fact-label { font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: #2a5090; font-weight: 600; margin-bottom: 0.3rem; }
+.fun-fact-text { font-size: 18px; color: #2a3a4a; line-height: 1.65; font-weight: 400; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
 
 .newsletter {
 	position: relative; z-index: 5; margin: 0 2rem 1.5rem;
@@ -469,7 +469,7 @@ hr {
 }
 .newsletter-emoji { font-size: 28px; margin-bottom: 0.6rem; display: block; }
 .newsletter-title { font-family: 'Lora', serif; font-size: 24px; font-weight: 600; color: #2a2420; margin-bottom: 0.5rem; }
-.newsletter-sub { font-size: 16px; color: #9a9080; margin-bottom: 1rem; line-height: 1.6; }
+.newsletter-sub { font-size: 16px; color: #6e5f52; margin-bottom: 1rem; line-height: 1.6; }
 .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .email-input {
 	flex: 1; min-width: 200px; padding: 12px 16px; border-radius: 10px;
@@ -498,8 +498,8 @@ hr {
 	display: flex; align-items: center; justify-content: space-between;
 	padding: 1rem 2rem; border-top: 1px solid #e2ddd6; background: #eceae4;
 }
-.footer-text { font-size: 14px; color: #a09888; }
+.footer-text { font-size: 14px; color: #6e5f52; }
 .footer-links { display: flex; gap: 1rem; }
-.footer-links a { font-size: 12px; color: #a09888; text-decoration: none; }
+.footer-links a { font-size: 12px; color: #6e5f52; text-decoration: none; }
 .footer-links a:hover { color: #4a6fa5; }
 
