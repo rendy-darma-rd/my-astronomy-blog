@@ -24,4 +24,7 @@ export default defineConfig({
   adapter: cloudflare(),
   integrations,
   output: 'static',
+  devToolbar: {
+    enabled: false
+  },
 });
