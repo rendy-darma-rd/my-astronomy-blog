@@ -108,6 +108,7 @@ function truncateText(text: string, maxLength: number = 120): string {
     </ul>
   </nav>
 
+  <main>
   <!-- HERO -->
   <div class="hero">
     <div class="hero-badge">🌟 Your friendly guide to the universe</div>
@@ -267,14 +268,6 @@ function truncateText(text: string, maxLength: number = 120): string {
     </div>
 
     <button class="slider-nav slider-next" aria-label="Next fact">›</button>
-
-    <div class="slider-dots">
-      <button class="dot active" data-slide="0" aria-label="Go to fact 1"></button>
-      <button class="dot" data-slide="1" aria-label="Go to fact 2"></button>
-      <button class="dot" data-slide="2" aria-label="Go to fact 3"></button>
-      <button class="dot" data-slide="3" aria-label="Go to fact 4"></button>
-      <button class="dot" data-slide="4" aria-label="Go to fact 5"></button>
-    </div>
   </div>
 
   <!-- NEWSLETTER -->
@@ -287,6 +280,8 @@ function truncateText(text: string, maxLength: number = 120): string {
       <button class="sub-btn">Subscribe</button>
     </div>
   </div>-->
+
+  </main>
 
   <!-- FOOTER -->
   <div class="footer">
@@ -337,19 +332,15 @@ function truncateText(text: string, maxLength: number = 120): string {
   let autoSlideInterval: ReturnType<typeof setInterval>;
   
   const slides = document.querySelectorAll('.fun-fact-track .fun-fact');
-  const dots = document.querySelectorAll('.slider-dots .dot');
   const prevBtn = document.querySelector('.slider-prev');
   const nextBtn = document.querySelector('.slider-next');
+  const sliderWrapper = document.querySelector('.fun-fact-slider-wrapper');
+  const slider = document.querySelector('.fun-fact-slider');
   
   function goToSlide(n: number) {
     slides[currentSlide].classList.remove('active');
-    dots[currentSlide].classList.remove('active');
-    
     currentSlide = (n + slides.length) % slides.length;
-    
     slides[currentSlide].classList.add('active');
-    dots[currentSlide].classList.add('active');
-    
     resetAutoSlide();
   }
   
@@ -366,19 +357,59 @@ function truncateText(text: string, maxLength: number = 120): string {
     autoSlideInterval = setInterval(nextSlide, 5000);
   }
   
-  // Event listeners
+  // Button event listeners
   prevBtn?.addEventListener('click', prevSlide);
   nextBtn?.addEventListener('click', nextSlide);
   
-  dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => goToSlide(index));
-  });
+  // Drag/Swipe functionality
+  let isDragging = false;
+  let startX = 0;
+  let currentX = 0;
+  
+  function handleDragStart(e: MouseEvent | TouchEvent) {
+    isDragging = true;
+    startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    clearInterval(autoSlideInterval);
+  }
+  
+  function handleDragMove(e: MouseEvent | TouchEvent) {
+    if (!isDragging) return;
+    currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+  }
+  
+  function handleDragEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const diff = startX - currentX;
+    const threshold = 50; // minimum drag distance
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    } else {
+      resetAutoSlide();
+    }
+  }
+  
+  // Mouse events
+  slider?.addEventListener('mousedown', handleDragStart);
+  slider?.addEventListener('mousemove', handleDragMove);
+  slider?.addEventListener('mouseup', handleDragEnd);
+  slider?.addEventListener('mouseleave', handleDragEnd);
+  
+  // Touch events
+  slider?.addEventListener('touchstart', handleDragStart);
+  slider?.addEventListener('touchmove', handleDragMove);
+  slider?.addEventListener('touchend', handleDragEnd);
   
   // Start auto-sliding
   resetAutoSlide();
   
   // Pause on hover
-  const sliderWrapper = document.querySelector('.fun-fact-slider-wrapper');
   sliderWrapper?.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
   sliderWrapper?.addEventListener('mouseleave', resetAutoSlide);
 </script>
@@ -416,7 +447,7 @@ function truncateText(text: string, maxLength: number = 120): string {
   .nav-links a {
     font-family: 'Nunito', sans-serif;
     font-size: 20px;
-    color: #7a7060;
+    color: #4a4034;
     text-decoration: none;
     transition: color 0.2s;
   }
@@ -441,7 +472,7 @@ function truncateText(text: string, maxLength: number = 120): string {
     display: block;
     width: 25px;
     height: 3px;
-    background: #7a7060;
+    background: #4a4034;
     border-radius: 3px;
     transition: all 0.3s;
   }
@@ -522,6 +553,12 @@ function truncateText(text: string, maxLength: number = 120): string {
     background: #e8f0f8;
     border: 1px solid #c8d8ec;
     text-align: left;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .fun-fact-slider:active {
+    cursor: grabbing;
   }
 
   .fun-fact-track {
@@ -568,14 +605,14 @@ function truncateText(text: string, maxLength: number = 120): string {
     font-size: 14px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #4a6fa5;
+    color: #2a5090;
     font-weight: 600;
   }
 
   .fun-fact-text {
     margin: 0;
     font-size: 18px;
-    color: #3a4a5a;
+    color: #2a3a4a;
     line-height: 1.65;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -619,35 +656,6 @@ function truncateText(text: string, maxLength: number = 120): string {
 
   .slider-next {
     right: -18px;
-  }
-
-  .slider-dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .slider-dots .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #c8d8ec;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    padding: 0;
-  }
-
-  .slider-dots .dot:hover {
-    background: #a0c0e0;
-    transform: scale(1.2);
-  }
-
-  .slider-dots .dot.active {
-    background: #4a6fa5;
-    width: 24px;
-    border-radius: 5px;
   }
 
   @media (max-width: 768px) {
@@ -721,19 +729,6 @@ function truncateText(text: string, maxLength: number = 120): string {
 
     .fun-fact-text {
       font-size: 15px;
-    }
-
-    .slider-dots {
-      margin-top: 10px;
-    }
-
-    .slider-dots .dot {
-      width: 8px;
-      height: 8px;
-    }
-
-    .slider-dots .dot.active {
-      width: 20px;
     }
   }
 </style>
