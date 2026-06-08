@@ -11,7 +11,9 @@ import cloudflare from '@astrojs/cloudflare';
 const integrations = [
   mdx(), 
   sitemap(), 
-  react(), 
+  react({
+    include: ['**/react/*', '**/keystatic/*', '**/node_modules/@keystatic/**'],
+  }), 
   markdoc({ allowHTML: true })
 ];
 
@@ -23,7 +25,7 @@ export default defineConfig({
   site: 'https://example.com',
   adapter: cloudflare(),
   integrations,
-  output: 'static',
+  output: 'server',
   devToolbar: {
     enabled: false
   },
