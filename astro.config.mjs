@@ -11,10 +11,8 @@ import cloudflare from '@astrojs/cloudflare';
 const integrations = [
   mdx(), 
   sitemap(), 
-  react({
-    include: ['**/react/*', '**/keystatic/*', '**/node_modules/@keystatic/**'],
-  }), 
-  markdoc({ allowHTML: true })
+  markdoc({ allowHTML: true }),
+  react()
 ];
 
 if (process.env.NODE_ENV !== 'production') {
