@@ -24,7 +24,11 @@ Setiap molekul menyerap cahaya pada panjang gelombang tertentu — seperti sidik
 
 > **Satu mikrometer (µm)** adalah satu per satu juta meter. Cahaya tampak yang bisa dilihat mata manusia berada di rentang sekitar 0,4–0,7 mikrometer. Panjang gelombang 3 mikrometer berada jauh di luar jangkauan mata, masuk ke wilayah inframerah tengah.
 
-Kebetulan, teleskop survei WISE (Wide-field Infrared Survey Explorer) memiliki salah satu bandnya — yang disebut W1 — dengan panjang gelombang efektif sekitar 3,35 mikrometer. Band ini cukup berdekatan dengan fitur penyerapan es air sehingga bisa menangkap efek keberadaan es tersebut. Inilah yang dimanfaatkan oleh tim peneliti.
+Teleskop survei WISE (Wide-field Infrared Survey Explorer) memotret seluruh langit dalam empat band — empat rentang panjang gelombang inframerah yang berbeda-beda, masing-masing sensitif terhadap jenis sumber cahaya atau fenomena yang berbeda.
+
+> Dalam astronomi, **band** merujuk pada satu rentang panjang gelombang tertentu yang ditangkap oleh sebuah filter atau detektor. Analoginya seperti radio AM dan FM — keduanya menangkap sinyal radio, tapi di frekuensi yang berbeda dan untuk tujuan yang berbeda. Teleskop WISE memiliki empat band seperti ini, masing-masing diberi nama W1, W2, W3, dan W4.
+
+Salah satu band WISE — yang disebut W1 — memiliki panjang gelombang efektif sekitar 3,35 mikrometer, cukup berdekatan dengan fitur penyerapan es air sehingga bisa menangkap efek keberadaan es tersebut. Inilah yang dimanfaatkan oleh tim peneliti.
 
 ## Cara Kerjanya: Menyaring Pengaruh Debu dari Pengaruh Es
 
@@ -34,7 +38,9 @@ Debu antarbintang meredupkan cahaya bintang secara umum di berbagai panjang gelo
 
 > **Reddening** bukan berarti bintangnya benar-benar menjadi merah, melainkan cahayanya terlihat lebih "kemerahan" dari seharusnya karena komponen birunya lebih banyak terserap oleh debu di sepanjang jalur pandang.
 
-Tim peneliti menggunakan data dari dua survei sekaligus: WISE untuk band W1 dan W2 (inframerah tengah), dan 2MASS untuk band J, H, dan Ks (inframerah dekat). Dengan mengombinasikan data dari lima band panjang gelombang ini, mereka bisa menghitung seberapa besar peredupan yang disebabkan oleh debu biasa menggunakan metode yang disebut PNICER — sebuah teknik pembelajaran mesin tanpa pengawasan yang menghitung kepunahan bintang satu per satu berdasarkan distribusi warna intrinsiknya.
+Tim peneliti menggunakan data dari dua survei sekaligus: WISE untuk band W1 dan W2, dan 2MASS untuk band J, H, dan Ks — keduanya merupakan survei inframerah yang mencakup seluruh langit. Dengan mengombinasikan data dari lima band panjang gelombang berbeda ini, mereka bisa menghitung seberapa besar peredupan yang disebabkan oleh debu biasa menggunakan metode yang disebut PNICER (Principal Component Analysis Near-Infrared Color Excess Ratios).
+
+> **PNICER** adalah teknik berbasis pembelajaran mesin yang bekerja tanpa perlu "dilatih" dengan data berlabel terlebih dahulu. Cara kerjanya sederhana secara konsep: ambil sekelompok bintang di area langit yang bebas dari debu sebagai referensi, lalu bandingkan warna setiap bintang yang diteliti terhadap referensi tersebut. Selisih warnanya mencerminkan seberapa banyak debu yang ada di depan bintang itu. PNICER melakukan ini secara otomatis untuk jutaan bintang sekaligus.
 
 Setelah pengaruh debu dikurangi, sisa peredupan yang masih muncul khusus di band W1 itulah yang dianggap berasal dari es air. Dari sekitar 700 juta bintang dalam dataset awal, setelah berbagai seleksi kualitas, sekitar 618 ribu bintang berhasil dipakai sebagai "pelacak es" — bintang-bintang yang cahayanya melewati awan berisi es dan membawa informasi tentang keberadaan es tersebut.
 
@@ -42,7 +48,11 @@ Setelah pengaruh debu dikurangi, sisa peredupan yang masih muncul khusus di band
 
 Sebelum mengklaim bahwa sinyal yang mereka ukur benar-benar berasal dari es air, tim peneliti melakukan perbandingan cermat dengan data spektroskopi yang sudah ada — yaitu pengukuran langsung kandungan es dari analisis spektrum cahaya bintang.
 
-Dari 116 bintang yang memiliki data spektroskopi dan juga masuk dalam sampel fotometri mereka, korelasi antara keduanya sangat kuat, dengan koefisien korelasi Pearson mencapai 0,88. Ini mengkonfirmasi bahwa sinyal yang terdeteksi di band W1 memang berasal dari fitur penyerapan es air di 3 mikrometer, bukan artefak dari metode pengukuran.
+Dari 116 bintang yang memiliki data spektroskopi dan juga masuk dalam sampel fotometri mereka, korelasi antara keduanya sangat kuat, dengan koefisien korelasi Pearson mencapai 0,88.
+
+> **Koefisien korelasi Pearson** adalah angka antara -1 dan 1 yang mengukur seberapa erat hubungan antara dua kumpulan data. Nilai 1 berarti keduanya bergerak bersama secara sempurna — kalau satu naik, yang lain naik persis sebanding. Nilai 0 berarti tidak ada hubungan sama sekali. Nilai -1 berarti keduanya bergerak berlawanan arah secara sempurna. Nilai 0,88 yang diperoleh dalam penelitian ini tergolong sangat kuat, artinya hasil fotometri dan spektroskopi hampir selalu sepakat satu sama lain.
+
+Ini mengkonfirmasi bahwa sinyal yang terdeteksi di band W1 memang berasal dari fitur penyerapan es air di 3 mikrometer, bukan artefak dari metode pengukuran.
 
 Tim juga menyusun persamaan empiris yang menghubungkan nilai serapan fotometri mereka dengan kedalaman optis es air (τ₃.₀) — ukuran standar seberapa banyak es yang ada di sepanjang jalur pandang. Hasilnya konsisten baik dengan model teoritis maupun dengan data observasi spektroskopi dari berbagai studi sebelumnya.
 
@@ -60,13 +70,13 @@ Peta ini memperlihatkan beberapa hal yang menarik:
 1. **Ophiuchus dan Vela juga kaya es, dengan perbedaan yang menarik.** Ophiuchus, yang dekat dengan Matahari dan jauh dari bidang galaksi, seharusnya menjadi kandidat awan es yang kuat — dan memang terdeteksi, tapi dengan tingkat serapan yang lebih lemah dibanding Taurus atau Orion. Penyebabnya belum dipahami sepenuhnya dan menjadi pertanyaan untuk penelitian lebih lanjut. Vela, sebaliknya, muncul sebagai salah satu kawasan paling kaya es dalam peta.
 1. **Pusat galaksi terdeteksi tapi terlalu kompleks untuk dianalisis secara detail.** Serapan es yang kuat memang terdeteksi di arah pusat galaksi, tapi kepadatan awan antarbintang dan tumpang tindih berbagai struktur membuat analisis rinci tidak memungkinkan dengan data dan resolusi saat ini.
 
-## Sumber Ketidakpastian Terbesar: Hukum Kepunahan
+## Sumber Ketidakpastian Terbesar: Hukum Pelemahan Cahaya
 
-Tidak semua aspek dari peta ini bisa dianggap pasti. Tim peneliti dengan jujur mengidentifikasi sumber ketidakpastian terbesar dalam metode mereka: pilihan hukum kepunahan (extinction law) yang digunakan untuk menghitung seberapa besar pengaruh debu.
+Tidak semua aspek dari peta ini bisa dianggap pasti. Tim peneliti dengan jujur mengidentifikasi sumber ketidakpastian terbesar dalam metode mereka: pilihan hukum pelemahan cahaya (extinction law) yang digunakan untuk menghitung seberapa besar pengaruh debu.
 
-Hukum kepunahan menggambarkan bagaimana debu menyerap cahaya di berbagai panjang gelombang. Masalahnya, hukum ini tidak seragam di seluruh galaksi — ia bisa bervariasi tergantung sifat debu di lokasi tertentu. Menggunakan hukum kepunahan yang berbeda bisa menggeser nilai serapan es yang dihitung, meski korelasinya dengan data spektroskopi tetap kuat.
+> **Hukum pelemahan cahaya (extinction law)** adalah deskripsi matematis tentang bagaimana debu antarbintang menyerap dan menghamburkan cahaya pada berbagai panjang gelombang. Analoginya seperti kabut di jalan: kabut tebal membuat lampu mobil terlihat lebih redup dan kekuningan karena cahaya biru lebih banyak tersebar. Tapi "ketebalan" kabut ini tidak selalu sama di setiap titik — begitu pula debu antarbintang. Hukum pelemahan cahaya adalah "rumus" yang menggambarkan seberapa kuat debu meredam cahaya di setiap panjang gelombang. Masalahnya, rumus ini tidak seragam di seluruh galaksi: debu di awan yang padat bisa berperilaku berbeda dari debu di ruang antarbintang yang renggang. Kalau rumus yang dipakai meleset, maka perhitungan "berapa banyak peredupan akibat debu" ikut meleset — dan ujungnya, perhitungan "berapa banyak peredupan akibat es" pun ikut terpengaruh.
 
-Tim menggunakan hukum kepunahan yang mereka derivasi sendiri dari penelitian sebelumnya (disebut Cao+24), yang terbukti menghasilkan nilai dengan offset paling kecil terhadap data spektroskopi. Ketidakpastian total dari hukum kepunahan diperkirakan sekitar 0,03 hingga 0,05 magnitude — cukup kecil untuk tidak mengubah kesimpulan utama, tapi cukup signifikan untuk diingat ketika menginterpretasi area-area tertentu dalam peta.
+Tim menggunakan hukum pelemahan cahaya yang mereka turunkan sendiri dari penelitian sebelumnya (Cao+24), yang terbukti menghasilkan nilai dengan offset paling kecil terhadap data spektroskopi. Ketidakpastian total dari hukum pelemahan cahaya diperkirakan sekitar 0,03 hingga 0,05 magnitudo — cukup kecil untuk tidak mengubah kesimpulan utama, tapi cukup signifikan untuk diingat ketika menginterpretasi area-area tertentu dalam peta.
 
 ## Kenapa Ini Penting?
 
