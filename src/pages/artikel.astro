@@ -88,7 +88,10 @@ const topicCounts = posts.reduce((acc, post) => {
 
 					<!-- Topics -->
 					<div class="facet-card">
-						<div class="facet-title">🏷 Topik</div>
+						<div class="facet-header">
+							<div class="facet-title">🏷 Topik</div>
+							<button class="toggle-all-btn" id="toggle-all-btn">Hapus semua</button>
+						</div>
 						<div class="cat-list" id="cat-list">
 							{Object.entries(TAG_MAP).map(([value, { label, emoji }]) => (
 								<label class="cat-item">
@@ -170,6 +173,7 @@ const topicCounts = posts.reduce((acc, post) => {
 			const resultsCount = document.getElementById('results-count') as HTMLElement;
 			const articleList = document.getElementById('article-list') as HTMLElement;
 			const checkboxes = document.querySelectorAll('#cat-list input[type="checkbox"]');
+			const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement;
 
 			// Apply initial values from URL
 			if (searchParam) {
@@ -218,6 +222,11 @@ const topicCounts = posts.reduce((acc, post) => {
 				const queryString = params.toString();
 				const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
 				window.history.pushState({}, '', newUrl);
+			}
+
+			function updateToggleBtn() {
+				const allChecked = Array.from(checkboxes).every(cb => (cb as HTMLInputElement).checked);
+				toggleAllBtn.textContent = allChecked ? 'Hapus semua' : 'Pilih semua';
 			}
 
 			function applyFilters() {
@@ -296,18 +305,32 @@ const topicCounts = posts.reduce((acc, post) => {
 			// Event listeners
 			searchInput.addEventListener('input', applyFilters);
 			sortSelect.addEventListener('change', applyFilters);
-			checkboxes.forEach(cb => cb.addEventListener('change', applyFilters));
-			
+			checkboxes.forEach(cb => cb.addEventListener('change', () => {
+				updateToggleBtn();
+				applyFilters();
+			}));
+
+			toggleAllBtn.addEventListener('click', () => {
+				const allChecked = Array.from(checkboxes).every(cb => (cb as HTMLInputElement).checked);
+				checkboxes.forEach(cb => { (cb as HTMLInputElement).checked = !allChecked; });
+				updateToggleBtn();
+				applyFilters();
+			});
+
 			clearBtn.addEventListener('click', () => {
 				searchInput.value = '';
 				sortSelect.value = 'newest';
 				checkboxes.forEach(cb => { (cb as HTMLInputElement).checked = true; });
-				
+				updateToggleBtn();
+
 				// Remove query string from URL
 				window.history.pushState({}, '', window.location.pathname);
-				
+
 				applyFilters();
 			});
+
+			// Set initial toggle button label
+			updateToggleBtn();
 
 			// Apply initial filter if any parameters exist
 			if (topicParam || searchParam || sortParam) {
@@ -388,6 +411,17 @@ const topicCounts = posts.reduce((acc, post) => {
 				box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
 			}
 
+			.facet-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 0.9rem;
+			}
+
+			.facet-header .facet-title {
+				margin-bottom: 0;
+			}
+
 			.facet-title {
 				font-size: 12px;
 				letter-spacing: 0.14em;
@@ -395,6 +429,24 @@ const topicCounts = posts.reduce((acc, post) => {
 				color: #6e5f52;
 				font-weight: 700;
 				margin-bottom: 0.9rem;
+			}
+
+			.toggle-all-btn {
+				background: none;
+				border: none;
+				padding: 2px 4px;
+				font-family: 'Nunito', sans-serif;
+				font-size: 11px;
+				font-weight: 600;
+				color: #4a6fa5;
+				cursor: pointer;
+				text-decoration: underline;
+				text-underline-offset: 2px;
+				transition: color 0.2s;
+			}
+
+			.toggle-all-btn:hover {
+				color: #2d4f82;
 			}
 
 			.search-box,
