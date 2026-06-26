@@ -88,10 +88,7 @@ const topicCounts = posts.reduce((acc, post) => {
 
 					<!-- Topics -->
 					<div class="facet-card">
-						<div class="facet-header">
-							<div class="facet-title">🏷 Topik</div>
-							<button class="toggle-all-btn" id="toggle-all-btn">Hapus semua</button>
-						</div>
+						<div class="facet-title">🏷 Topik</div>
 						<div class="cat-list" id="cat-list">
 							{Object.entries(TAG_MAP).map(([value, { label, emoji }]) => (
 								<label class="cat-item">
@@ -152,6 +149,7 @@ const topicCounts = posts.reduce((acc, post) => {
 							);
 						})}
 					</div>
+				<nav class="pagination-wrap" id="pagination-wrap" aria-label="Paginasi artikel"></nav>
 				</div>
 			</div>
 		</div>
@@ -161,7 +159,6 @@ const topicCounts = posts.reduce((acc, post) => {
 		<BackToTop />
 
 		<script>
-			// Read URL parameters and apply initial filter
 			const urlParams = new URLSearchParams(window.location.search);
 			const topicParam = urlParams.get('topic');
 			const searchParam = urlParams.get('search');
@@ -173,17 +170,16 @@ const topicCounts = posts.reduce((acc, post) => {
 			const resultsCount = document.getElementById('results-count') as HTMLElement;
 			const articleList = document.getElementById('article-list') as HTMLElement;
 			const checkboxes = document.querySelectorAll('#cat-list input[type="checkbox"]');
-			const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement;
+
+			// Pagination state
+			let currentPage = 1;
+			const ARTICLES_PER_PAGE = 6;
+			let sortedArticles: HTMLElement[] = [];
 
 			// Apply initial values from URL
-			if (searchParam) {
-				searchInput.value = searchParam;
-			}
-			if (sortParam) {
-				sortSelect.value = sortParam;
-			}
+			if (searchParam) searchInput.value = searchParam;
+			if (sortParam) sortSelect.value = sortParam;
 			if (topicParam) {
-				// Handle comma-separated topics or single topic
 				const selectedTopics = topicParam.split(',').map(t => t.trim());
 				checkboxes.forEach(cb => {
 					const checkbox = cb as HTMLInputElement;
@@ -197,36 +193,93 @@ const topicCounts = posts.reduce((acc, post) => {
 				const selectedTopics = Array.from(checkboxes)
 					.filter(cb => (cb as HTMLInputElement).checked)
 					.map(cb => (cb as HTMLInputElement).value);
-
 				const params = new URLSearchParams();
-				
-				// Add search if not empty
-				if (searchTerm) {
-					params.set('search', searchTerm);
-				}
-				
-				// Add sort if not default
-				if (sortValue !== 'newest') {
-					params.set('sort', sortValue);
-				}
-				
-				// Add topic if only one is selected (not all)
+				if (searchTerm) params.set('search', searchTerm);
+				if (sortValue !== 'newest') params.set('sort', sortValue);
 				if (selectedTopics.length === 1) {
 					params.set('topic', selectedTopics[0]);
 				} else if (selectedTopics.length > 1 && selectedTopics.length < checkboxes.length) {
-					// If multiple but not all topics selected, add as comma-separated
 					params.set('topic', selectedTopics.join(','));
 				}
-				
-				// Update URL without reloading
-				const queryString = params.toString();
-				const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
-				window.history.pushState({}, '', newUrl);
+				const qs = params.toString();
+				window.history.pushState({}, '', qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
 			}
 
-			function updateToggleBtn() {
-				const allChecked = Array.from(checkboxes).every(cb => (cb as HTMLInputElement).checked);
-				toggleAllBtn.textContent = allChecked ? 'Hapus semua' : 'Pilih semua';
+			function renderPagination(totalPages: number, page: number) {
+				const wrap = document.getElementById('pagination-wrap') as HTMLElement;
+				if (!wrap) return;
+				if (totalPages <= 1) { wrap.innerHTML = ''; return; }
+
+				// Build page number range with ellipsis
+				const rangeSet = new Set<number>();
+				rangeSet.add(1);
+				rangeSet.add(totalPages);
+				for (let i = Math.max(1, page - 1); i <= Math.min(totalPages, page + 1); i++) rangeSet.add(i);
+				const rangeArr = Array.from(rangeSet).sort((a, b) => a - b);
+				const items: (number | string)[] = [];
+				let prev = 0;
+				for (const p of rangeArr) {
+					if (p - prev > 1) items.push('...');
+					items.push(p);
+					prev = p;
+				}
+
+				let html = `<button class="page-btn page-nav" id="pg-prev" aria-label="Halaman sebelumnya"${page === 1 ? ' disabled' : ''}>&#8249;</button>`;
+				for (const item of items) {
+					if (item === '...') {
+						html += `<span class="page-ellipsis">…</span>`;
+					} else {
+						const n = item as number;
+						html += `<button class="page-btn${n === page ? ' active' : ''}" data-page="${n}" aria-label="Halaman ${n}"${n === page ? ' aria-current="page"' : ''}>${n}</button>`;
+					}
+				}
+				html += `<button class="page-btn page-nav" id="pg-next" aria-label="Halaman berikutnya"${page === totalPages ? ' disabled' : ''}>&#8250;</button>`;
+				wrap.innerHTML = html;
+
+				wrap.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+					btn.addEventListener('click', () => {
+						const p = parseInt((btn as HTMLElement).dataset.page || '1');
+						showPage(p);
+						articleList.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+					});
+				});
+
+				const prevBtn = wrap.querySelector('#pg-prev') as HTMLButtonElement;
+				const nextBtn = wrap.querySelector('#pg-next') as HTMLButtonElement;
+				if (prevBtn) prevBtn.addEventListener('click', () => {
+					if (currentPage > 1) { showPage(currentPage - 1); articleList.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+				});
+				if (nextBtn) nextBtn.addEventListener('click', () => {
+					if (currentPage < totalPages) { showPage(currentPage + 1); articleList.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+				});
+			}
+
+			function showPage(page: number) {
+				currentPage = page;
+				const allArticles = Array.from(articleList.querySelectorAll('.article-row')) as HTMLElement[];
+				allArticles.forEach(article => { article.style.display = 'none'; });
+
+				const existingNoResults = articleList.querySelector('.no-results');
+				if (existingNoResults) existingNoResults.remove();
+
+				const total = sortedArticles.length;
+				const start = (page - 1) * ARTICLES_PER_PAGE;
+				const end = Math.min(start + ARTICLES_PER_PAGE, total);
+				sortedArticles.slice(start, end).forEach(article => { article.style.display = 'flex'; });
+
+				resultsCount.innerHTML = `<strong>${total}</strong> artikel ditemukan`;
+
+				if (total === 0) {
+					const noResults = document.createElement('div');
+					noResults.className = 'no-results';
+					noResults.innerHTML = `
+						<div class="no-results-icon">🔭</div>
+						<div class="no-results-text">Tidak ada artikel yang sesuai dengan filter Anda.<br>Coba sesuaikan pencarian atau topik.</div>
+					`;
+					articleList.appendChild(noResults);
+				}
+
+				renderPagination(Math.ceil(total / ARTICLES_PER_PAGE), page);
 			}
 
 			function applyFilters() {
@@ -237,26 +290,19 @@ const topicCounts = posts.reduce((acc, post) => {
 					.map(cb => (cb as HTMLInputElement).value);
 
 				const allArticles = Array.from(articleList.querySelectorAll('.article-row')) as HTMLElement[];
-				
-				// Filter
+
 				const visibleArticles = allArticles.filter(article => {
 					const topic = article.dataset.topic;
 					const title = article.dataset.title || '';
 					const excerpt = article.querySelector('.article-row-excerpt')?.textContent?.toLowerCase() || '';
-					
-					const matchesTopic = selectedTopics.includes(topic || '');
-					const matchesSearch = !searchTerm || title.includes(searchTerm) || excerpt.includes(searchTerm);
-					
-					return matchesTopic && matchesSearch;
+					return selectedTopics.includes(topic || '') && (!searchTerm || title.includes(searchTerm) || excerpt.includes(searchTerm));
 				});
 
-				// Sort
-				const sorted = [...visibleArticles].sort((a, b) => {
+				sortedArticles = [...visibleArticles].sort((a, b) => {
 					const dateA = new Date(a.dataset.date || '');
 					const dateB = new Date(b.dataset.date || '');
 					const titleA = a.dataset.title || '';
 					const titleB = b.dataset.title || '';
-
 					switch (sortValue) {
 						case 'newest': return dateB.getTime() - dateA.getTime();
 						case 'oldest': return dateA.getTime() - dateB.getTime();
@@ -266,76 +312,29 @@ const topicCounts = posts.reduce((acc, post) => {
 					}
 				});
 
-				// Hide all first
-				allArticles.forEach(article => {
-					article.style.display = 'none';
-				});
+				// Reorder in DOM to reflect sort
+				sortedArticles.forEach(article => articleList.appendChild(article));
 
-				// Remove any existing no-results message
-				const existingNoResults = articleList.querySelector('.no-results');
-				if (existingNoResults) {
-					existingNoResults.remove();
-				}
-
-				// Show filtered and sorted
-				sorted.forEach(article => {
-					article.style.display = 'flex';
-					articleList.appendChild(article); // Reorder in DOM
-				});
-
-				// Update count
-				const count = sorted.length;
-				resultsCount.innerHTML = `<strong>${count}</strong> artikel ditemukan`;
-
-				// Show no results message
-				if (count === 0) {
-					const noResults = document.createElement('div');
-					noResults.className = 'no-results';
-					noResults.innerHTML = `
-						<div class="no-results-icon">🔭</div>
-						<div class="no-results-text">Tidak ada artikel yang sesuai dengan filter Anda.<br>Coba sesuaikan pencarian atau topik.</div>
-					`;
-					articleList.appendChild(noResults);
-				}
-
-				// Update URL with current filters
+				currentPage = 1;
+				showPage(1);
 				updateURL();
 			}
 
 			// Event listeners
 			searchInput.addEventListener('input', applyFilters);
 			sortSelect.addEventListener('change', applyFilters);
-			checkboxes.forEach(cb => cb.addEventListener('change', () => {
-				updateToggleBtn();
-				applyFilters();
-			}));
-
-			toggleAllBtn.addEventListener('click', () => {
-				const allChecked = Array.from(checkboxes).every(cb => (cb as HTMLInputElement).checked);
-				checkboxes.forEach(cb => { (cb as HTMLInputElement).checked = !allChecked; });
-				updateToggleBtn();
-				applyFilters();
-			});
+			checkboxes.forEach(cb => cb.addEventListener('change', applyFilters));
 
 			clearBtn.addEventListener('click', () => {
 				searchInput.value = '';
 				sortSelect.value = 'newest';
 				checkboxes.forEach(cb => { (cb as HTMLInputElement).checked = true; });
-				updateToggleBtn();
-
-				// Remove query string from URL
 				window.history.pushState({}, '', window.location.pathname);
-
 				applyFilters();
 			});
 
-			// Set initial toggle button label
-			updateToggleBtn();
-
-			// Apply initial filter if any parameters exist
-			if (topicParam || searchParam || sortParam) {
-				applyFilters();
-			}
+			// Always initialize
+			applyFilters();
 		</script>
 
 		<style>
@@ -411,17 +410,6 @@ const topicCounts = posts.reduce((acc, post) => {
 				box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
 			}
 
-			.facet-header {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				margin-bottom: 0.9rem;
-			}
-
-			.facet-header .facet-title {
-				margin-bottom: 0;
-			}
-
 			.facet-title {
 				font-size: 12px;
 				letter-spacing: 0.14em;
@@ -429,24 +417,6 @@ const topicCounts = posts.reduce((acc, post) => {
 				color: #6e5f52;
 				font-weight: 700;
 				margin-bottom: 0.9rem;
-			}
-
-			.toggle-all-btn {
-				background: none;
-				border: none;
-				padding: 2px 4px;
-				font-family: 'Nunito', sans-serif;
-				font-size: 11px;
-				font-weight: 600;
-				color: #4a6fa5;
-				cursor: pointer;
-				text-decoration: underline;
-				text-underline-offset: 2px;
-				transition: color 0.2s;
-			}
-
-			.toggle-all-btn:hover {
-				color: #2d4f82;
 			}
 
 			.search-box,
@@ -827,7 +797,7 @@ const topicCounts = posts.reduce((acc, post) => {
 
 			@media (max-width: 400px) {
 				.page-title {
-					font-size: 20px; 
+					font-size: 20px;
 				}
 
 				.article-row-thumb {
@@ -840,6 +810,114 @@ const topicCounts = posts.reduce((acc, post) => {
 
 				.article-list {
 					gap: 0.7rem;
+				}
+			}
+
+			/* PAGINATION */
+			.pagination-wrap {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 4px;
+				margin-top: 1.5rem;
+				flex-wrap: wrap;
+			}
+
+			.page-btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 44px;
+				height: 44px;
+				padding: 0 10px;
+				border: 1px solid #d4cfc7;
+				border-radius: 4px;
+				background: #fff;
+				font-family: 'Nunito', sans-serif;
+				font-size: 15px;
+				font-weight: 500;
+				color: #2a2420;
+				cursor: pointer;
+				transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.1s;
+				line-height: 1;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+			}
+
+			.page-btn:hover:not(:disabled):not(.active) {
+				background: rgba(74, 111, 165, 0.08);
+				border-color: #4a6fa5;
+				color: #4a6fa5;
+			}
+
+			.page-btn:active:not(:disabled):not(.active) {
+				background: rgba(74, 111, 165, 0.22);
+				border-color: #3a5f95;
+				color: #3a5f95;
+				transform: scale(0.95);
+			}
+
+			.page-btn.active {
+				background: #4a6fa5;
+				border-color: #4a6fa5;
+				color: #fff;
+				font-weight: 700;
+				cursor: default;
+				box-shadow: 0 2px 6px rgba(74, 111, 165, 0.3);
+			}
+
+			.page-btn.active:active {
+				background: #3a5f95;
+				border-color: #3a5f95;
+				transform: scale(0.95);
+			}
+
+			.page-btn:disabled {
+				opacity: 0.35;
+				cursor: not-allowed;
+				box-shadow: none;
+			}
+
+			.page-btn.page-nav {
+				font-size: 24px;
+				font-weight: 300;
+				color: #6e5f52;
+			}
+
+			.page-btn.page-nav:hover:not(:disabled) {
+				color: #4a6fa5;
+			}
+
+			.page-ellipsis {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 44px;
+				height: 44px;
+				font-size: 15px;
+				color: #6e5f52;
+				letter-spacing: 0.05em;
+			}
+
+			@media (max-width: 600px) {
+				.pagination-wrap {
+					gap: 3px;
+					margin-top: 1.2rem;
+				}
+
+				.page-btn {
+					min-width: 38px;
+					height: 38px;
+					font-size: 14px;
+				}
+
+				.page-btn.page-nav {
+					font-size: 22px;
+				}
+
+				.page-ellipsis {
+					width: 38px;
+					height: 38px;
+					font-size: 14px;
 				}
 			}
 		</style>
