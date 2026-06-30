@@ -152,6 +152,11 @@ const topicCounts = posts.reduce((acc, post) => {
 							);
 						})}
 					</div>
+
+					<!-- PAGINATION -->
+					<div class="pagination-wrapper" id="pagination-wrapper">
+						<div class="pagination-controls" id="pagination-controls"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -161,11 +166,16 @@ const topicCounts = posts.reduce((acc, post) => {
 		<BackToTop />
 
 		<script>
+			// Pagination constant
+			const ARTICLES_PER_PAGE = 5;
+			let currentPage = 1;
+
 			// Read URL parameters and apply initial filter
 			const urlParams = new URLSearchParams(window.location.search);
 			const topicParam = urlParams.get('topic');
 			const searchParam = urlParams.get('search');
 			const sortParam = urlParams.get('sort');
+			const pageParam = urlParams.get('page');
 
 			const searchInput = document.getElementById('search-input') as HTMLInputElement;
 			const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
@@ -175,12 +185,21 @@ const topicCounts = posts.reduce((acc, post) => {
 			const checkboxes = document.querySelectorAll('#cat-list input[type="checkbox"]');
 			const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement;
 
+			// Function to update toggle button label
+			function updateToggleBtn() {
+				const allChecked = Array.from(checkboxes).every(cb => (cb as HTMLInputElement).checked);
+				toggleAllBtn.textContent = allChecked ? 'Hapus semua' : 'Pilih semua';
+			}
+
 			// Apply initial values from URL
 			if (searchParam) {
 				searchInput.value = searchParam;
 			}
 			if (sortParam) {
 				sortSelect.value = sortParam;
+			}
+			if (pageParam) {
+				currentPage = parseInt(pageParam) || 1;
 			}
 			if (topicParam) {
 				// Handle comma-separated topics or single topic
@@ -199,6 +218,11 @@ const topicCounts = posts.reduce((acc, post) => {
 					.map(cb => (cb as HTMLInputElement).value);
 
 				const params = new URLSearchParams();
+				
+				// Add page if not first page
+				if (currentPage > 1) {
+					params.set('page', currentPage.toString());
+				}
 				
 				// Add search if not empty
 				if (searchTerm) {
@@ -224,9 +248,81 @@ const topicCounts = posts.reduce((acc, post) => {
 				window.history.pushState({}, '', newUrl);
 			}
 
-			function updateToggleBtn() {
-				const allChecked = Array.from(checkboxes).every(cb => (cb as HTMLInputElement).checked);
-				toggleAllBtn.textContent = allChecked ? 'Hapus semua' : 'Pilih semua';
+			function renderPagination(totalArticles) {
+				const paginationControls = document.getElementById('pagination-controls');
+				if (!paginationControls) return;
+
+				const totalPages = Math.ceil(totalArticles / ARTICLES_PER_PAGE);
+				
+				if (totalPages <= 1) {
+					paginationControls.innerHTML = '';
+					return;
+				}
+
+				let html = '';
+
+				// First button
+				html += `<button class="pagination-btn" data-page="1" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
+				
+				// Previous button
+				html += `<button class="pagination-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+				// Page numbers (smart range)
+				html += '<div class="pagination-pages">';
+				
+				const maxButtons = 5;
+				let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+				let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+				
+				if (endPage - startPage < maxButtons - 1) {
+					startPage = Math.max(1, endPage - maxButtons + 1);
+				}
+
+				if (startPage > 1) {
+					html += `<button class="pagination-page-btn" data-page="1">1</button>`;
+					if (startPage > 2) {
+						html += '<span class="pagination-ellipsis">...</span>';
+					}
+				}
+
+				for (let i = startPage; i <= endPage; i++) {
+					const active = i === currentPage ? 'disabled' : '';
+					html += `<button class="pagination-page-btn" data-page="${i}" ${active}>${i}</button>`;
+				}
+
+				if (endPage < totalPages) {
+					if (endPage < totalPages - 1) {
+						html += '<span class="pagination-ellipsis">...</span>';
+					}
+					html += `<button class="pagination-page-btn" data-page="${totalPages}">${totalPages}</button>`;
+				}
+
+				html += '</div>';
+
+				// Next button
+				html += `<button class="pagination-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+				
+				// Last button
+				html += `<button class="pagination-btn" data-page="${totalPages}" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+
+				paginationControls.innerHTML = html;
+
+				// Add event listeners to pagination buttons
+				const paginationButtons = paginationControls.querySelectorAll('button[data-page]');
+				paginationButtons.forEach(btn => {
+					btn.addEventListener('click', () => {
+						const page = parseInt(btn.getAttribute('data-page') || '1');
+						if (page !== currentPage && page >= 1 && page <= totalPages) {
+							currentPage = page;
+							applyFilters();
+							// Scroll to top of article list
+							const articleList = document.getElementById('article-list');
+							if (articleList) {
+								articleList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+							}
+						}
+					});
+				});
 			}
 
 			function applyFilters() {
@@ -266,6 +362,19 @@ const topicCounts = posts.reduce((acc, post) => {
 					}
 				});
 
+				// Calculate pagination
+				const totalArticles = sorted.length;
+				const totalPages = Math.ceil(totalArticles / ARTICLES_PER_PAGE);
+				
+				// Ensure current page is valid
+				if (currentPage > totalPages) {
+					currentPage = Math.max(1, totalPages);
+				}
+
+				const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+				const endIndex = startIndex + ARTICLES_PER_PAGE;
+				const articlesToShow = sorted.slice(startIndex, endIndex);
+
 				// Hide all first
 				allArticles.forEach(article => {
 					article.style.display = 'none';
@@ -277,18 +386,17 @@ const topicCounts = posts.reduce((acc, post) => {
 					existingNoResults.remove();
 				}
 
-				// Show filtered and sorted
-				sorted.forEach(article => {
+				// Show filtered, sorted, and paginated articles
+				articlesToShow.forEach(article => {
 					article.style.display = 'flex';
 					articleList.appendChild(article); // Reorder in DOM
 				});
 
 				// Update count
-				const count = sorted.length;
-				resultsCount.innerHTML = `<strong>${count}</strong> artikel ditemukan`;
+				resultsCount.innerHTML = `<strong>${totalArticles}</strong> artikel ditemukan`;
 
 				// Show no results message
-				if (count === 0) {
+				if (totalArticles === 0) {
 					const noResults = document.createElement('div');
 					noResults.className = 'no-results';
 					noResults.innerHTML = `
@@ -298,14 +406,24 @@ const topicCounts = posts.reduce((acc, post) => {
 					articleList.appendChild(noResults);
 				}
 
+				// Render pagination
+				renderPagination(totalArticles);
+
 				// Update URL with current filters
 				updateURL();
 			}
 
 			// Event listeners
-			searchInput.addEventListener('input', applyFilters);
-			sortSelect.addEventListener('change', applyFilters);
+			searchInput.addEventListener('input', () => {
+				currentPage = 1; // Reset to page 1 on search
+				applyFilters();
+			});
+			sortSelect.addEventListener('change', () => {
+				currentPage = 1; // Reset to page 1 on sort
+				applyFilters();
+			});
 			checkboxes.forEach(cb => cb.addEventListener('change', () => {
+				currentPage = 1; // Reset to page 1 on filter change
 				updateToggleBtn();
 				applyFilters();
 			}));
@@ -321,6 +439,7 @@ const topicCounts = posts.reduce((acc, post) => {
 				searchInput.value = '';
 				sortSelect.value = 'newest';
 				checkboxes.forEach(cb => { (cb as HTMLInputElement).checked = true; });
+				currentPage = 1; // Reset to page 1 on clear
 				updateToggleBtn();
 
 				// Remove query string from URL
@@ -332,10 +451,8 @@ const topicCounts = posts.reduce((acc, post) => {
 			// Set initial toggle button label
 			updateToggleBtn();
 
-			// Apply initial filter if any parameters exist
-			if (topicParam || searchParam || sortParam) {
-				applyFilters();
-			}
+			// Always apply filters on initial load to set up pagination
+			applyFilters();
 		</script>
 
 		<style>
@@ -651,6 +768,98 @@ const topicCounts = posts.reduce((acc, post) => {
 				line-height: 1.55;
 			}
 
+			/* PAGINATION */
+			.pagination-wrapper {
+				display: flex;
+				justify-content: center;
+				margin-top: 2rem;
+				padding-top: 1.5rem;
+				border-top: 1px solid #e2ddd6;
+			}
+
+			.pagination-controls {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+			}
+
+			.pagination-btn {
+				padding: 8px 10px;
+				border-radius: 0;
+				border: none;
+				border-bottom: 2px solid transparent;
+				background: transparent;
+				font-family: 'Nunito', sans-serif;
+				font-size: 14px;
+				font-weight: 500;
+				color: #2a2420;
+				cursor: pointer;
+				transition: all 0.15s;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				min-width: auto;
+				min-height: auto;
+			}
+
+			.pagination-btn:not(:disabled):hover {
+				border-bottom-color: #4a6fa5;
+				color: #4a6fa5;
+				background: transparent;
+			}
+
+			.pagination-btn:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
+			.pagination-pages {
+				display: flex;
+				align-items: center;
+				gap: 0.3rem;
+			}
+
+			.pagination-page-btn {
+				width: auto;
+				height: auto;
+				padding: 8px 10px;
+				border-radius: 0;
+				border: none;
+				border-bottom: 2px solid transparent;
+				background: transparent;
+				font-family: 'Nunito', sans-serif;
+				font-size: 14px;
+				font-weight: 500;
+				color: #2a2420;
+				cursor: pointer;
+				transition: all 0.15s;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.pagination-page-btn:not(:disabled):hover {
+				border-bottom-color: #4a6fa5;
+				color: #4a6fa5;
+				background: transparent;
+			}
+
+			.pagination-page-btn:disabled {
+				background: transparent;
+				color: #4a6fa5;
+				border-bottom-color: #4a6fa5;
+				font-weight: 600;
+				cursor: default;
+			}
+
+			.pagination-ellipsis {
+				padding: 0 4px;
+				color: #a09888;
+				font-size: 12px;
+			}
+
 			.no-results {
 				text-align: center;
 				padding: 2.5rem 1rem;
@@ -685,6 +894,20 @@ const topicCounts = posts.reduce((acc, post) => {
 				.facet-card {
 					padding: 0.8rem 1rem;
 				}
+
+				.pagination-controls {
+					gap: 0.4rem;
+				}
+
+				.pagination-btn {
+					padding: 6px 8px;
+					font-size: 13px;
+				}
+
+				.pagination-page-btn {
+					padding: 6px 8px;
+					font-size: 13px;
+				}
 			}
 
 			@media (max-width: 768px) {
@@ -714,6 +937,20 @@ const topicCounts = posts.reduce((acc, post) => {
 
 				.article-row-excerpt {
 					font-size: 13px;
+				}
+
+				.pagination-controls {
+					gap: 0.4rem;
+				}
+
+				.pagination-btn {
+					padding: 6px 8px;
+					font-size: 12px;
+				}
+
+				.pagination-page-btn {
+					padding: 6px 8px;
+					font-size: 12px;
 				}
 			}
 
@@ -823,6 +1060,25 @@ const topicCounts = posts.reduce((acc, post) => {
 					font-size: 11px;
 					padding: 6px;
 				}
+
+				.pagination-controls {
+					gap: 0.3rem;
+				}
+
+				.pagination-btn {
+					padding: 6px 8px;
+					font-size: 12px;
+				}
+
+				.pagination-page-btn {
+					padding: 6px 8px;
+					font-size: 12px;
+				}
+
+				.pagination-ellipsis {
+					padding: 0 3px;
+					font-size: 11px;
+				}
 			}
 
 			@media (max-width: 400px) {
@@ -840,6 +1096,20 @@ const topicCounts = posts.reduce((acc, post) => {
 
 				.article-list {
 					gap: 0.7rem;
+				}
+
+				.pagination-controls {
+					gap: 0.3rem;
+				}
+
+				.pagination-btn {
+					padding: 5px 7px;
+					font-size: 11px;
+				}
+
+				.pagination-page-btn {
+					padding: 5px 7px;
+					font-size: 11px;
 				}
 			}
 		</style>
