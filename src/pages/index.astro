@@ -4,12 +4,14 @@ export const prerender = true;
 import BaseHead from '../components/BaseHead.astro';
 import HomepageDesign from '../components/HomepageDesign.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<GoogleAnalytics />
 	</head>
 	<body>
 		<HomepageDesign />
