@@ -5,6 +5,7 @@ import BaseHead from '../components/BaseHead.astro';
 import HomepageDesign from '../components/HomepageDesign.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import MonetagAdsense from '../components/MonetagAdsense.astro';
 ---
 
 <!doctype html>
@@ -12,6 +13,7 @@ import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<GoogleAnalytics />
+		<MonetagAdsense />
 	</head>
 	<body>
 		<HomepageDesign />

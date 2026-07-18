@@ -8,6 +8,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import MonetagAdsense from '../components/MonetagAdsense.astro';
 
 type Props = Omit<CollectionEntry<'blog'>['data'], 'heroImage'> & {
 	heroImage?: ImageMetadata | null;
@@ -315,6 +316,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 		</style>
 		<GoogleAnalytics />
+		<MonetagAdsense />
 	</head>
 
 	<body>

@@ -8,6 +8,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import MonetagAdsense from '../components/MonetagAdsense.astro';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -54,6 +55,7 @@ const topicCounts = posts.reduce((acc, post) => {
 	<head>
 		<BaseHead title="Artikel" description="Jelajahi dan temukan beragam artikel astronomi di Antariksa. Spark your curiosity and joy." />
 		<GoogleAnalytics />
+		<MonetagAdsense />
 	</head>
 	<body>
 		<Header />
