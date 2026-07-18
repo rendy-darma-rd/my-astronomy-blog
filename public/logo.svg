@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#f5f3ef" stroke="#4a6fa5" stroke-width="2"/>
+  
+  <!-- Telescope/Astronomy symbol -->
+  <g transform="translate(100, 100)">
+    <!-- Star -->
+    <path d="M 0,-40 L 8,-15 L 35,-15 L 15,0 L 23,25 L 0,10 L -23,25 L -15,0 L -35,-15 L -8,-15 Z" fill="#4a6fa5" stroke="#4a6fa5" stroke-width="1"/>
+    
+    <!-- Text -->
+    <text y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#4a6fa5">Antariksa</text>
+  </g>
+</svg>
