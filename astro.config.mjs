@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://antariksa.web.id',
   adapter: cloudflare(),
   integrations,
   output: 'server',
