@@ -10,7 +10,12 @@ import cloudflare from '@astrojs/cloudflare';
 // Only include Keystatic in development
 const integrations = [
   mdx(), 
-  sitemap(), 
+  sitemap({
+    customPages: [],
+    changefreq: 'weekly',
+    priority: 0.7,
+    lastmod: new Date(),
+  }), 
   react({
     include: ['**/react/*', '**/keystatic/*', '**/node_modules/@keystatic/**'],
   }), 
