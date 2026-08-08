@@ -50,7 +50,7 @@ const cards = sortedPosts.slice(1, 5);
 const featuredTag = featured ? resolveTag(featured.data) : null;
 
 // Import all images from content/blog directory
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/artikel/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
 
 function getImageSrc(post: any) {
   const heroImage = post.data.heroImage;
@@ -63,14 +63,14 @@ function getImageSrc(post: any) {
     const postIdWithoutExt = post.id.replace(/\.(mdoc|md|mdx)$/, '');
     
     // Try with the post directory
-    const imagePath = `/src/content/blog/${postIdWithoutExt}/${heroImage}`;
+    const imagePath = `/src/content/artikel/${postIdWithoutExt}/${heroImage}`;
     const imageModule = images[imagePath];
     if (imageModule && imageModule.default) {
       return imageModule.default;
     }
     
     // Try without directory (fallback)
-    const fallbackPath = `/src/content/blog/${heroImage}`;
+    const fallbackPath = `/src/content/artikel/${heroImage}`;
     const fallbackModule = images[fallbackPath];
     if (fallbackModule && fallbackModule.default) {
       return fallbackModule.default;
@@ -163,11 +163,11 @@ function truncateText(text: string, maxLength: number = 120): string {
         {featuredTag ? (
           <span class={`tag-pill ${featuredTag.class}`}>{featuredTag.label}</span>
         ) : null}
-        <div class="featured-title"><a href={`/blog/${featured.id}`}>{featured.data.title}</a></div>
+        <div class="featured-title"><a href={`/artikel/${featured.id}`}>{featured.data.title}</a></div>
         <div class="featured-excerpt">{truncateText(featured.data.description, 150)}</div>
         <div class="article-meta">
           <span>{featured.data.pubDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-          <a class="read-link" href={`/blog/${featured.id}`}>Baca artikel →</a>
+          <a class="read-link" href={`/artikel/${featured.id}`}>Baca artikel →</a>
         </div>
       </div>
     </article>
@@ -201,13 +201,13 @@ function truncateText(text: string, maxLength: number = 120): string {
             )}
           </div>
           <div class="card-body">
-            <div class="card-title"><a href={`/blog/${post.id}`}>{post.data.title}</a></div>
+            <div class="card-title"><a href={`/artikel/${post.id}`}>{post.data.title}</a></div>
             <div class="card-excerpt">{truncateText(post.data.description, 85)}</div>
             <div class="card-meta">
               <span class={`tag-pill ${t.class}`} style="padding:2px 8px;font-size:10px;">{t.label}</span>
               <span class="card-date">{post.data.pubDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
             </div>
-            <a href={`/blog/${post.id}`} class="card-read-link">Baca artikel →</a>
+            <a href={`/artikel/${post.id}`} class="card-read-link">Baca artikel →</a>
           </div>
         </article>
       );

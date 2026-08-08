@@ -15,11 +15,11 @@ const posts = (await getCollection('blog')).sort(
 );
 
 // Load all images from content folders
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/artikel/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
 
 function getImageSrc(post: any) {
 	if (!post.data.heroImage) return null;
-	const imagePath = `/src/content/blog/${post.id}/${post.data.heroImage}`;
+	const imagePath = `/src/content/artikel/${post.id}/${post.data.heroImage}`;
 	const imageModule = images[imagePath];
 	return imageModule ? imageModule.default : null;
 }
@@ -149,7 +149,7 @@ const topicCounts = posts.reduce((acc, post) => {
 												{post.data.pubDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
 											</span>
 										</div>
-										<a href={`/blog/${post.id}`} class="article-row-title">{post.data.title}</a>
+										<a href={`/artikel/${post.id}`} class="article-row-title">{post.data.title}</a>
 										<div class="article-row-excerpt">{truncateText(post.data.description, 100)}</div>
 									</div>
 								</article>

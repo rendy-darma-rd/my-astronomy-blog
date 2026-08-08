@@ -6,7 +6,7 @@ export default config({
     posts: collection({
       label: 'Articles',
       slugField: 'title',
-      path: 'src/content/blog/*',
+      path: 'src/content/artikel/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       schema: {

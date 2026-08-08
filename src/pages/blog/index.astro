@@ -14,11 +14,11 @@ const posts = (await getCollection('blog')).sort(
 );
 
 // Load all images from content folders
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/blog/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/artikel/**/*.{jpg,jpeg,png,gif,webp}', { eager: true });
 
 function getImageSrc(post: any) {
 	if (!post.data.heroImage) return null;
-	const imagePath = `/src/content/blog/${post.id}/${post.data.heroImage}`;
+	const imagePath = `/src/content/artikel/${post.id}/${post.data.heroImage}`;
 	const imageModule = images[imagePath];
 	return imageModule ? imageModule.default : null;
 }
@@ -108,7 +108,7 @@ function getImageSrc(post: any) {
 							const imageSrc = getImageSrc(post);
 							return (
 								<li>
-									<a href={`/blog/${post.id}/`}>
+											<a href={`/artikel/${post.id}/`}>
 										{imageSrc && (
 											<Image width={960} height={540} quality={90} src={imageSrc} alt="" />
 										)}
