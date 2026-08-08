@@ -159,6 +159,7 @@ const topicCounts = posts.reduce((acc, post) => {
 
 					<!-- PAGINATION -->
 					<div class="pagination-wrapper" id="pagination-wrapper">
+						<div class="pagination-info" id="pagination-info"></div>
 						<div class="pagination-controls" id="pagination-controls"></div>
 					</div>
 				</div>
@@ -252,62 +253,65 @@ const topicCounts = posts.reduce((acc, post) => {
 				window.history.pushState({}, '', newUrl);
 			}
 
-			function renderPagination(totalArticles) {
+			function renderPagination(totalArticles: number) {
 				const paginationControls = document.getElementById('pagination-controls');
+				const paginationInfo = document.getElementById('pagination-info');
 				if (!paginationControls) return;
 
 				const totalPages = Math.ceil(totalArticles / ARTICLES_PER_PAGE);
-				
+
 				if (totalPages <= 1) {
 					paginationControls.innerHTML = '';
+					if (paginationInfo) paginationInfo.innerHTML = '';
 					return;
 				}
 
+				if (paginationInfo) {
+					paginationInfo.innerHTML = `Halaman <strong>${currentPage}</strong> dari <strong>${totalPages}</strong>`;
+				}
+
+				const chevronLeft = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+				const chevronRight = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
 				let html = '';
 
-				// First button
-				html += `<button class="pagination-btn" data-page="1" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
-				
 				// Previous button
-				html += `<button class="pagination-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+				html += `<button class="pagination-btn pagination-prev" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>${chevronLeft}<span>Sebelumnya</span></button>`;
 
 				// Page numbers (smart range)
 				html += '<div class="pagination-pages">';
-				
+
 				const maxButtons = 5;
 				let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
 				let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-				
+
 				if (endPage - startPage < maxButtons - 1) {
 					startPage = Math.max(1, endPage - maxButtons + 1);
 				}
 
 				if (startPage > 1) {
-					html += `<button class="pagination-page-btn" data-page="1">1</button>`;
+					html += `<button class="pagination-page-btn" data-page="1" aria-current="false">1</button>`;
 					if (startPage > 2) {
-						html += '<span class="pagination-ellipsis">...</span>';
+						html += '<span class="pagination-ellipsis">···</span>';
 					}
 				}
 
 				for (let i = startPage; i <= endPage; i++) {
-					const active = i === currentPage ? 'disabled' : '';
-					html += `<button class="pagination-page-btn" data-page="${i}" ${active}>${i}</button>`;
+					const isActive = i === currentPage;
+					html += `<button class="pagination-page-btn${isActive ? ' is-active' : ''}" data-page="${i}" aria-current="${isActive ? 'page' : 'false'}">${i}</button>`;
 				}
 
 				if (endPage < totalPages) {
 					if (endPage < totalPages - 1) {
-						html += '<span class="pagination-ellipsis">...</span>';
+						html += '<span class="pagination-ellipsis">···</span>';
 					}
-					html += `<button class="pagination-page-btn" data-page="${totalPages}">${totalPages}</button>`;
+					html += `<button class="pagination-page-btn" data-page="${totalPages}" aria-current="false">${totalPages}</button>`;
 				}
 
 				html += '</div>';
 
 				// Next button
-				html += `<button class="pagination-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
-				
-				// Last button
-				html += `<button class="pagination-btn" data-page="${totalPages}" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+				html += `<button class="pagination-btn pagination-next" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}><span>Berikutnya</span>${chevronRight}</button>`;
 
 				paginationControls.innerHTML = html;
 
@@ -772,96 +776,127 @@ const topicCounts = posts.reduce((acc, post) => {
 				line-height: 1.55;
 			}
 
-			/* PAGINATION */
+			/* PAGINATION — scoped elements (in Astro template) */
 			.pagination-wrapper {
-				display: flex;
-				justify-content: center;
-				margin-top: 2rem;
-				padding-top: 1.5rem;
+				margin-top: 2.5rem;
+				padding-top: 2rem;
 				border-top: 1px solid #e2ddd6;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 1.1rem;
+			}
+
+			.pagination-info {
+				font-family: 'Nunito', sans-serif;
+				font-size: 11px;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: #9a8878;
+				font-weight: 700;
+			}
+
+			.pagination-info strong {
+				color: #4a6fa5;
+				font-weight: 800;
 			}
 
 			.pagination-controls {
 				display: flex;
 				align-items: center;
-				justify-content: center;
-				gap: 0.5rem;
-				flex-wrap: wrap;
+				gap: 10px;
 			}
 
-			.pagination-btn {
-				padding: 8px 10px;
-				border-radius: 0;
-				border: none;
-				border-bottom: 2px solid transparent;
-				background: transparent;
-				font-family: 'Nunito', sans-serif;
-				font-size: 14px;
-				font-weight: 500;
-				color: #2a2420;
-				cursor: pointer;
-				transition: all 0.15s;
+			/* PAGINATION — dynamic elements (created via JS innerHTML, need :global) */
+			:global(.pagination-pages) {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin: 0 4px;
+			}
+
+			:global(.pagination-ellipsis) {
+				width: 42px;
+				height: 42px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				min-width: auto;
-				min-height: auto;
+				color: #b0a090;
+				font-size: 16px;
+				font-family: 'Nunito', sans-serif;
+				user-select: none;
+				letter-spacing: 0.05em;
 			}
 
-			.pagination-btn:not(:disabled):hover {
-				border-bottom-color: #4a6fa5;
+			/* Prev / Next pill buttons */
+			:global(.pagination-btn) {
+				height: 42px;
+				padding: 0 20px;
+				border-radius: 100px;
+				border: 1.5px solid #d4cfc7;
+				background: #fff;
+				font-family: 'Nunito', sans-serif;
+				font-size: 13px;
+				font-weight: 700;
+				color: #4a4030;
+				cursor: pointer;
+				transition: border-color 0.18s, color 0.18s, background 0.18s, opacity 0.18s;
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				white-space: nowrap;
+				user-select: none;
+			}
+
+			:global(.pagination-btn:not(:disabled):hover) {
+				border-color: #4a6fa5;
 				color: #4a6fa5;
-				background: transparent;
+				background: #eef4ff;
 			}
 
-			.pagination-btn:disabled {
-				opacity: 0.5;
+			:global(.pagination-btn:disabled) {
+				opacity: 0.28;
 				cursor: not-allowed;
 			}
 
-			.pagination-pages {
-				display: flex;
-				align-items: center;
-				gap: 0.3rem;
-			}
-
-			.pagination-page-btn {
-				width: auto;
-				height: auto;
-				padding: 8px 10px;
-				border-radius: 0;
-				border: none;
-				border-bottom: 2px solid transparent;
-				background: transparent;
+			/* Circle page number buttons */
+			:global(.pagination-page-btn) {
+				width: 42px;
+				height: 42px;
+				border-radius: 50%;
+				border: 1.5px solid #d4cfc7;
+				background: #fff;
 				font-family: 'Nunito', sans-serif;
 				font-size: 14px;
-				font-weight: 500;
-				color: #2a2420;
+				font-weight: 600;
+				color: #4a4030;
 				cursor: pointer;
-				transition: all 0.15s;
+				transition: border-color 0.18s, color 0.18s, background 0.18s, box-shadow 0.18s;
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				user-select: none;
 			}
 
-			.pagination-page-btn:not(:disabled):hover {
-				border-bottom-color: #4a6fa5;
+			:global(.pagination-page-btn:hover) {
+				border-color: #4a6fa5;
 				color: #4a6fa5;
-				background: transparent;
+				background: #eef4ff;
 			}
 
-			.pagination-page-btn:disabled {
-				background: transparent;
-				color: #4a6fa5;
-				border-bottom-color: #4a6fa5;
-				font-weight: 600;
+			:global(.pagination-page-btn.is-active) {
+				background: #4a6fa5;
+				color: #fff;
+				border-color: #4a6fa5;
+				font-weight: 700;
 				cursor: default;
+				box-shadow: 0 4px 14px rgba(74, 111, 165, 0.4);
 			}
 
-			.pagination-ellipsis {
-				padding: 0 4px;
-				color: #a09888;
-				font-size: 12px;
+			:global(.pagination-page-btn.is-active:hover) {
+				background: #4a6fa5;
+				color: #fff;
+				border-color: #4a6fa5;
 			}
 
 			.no-results {
@@ -899,18 +934,21 @@ const topicCounts = posts.reduce((acc, post) => {
 					padding: 0.8rem 1rem;
 				}
 
-				.pagination-controls {
-					gap: 0.4rem;
-				}
-
-				.pagination-btn {
-					padding: 6px 8px;
+				:global(.pagination-btn) {
+					height: 38px;
+					padding: 0 16px;
 					font-size: 13px;
 				}
 
-				.pagination-page-btn {
-					padding: 6px 8px;
+				:global(.pagination-page-btn) {
+					width: 38px;
+					height: 38px;
 					font-size: 13px;
+				}
+
+				:global(.pagination-ellipsis) {
+					width: 38px;
+					height: 38px;
 				}
 			}
 
@@ -943,18 +981,21 @@ const topicCounts = posts.reduce((acc, post) => {
 					font-size: 13px;
 				}
 
-				.pagination-controls {
-					gap: 0.4rem;
-				}
-
-				.pagination-btn {
-					padding: 6px 8px;
+				:global(.pagination-btn) {
+					height: 36px;
+					padding: 0 14px;
 					font-size: 12px;
 				}
 
-				.pagination-page-btn {
-					padding: 6px 8px;
-					font-size: 12px;
+				:global(.pagination-page-btn) {
+					width: 36px;
+					height: 36px;
+					font-size: 13px;
+				}
+
+				:global(.pagination-ellipsis) {
+					width: 36px;
+					height: 36px;
 				}
 			}
 
@@ -1066,28 +1107,42 @@ const topicCounts = posts.reduce((acc, post) => {
 				}
 
 				.pagination-controls {
-					gap: 0.3rem;
+					gap: 6px;
+					flex-wrap: wrap;
+					justify-content: center;
 				}
 
-				.pagination-btn {
-					padding: 6px 8px;
+				:global(.pagination-btn) {
+					height: 34px;
+					padding: 0 12px;
 					font-size: 12px;
 				}
 
-				.pagination-page-btn {
-					padding: 6px 8px;
+				:global(.pagination-btn span) {
+					display: none;
+				}
+
+				:global(.pagination-page-btn) {
+					width: 34px;
+					height: 34px;
 					font-size: 12px;
 				}
 
-				.pagination-ellipsis {
-					padding: 0 3px;
-					font-size: 11px;
+				:global(.pagination-pages) {
+					gap: 4px;
+					margin: 0 2px;
+				}
+
+				:global(.pagination-ellipsis) {
+					width: 34px;
+					height: 34px;
+					font-size: 14px;
 				}
 			}
 
 			@media (max-width: 400px) {
 				.page-title {
-					font-size: 20px; 
+					font-size: 20px;
 				}
 
 				.article-row-thumb {
@@ -1102,18 +1157,20 @@ const topicCounts = posts.reduce((acc, post) => {
 					gap: 0.7rem;
 				}
 
-				.pagination-controls {
-					gap: 0.3rem;
+				:global(.pagination-btn) {
+					height: 32px;
+					padding: 0 10px;
 				}
 
-				.pagination-btn {
-					padding: 5px 7px;
-					font-size: 11px;
+				:global(.pagination-page-btn) {
+					width: 32px;
+					height: 32px;
+					font-size: 12px;
 				}
 
-				.pagination-page-btn {
-					padding: 5px 7px;
-					font-size: 11px;
+				:global(.pagination-ellipsis) {
+					width: 32px;
+					height: 32px;
 				}
 			}
 		</style>
