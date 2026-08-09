@@ -7,6 +7,7 @@ import Footer from '../components/Footer.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import AdsenseTag from '../components/AdsenseTag.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 ---
 
 <!doctype html>
@@ -23,6 +24,10 @@ import AdsenseTag from '../components/AdsenseTag.astro';
 		<div class="page-wrapper">
 			<!-- PAGE HEADER -->
 			<div class="page-header">
+				<Breadcrumb items={[
+					{ label: 'Beranda', href: '/' },
+					{ label: 'Tentang Kami' },
+				]} />
 				<div class="page-eyebrow">✦ Explore the universe</div>
 				<h1 class="page-title">Tentang <span>Antariksa</span></h1>
 				<p class="page-sub">Mengenal cerita, tujuan, dan semangat di balik Antariksa.</p>

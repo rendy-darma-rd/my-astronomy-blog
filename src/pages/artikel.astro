@@ -9,6 +9,7 @@ import Footer from '../components/Footer.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import AdsenseTag from '../components/AdsenseTag.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -64,6 +65,10 @@ const topicCounts = posts.reduce((acc, post) => {
 		<div class="page-wrapper">
 			<!-- PAGE HEADER -->
 			<div class="page-header">
+				<Breadcrumb items={[
+					{ label: 'Beranda', href: '/' },
+					{ label: 'Artikel' },
+				]} />
 				<div class="page-eyebrow">✦ Explore the universe</div>
 				<h1 class="page-title">Semua <span>Artikel</span></h1>
 				<p class="page-sub">Jelajahi dan temukan beragam artikel astronomi — Spark your curiosity and joy.</p>

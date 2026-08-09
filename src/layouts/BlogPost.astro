@@ -9,6 +9,7 @@ import Header from '../components/Header.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import AdsenseTag from '../components/AdsenseTag.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 
 type Props = Omit<CollectionEntry<'blog'>['data'], 'heroImage'> & {
 	heroImage?: ImageMetadata | null;
@@ -325,6 +326,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<!-- Article header -->
 			<div class="article-header">
+				<Breadcrumb items={[
+					{ label: 'Beranda', href: '/' },
+					{ label: 'Artikel', href: '/artikel' },
+					{ label: title },
+				]} />
 				<div class="article-meta-top">
 					<FormattedDate date={pubDate} />
 					{updatedDate && (
