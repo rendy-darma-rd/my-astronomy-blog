@@ -195,6 +195,9 @@ const topicCounts = posts.reduce((acc, post) => {
 			const checkboxes = document.querySelectorAll('#cat-list input[type="checkbox"]');
 			const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement;
 
+			// Capture once — never re-query so DOM order never affects sort results
+			const allArticles = Array.from(articleList.querySelectorAll('.article-row')) as HTMLElement[];
+
 			// Function to update toggle button label
 			function updateToggleBtn() {
 				const allChecked = Array.from(checkboxes).every(cb => (cb as HTMLInputElement).checked);
@@ -345,70 +348,61 @@ const topicCounts = posts.reduce((acc, post) => {
 					.filter(cb => (cb as HTMLInputElement).checked)
 					.map(cb => (cb as HTMLInputElement).value);
 
-				const allArticles = Array.from(articleList.querySelectorAll('.article-row')) as HTMLElement[];
-				
-				// Filter
+				// Filter from the fixed snapshot — never re-query the DOM
 				const visibleArticles = allArticles.filter(article => {
 					const topic = article.dataset.topic;
 					const title = article.dataset.title || '';
 					const excerpt = article.querySelector('.article-row-excerpt')?.textContent?.toLowerCase() || '';
-					
 					const matchesTopic = selectedTopics.includes(topic || '');
 					const matchesSearch = !searchTerm || title.includes(searchTerm) || excerpt.includes(searchTerm);
-					
 					return matchesTopic && matchesSearch;
 				});
 
-				// Sort
+				// Sort — title as tiebreaker so result is always deterministic
 				const sorted = [...visibleArticles].sort((a, b) => {
-					const dateA = new Date(a.dataset.date || '');
-					const dateB = new Date(b.dataset.date || '');
+					const dateA = new Date(a.dataset.date || '').getTime();
+					const dateB = new Date(b.dataset.date || '').getTime();
 					const titleA = a.dataset.title || '';
 					const titleB = b.dataset.title || '';
-
 					switch (sortValue) {
-						case 'newest': return dateB.getTime() - dateA.getTime();
-						case 'oldest': return dateA.getTime() - dateB.getTime();
-						case 'az': return titleA.localeCompare(titleB);
-						case 'za': return titleB.localeCompare(titleA);
-						default: return 0;
+						case 'newest': return (dateB - dateA) || titleA.localeCompare(titleB);
+						case 'oldest': return (dateA - dateB) || titleA.localeCompare(titleB);
+						case 'az':     return titleA.localeCompare(titleB);
+						case 'za':     return titleB.localeCompare(titleA);
+						default:       return 0;
 					}
 				});
 
 				// Calculate pagination
 				const totalArticles = sorted.length;
 				const totalPages = Math.ceil(totalArticles / ARTICLES_PER_PAGE);
-				
-				// Ensure current page is valid
+
 				if (currentPage > totalPages) {
 					currentPage = Math.max(1, totalPages);
 				}
 
 				const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
-				const endIndex = startIndex + ARTICLES_PER_PAGE;
-				const articlesToShow = sorted.slice(startIndex, endIndex);
-
-				// Hide all first
-				allArticles.forEach(article => {
-					article.style.display = 'none';
-				});
+				const pageArticles = sorted.slice(startIndex, startIndex + ARTICLES_PER_PAGE);
 
 				// Remove any existing no-results message
 				const existingNoResults = articleList.querySelector('.no-results');
-				if (existingNoResults) {
-					existingNoResults.remove();
-				}
+				if (existingNoResults) existingNoResults.remove();
 
-				// Show filtered, sorted, and paginated articles
-				articlesToShow.forEach(article => {
+				// Hide all and clear visual order — no DOM movement, ever
+				allArticles.forEach(article => {
+					article.style.display = 'none';
+					article.style.order = '';
+				});
+
+				// Show only this page's articles, using CSS order for visual sequence
+				pageArticles.forEach((article, i) => {
 					article.style.display = 'flex';
-					articleList.appendChild(article); // Reorder in DOM
+					article.style.order = String(i);
 				});
 
 				// Update count
 				resultsCount.innerHTML = `<strong>${totalArticles}</strong> artikel ditemukan`;
 
-				// Show no results message
 				if (totalArticles === 0) {
 					const noResults = document.createElement('div');
 					noResults.className = 'no-results';
@@ -419,10 +413,7 @@ const topicCounts = posts.reduce((acc, post) => {
 					articleList.appendChild(noResults);
 				}
 
-				// Render pagination
 				renderPagination(totalArticles);
-
-				// Update URL with current filters
 				updateURL();
 			}
 
