@@ -9,10 +9,12 @@ export default config({
       path: 'src/content/artikel/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
+      columns: ['title', 'pubDate'],
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         description: fields.text({ label: 'Description', multiline: true }),
-        pubDate: fields.date({ label: 'Publish Date' }),
+        pubDate: fields.date({ label: 'Created Date' }),
+        updatedDate: fields.date({ label: 'Last Modified' }),
         heroImage: fields.image({ label: 'Cover Image' }),
         topic: fields.select({
           label: 'Topic',
