@@ -1,0 +1,209 @@
+---
+export const prerender = true;
+
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+---
+
+<!doctype html>
+<html lang="id">
+	<head>
+		<BaseHead
+			title="404 — Halaman Tidak Ditemukan | Antariksa"
+			description="Halaman yang kamu cari tidak ditemukan. Mungkin URL-nya salah atau halaman ini sudah tidak ada."
+		/>
+		<GoogleAnalytics />
+	</head>
+	<body>
+		<Header />
+
+		<main>
+			<div class="error-page">
+				<!-- decorative background number -->
+				<div class="error-bg-number" aria-hidden="true">404</div>
+
+				<div class="error-content">
+					<div class="error-icon">🔭</div>
+					<div class="error-eyebrow">✦ Error 404</div>
+					<h1 class="error-title">Halaman Tidak <span>Ditemukan</span></h1>
+					<p class="error-message">
+						Sepertinya halaman yang kamu cari sudah tersesat jauh di luar tata surya.
+						Mungkin URL-nya salah, atau halaman ini sudah tidak ada lagi.
+					</p>
+					<div class="error-actions">
+						<a href="/" class="btn-primary">← Kembali ke Beranda</a>
+						<a href="/artikel" class="btn-secondary">Jelajahi Artikel →</a>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<Footer />
+	</body>
+</html>
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&display=swap');
+
+	body {
+		font-family: 'Nunito', sans-serif;
+		background: #f5f3ef;
+		margin: 0;
+		padding: 0;
+	}
+
+	main {
+		min-height: calc(100vh - 72px);
+		display: flex;
+		align-items: center;
+	}
+
+	/* ── Page layout ── */
+	.error-page {
+		position: relative;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4rem 2rem 5rem;
+		overflow: hidden;
+	}
+
+	/* Large faint "404" sitting behind everything */
+	.error-bg-number {
+		position: absolute;
+		font-family: 'Lora', serif;
+		font-size: clamp(140px, 22vw, 280px);
+		font-weight: 700;
+		color: #4a6fa5;
+		opacity: 0.07;
+		letter-spacing: -0.04em;
+		line-height: 1;
+		user-select: none;
+		pointer-events: none;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		white-space: nowrap;
+	}
+
+	/* ── Content ── */
+	.error-content {
+		position: relative;
+		z-index: 1;
+		text-align: center;
+		max-width: 560px;
+	}
+
+	.error-icon {
+		font-size: 52px;
+		margin-bottom: 1rem;
+		display: block;
+	}
+
+	.error-eyebrow {
+		font-size: 11px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: #6e5f52;
+		font-weight: 700;
+		margin-bottom: 0.75rem;
+	}
+
+	.error-title {
+		font-family: 'Lora', serif;
+		font-size: clamp(28px, 5vw, 44px);
+		font-weight: 700;
+		color: #2a2420;
+		line-height: 1.2;
+		margin: 0 0 1.1rem;
+	}
+
+	.error-title span {
+		color: #4a6fa5;
+		font-style: italic;
+	}
+
+	.error-message {
+		font-size: 16px;
+		color: #6e5f52;
+		line-height: 1.75;
+		margin: 0 0 2.5rem;
+	}
+
+	/* ── Buttons ── */
+	.error-actions {
+		display: flex;
+		gap: 12px;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.btn-primary,
+	.btn-secondary {
+		display: inline-flex;
+		align-items: center;
+		padding: 12px 28px;
+		border-radius: 100px;
+		font-family: 'Nunito', sans-serif;
+		font-size: 14px;
+		font-weight: 700;
+		text-decoration: none;
+		transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+	}
+
+	.btn-primary {
+		background: #4a6fa5;
+		color: #fff;
+		border: 1.5px solid #4a6fa5;
+		box-shadow: 0 4px 14px rgba(74, 111, 165, 0.28);
+	}
+
+	.btn-primary:hover {
+		background: #2d4f82;
+		border-color: #2d4f82;
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba(74, 111, 165, 0.35);
+	}
+
+	.btn-secondary {
+		background: transparent;
+		color: #4a6fa5;
+		border: 1.5px solid #c5bdb4;
+	}
+
+	.btn-secondary:hover {
+		border-color: #4a6fa5;
+		background: #eef4ff;
+		transform: translateY(-2px);
+	}
+
+	/* ── Responsive ── */
+	@media (max-width: 600px) {
+		.error-page {
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.error-icon {
+			font-size: 42px;
+		}
+
+		.error-message {
+			font-size: 15px;
+		}
+
+		.error-actions {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.btn-primary,
+		.btn-secondary {
+			width: 100%;
+			max-width: 280px;
+			justify-content: center;
+		}
+	}
+</style>
