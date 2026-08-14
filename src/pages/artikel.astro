@@ -77,7 +77,12 @@ const topicCounts = posts.reduce((acc, post) => {
 			<!-- CONTENT: SIDEBAR + ARTICLES -->
 			<div class="content-wrap">
 				<!-- SIDEBAR FACETS -->
-				<aside class="sidebar">
+				<aside class="sidebar" id="sidebar">
+					<!-- Mobile bottom sheet header (hidden on desktop) -->
+					<div class="filter-sheet-header">
+						<span class="filter-sheet-title">✦ Filter & Urutkan</span>
+						<button class="filter-close-btn" id="filter-close-btn" aria-label="Tutup filter">✕</button>
+					</div>
 					<!-- Search -->
 					<div class="facet-card">
 						<div class="facet-title">🔍 Cari</div>
@@ -171,6 +176,16 @@ const topicCounts = posts.reduce((acc, post) => {
 			</div>
 		</div>
 		</main>
+
+		<!-- Mobile filter overlay backdrop -->
+		<div class="filter-overlay" id="filter-overlay"></div>
+
+		<!-- Mobile floating filter button -->
+		<button class="filter-fab" id="filter-fab" aria-label="Buka filter">
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+			<span>Filter</span>
+			<span class="filter-badge" id="filter-badge"></span>
+		</button>
 
 		<Footer />
 		<BackToTop />
@@ -341,6 +356,76 @@ const topicCounts = posts.reduce((acc, post) => {
 				});
 			}
 
+			// Mobile filter panel
+			const filterFab = document.getElementById('filter-fab') as HTMLButtonElement;
+			const filterCloseBtn = document.getElementById('filter-close-btn') as HTMLButtonElement;
+			const filterBadge = document.getElementById('filter-badge') as HTMLElement;
+			const sidebarEl = document.getElementById('sidebar') as HTMLElement;
+			const sidebarOriginalParent = sidebarEl?.parentElement;
+			const sidebarOriginalNextSibling = sidebarEl?.nextSibling;
+
+			function openFilterPanel() {
+				// Move sidebar to body so its z-index competes at root level, above the overlay
+				if (sidebarEl) document.body.appendChild(sidebarEl);
+				document.body.classList.add('filter-open');
+				document.body.style.overflow = 'hidden';
+			}
+
+			function closeFilterPanel() {
+				document.body.classList.remove('filter-open');
+				document.body.style.overflow = '';
+				// Restore sidebar to its original grid position
+				if (sidebarEl && sidebarOriginalParent) {
+					if (sidebarOriginalNextSibling) {
+						sidebarOriginalParent.insertBefore(sidebarEl, sidebarOriginalNextSibling);
+					} else {
+						sidebarOriginalParent.appendChild(sidebarEl);
+					}
+				}
+			}
+
+			function updateFilterBadge() {
+				if (!filterBadge) return;
+				let count = 0;
+				if (searchInput.value.trim()) count++;
+				if (sortSelect.value !== 'newest') count++;
+				const anyUnchecked = Array.from(checkboxes).some(cb => !(cb as HTMLInputElement).checked);
+				if (anyUnchecked) count++;
+				if (count > 0) {
+					filterBadge.textContent = String(count);
+					filterBadge.classList.add('has-filters');
+				} else {
+					filterBadge.textContent = '';
+					filterBadge.classList.remove('has-filters');
+				}
+			}
+
+			// Stop clicks inside the panel from reaching the document-level close handler
+			document.getElementById('sidebar')?.addEventListener('click', (e) => {
+				e.stopPropagation();
+			});
+
+			// Close when clicking the dimmed backdrop (outside the panel)
+			document.addEventListener('click', () => {
+				if (document.body.classList.contains('filter-open')) {
+					closeFilterPanel();
+				}
+			});
+
+			// Close on Escape key
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && document.body.classList.contains('filter-open')) {
+					closeFilterPanel();
+				}
+			});
+
+			// Prevent FAB click from immediately re-triggering the document close handler
+			filterFab?.addEventListener('click', (e) => {
+				e.stopPropagation();
+				openFilterPanel();
+			});
+			filterCloseBtn?.addEventListener('click', closeFilterPanel);
+
 			function applyFilters() {
 				const searchTerm = searchInput.value.toLowerCase();
 				const sortValue = sortSelect.value;
@@ -415,6 +500,7 @@ const topicCounts = posts.reduce((acc, post) => {
 
 				renderPagination(totalArticles);
 				updateURL();
+				updateFilterBadge();
 			}
 
 			// Event listeners
@@ -949,6 +1035,11 @@ const topicCounts = posts.reduce((acc, post) => {
 			}
 
 			@media (max-width: 768px) {
+				/* Extra bottom padding so FAB doesn't overlap last article/pagination */
+				.articles-col {
+					padding-bottom: 80px;
+				}
+
 				.page-header {
 					padding: 1.5rem 1rem 1rem;
 				}
@@ -1167,6 +1258,166 @@ const topicCounts = posts.reduce((acc, post) => {
 				:global(.pagination-ellipsis) {
 					width: 32px;
 					height: 32px;
+				}
+			}
+
+			/* ── Mobile filter panel ── */
+
+			/* These are hidden on desktop */
+			.filter-fab,
+			.filter-overlay,
+			.filter-sheet-header {
+				display: none;
+			}
+
+			@media (max-width: 768px) {
+				/* Hide sidebar from the normal flow; it lives in the bottom sheet on mobile */
+				.sidebar {
+					display: none;
+					position: fixed;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					z-index: 1001;
+					background: #fff;
+					border-radius: 20px 20px 0 0;
+					padding: 0 1.2rem 1.5rem;
+					max-height: 85vh;
+					overflow-y: auto;
+					box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.18);
+					flex-direction: column;
+					gap: 0.8rem;
+					margin-bottom: 0;
+				}
+
+				/* Show sidebar as bottom sheet when panel is open */
+				:global(body.filter-open) .sidebar {
+					display: flex;
+					animation: filterSlideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+				}
+
+				@keyframes filterSlideUp {
+					from { transform: translateY(100%); }
+					to { transform: translateY(0); }
+				}
+
+				/* Dark overlay backdrop */
+				.filter-overlay {
+					display: none;
+					position: fixed;
+					inset: 0;
+					background: rgba(0, 0, 0, 0.45);
+					z-index: 1000;
+				}
+
+				:global(body.filter-open) .filter-overlay {
+					display: block;
+					animation: fadeInOverlay 0.2s ease;
+					pointer-events: none;
+				}
+
+				@keyframes fadeInOverlay {
+					from { opacity: 0; }
+					to { opacity: 1; }
+				}
+
+				/* Bottom sheet header */
+				.filter-sheet-header {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					padding: 1rem 0 0.75rem;
+					position: sticky;
+					top: 0;
+					background: #fff;
+					z-index: 1;
+					border-bottom: 1px solid #f0ede8;
+					margin-bottom: 0.2rem;
+				}
+
+				.filter-sheet-title {
+					font-family: 'Lora', serif;
+					font-size: 15px;
+					font-weight: 600;
+					color: #2a2420;
+					letter-spacing: 0.02em;
+				}
+
+				.filter-close-btn {
+					width: 30px;
+					height: 30px;
+					border-radius: 50%;
+					border: 1px solid #e2ddd6;
+					background: #f5f3ef;
+					color: #6e5f52;
+					font-size: 14px;
+					cursor: pointer;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					transition: background 0.15s;
+					line-height: 1;
+					padding: 0;
+					font-family: 'Nunito', sans-serif;
+				}
+
+				.filter-close-btn:hover {
+					background: #e8e4dc;
+					color: #2a2420;
+				}
+
+				/* Floating filter button */
+				.filter-fab {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+					position: fixed;
+					bottom: 24px;
+					left: 50%;
+					transform: translateX(-50%);
+					z-index: 997;
+					background: #4a6fa5;
+					color: #fff;
+					border: none;
+					border-radius: 100px;
+					padding: 13px 26px;
+					font-family: 'Nunito', sans-serif;
+					font-size: 14px;
+					font-weight: 700;
+					cursor: pointer;
+					box-shadow: 0 4px 20px rgba(74, 111, 165, 0.45);
+					transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+					white-space: nowrap;
+				}
+
+				.filter-fab:hover {
+					background: #2d4f82;
+					box-shadow: 0 6px 24px rgba(74, 111, 165, 0.55);
+					transform: translateX(-50%) translateY(-2px);
+				}
+
+				:global(body.filter-open) .filter-fab {
+					display: none;
+				}
+
+				/* Active filter count badge */
+				.filter-badge {
+					display: none;
+					min-width: 18px;
+					height: 18px;
+					background: #e05252;
+					border-radius: 9px;
+					font-size: 10px;
+					font-weight: 800;
+					color: #fff;
+					align-items: center;
+					justify-content: center;
+					padding: 0 4px;
+					margin-left: 2px;
+				}
+
+				.filter-badge.has-filters {
+					display: flex;
 				}
 			}
 		</style>
