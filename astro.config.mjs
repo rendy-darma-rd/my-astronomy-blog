@@ -6,7 +6,6 @@ import react from '@astrojs/react';
 import markdoc from '@astrojs/markdoc';
 import keystatic from '@keystatic/astro';
 import cloudflare from '@astrojs/cloudflare';
-
 // Only include Keystatic in development
 const integrations = [
   mdx(), 

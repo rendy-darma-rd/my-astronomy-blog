@@ -9,7 +9,7 @@ export default config({
       path: 'src/content/artikel/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
-      columns: ['title', 'pubDate'],
+      columns: ['title', 'pubDate', 'updatedDate'],
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         description: fields.text({ label: 'Description', multiline: true }),
