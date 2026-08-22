@@ -21,7 +21,7 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         description: fields.text({ label: 'Description', multiline: true }),
         pubDate: fields.date({ label: 'Created Date', defaultValue: { kind: 'today' } }),
-        updatedDate: fields.date({ label: 'Last Modified' }),
+        updatedDate: fields.date({ label: 'Last Modified', defaultValue: { kind: 'today' } }),
         heroImage: fields.image({ label: 'Cover Image' }),
         topic: fields.select({
           label: 'Topic',
