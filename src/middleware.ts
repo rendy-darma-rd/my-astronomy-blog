@@ -57,8 +57,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const url = new URL(context.request.url);
   const path = url.pathname;
 
-  // Protect /keystatic UI and /api/keystatic endpoints with Basic Auth
-  if (path.startsWith('/keystatic') || path.startsWith('/api/keystatic')) {
+  // Protect /keystatic UI and /api/keystatic endpoints with Basic Auth.
+  // Exclude the OAuth callback — it arrives via browser redirect from GitHub
+  // without the stored Basic Auth header, and is protected by GitHub's one-time code.
+  const isOAuthCallback = path.startsWith('/api/keystatic/github/oauth/');
+  if (!isOAuthCallback && (path.startsWith('/keystatic') || path.startsWith('/api/keystatic'))) {
     const validUser = getEnvVar(context, 'KEYSTATIC_USERNAME');
     const validPass = getEnvVar(context, 'KEYSTATIC_PASSWORD');
 
