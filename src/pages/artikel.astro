@@ -11,7 +11,7 @@ import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import AdsenseTag from '../components/AdsenseTag.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('blog', ({ data }) => data.status === 'published')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 

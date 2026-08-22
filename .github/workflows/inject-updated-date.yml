@@ -20,12 +20,15 @@ jobs:
 
           while IFS= read -r file; do
             if echo "$file" | grep -qE '^src/content/artikel/[^/]+\.mdoc$' && [ -f "$file" ]; then
-              if grep -q '^updatedDate:' "$file"; then
-                sed -i "s/^updatedDate:.*/updatedDate: $TODAY/" "$file"
-              else
-                sed -i "/^pubDate:/a updatedDate: $TODAY" "$file"
+              # Only stamp updatedDate for published articles
+              if grep -q '^status: published' "$file"; then
+                if grep -q '^updatedDate:' "$file"; then
+                  sed -i "s/^updatedDate:.*/updatedDate: $TODAY/" "$file"
+                else
+                  sed -i "/^pubDate:/a updatedDate: $TODAY" "$file"
+                fi
+                CHANGED=true
               fi
-              CHANGED=true
             fi
           done < <(git diff --name-only HEAD~1 HEAD)
 

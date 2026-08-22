@@ -14,6 +14,7 @@ const blog = defineCollection({
 		updatedDate: z.coerce.date().optional(),
 		// Use string for image path since glob loader doesn't support image() helper
 		heroImage: z.string().optional(),
+		status: z.enum(['draft', 'published']).optional().default('published'),
 		// Topic field for categorizing articles
 		topic: z.enum(['benda-kecil', 'planet', 'bintang', 'gugus-bintang', 'galaksi', 'alam-semesta', 'misi-antariksa', 'sejarah']).optional(),
 	}),

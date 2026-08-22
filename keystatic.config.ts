@@ -16,12 +16,20 @@ export default config({
       path: 'src/content/artikel/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
-      columns: ['title', 'pubDate', 'updatedDate'],
+      columns: ['title', 'status', 'pubDate', 'updatedDate'],
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         description: fields.text({ label: 'Description', multiline: true }),
         pubDate: fields.date({ label: 'Created Date', defaultValue: { kind: 'today' } }),
         updatedDate: fields.date({ label: 'Last Modified', defaultValue: { kind: 'today' } }),
+        status: fields.select({
+          label: 'Status',
+          options: [
+            { label: 'Draft', value: 'draft' },
+            { label: 'Published', value: 'published' },
+          ],
+          defaultValue: 'draft',
+        }),
         heroImage: fields.image({ label: 'Cover Image' }),
         topic: fields.select({
           label: 'Topic',

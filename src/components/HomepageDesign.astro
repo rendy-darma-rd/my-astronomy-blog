@@ -4,7 +4,7 @@ import { Image } from 'astro:assets';
 import BackToTop from './BackToTop.astro';
 
 const { getCollection } = await import('astro:content');
-const posts = await getCollection('blog');
+const posts = await getCollection('blog', ({ data }) => data.status === 'published');
 
 const TAG_MAP = {
   'benda-kecil': { label: 'Benda Kecil', class: 'tag-benda-kecil' },
