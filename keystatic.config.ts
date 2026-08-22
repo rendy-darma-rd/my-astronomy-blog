@@ -1,7 +1,14 @@
 import { config, fields, collection } from '@keystatic/core';
 
 export default config({
-  storage: { kind: 'local' },
+  storage:
+    import.meta.env.PROD
+      ? {
+          kind: 'github',
+          repo: { owner: 'rendy-darma-rd', name: 'my-astronomy-blog' },
+          branchPrefix: 'keystatic/',
+        }
+      : { kind: 'local' },
   collections: {
     posts: collection({
       label: 'Articles',

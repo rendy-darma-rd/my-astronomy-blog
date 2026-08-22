@@ -21,9 +21,7 @@ const integrations = [
   markdoc({ allowHTML: true })
 ];
 
-if (process.env.NODE_ENV !== 'production') {
-  integrations.push(keystatic());
-}
+integrations.push(keystatic());
 
 export default defineConfig({
   site: 'https://antariksa.web.id',

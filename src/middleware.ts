@@ -4,6 +4,30 @@ import config from '../keystatic.config';
 
 const keystatic = makeGenericAPIRouteHandler({ config });
 
+// --- Basic Auth for /keystatic ---
+
+function getEnvVar(context: Parameters<typeof defineMiddleware>[0], key: string): string | undefined {
+  // Cloudflare Workers: env vars come from locals.runtime.env
+  // Dev: from import.meta.env
+  const runtime = (context.locals as Record<string, unknown>)?.runtime as Record<string, unknown> | undefined;
+  const cfEnv = runtime?.env as Record<string, string> | undefined;
+  return cfEnv?.[key] ?? (import.meta.env[key] as string | undefined);
+}
+
+function isAuthorized(authHeader: string | null, validUser: string, validPass: string): boolean {
+  if (!authHeader?.startsWith('Basic ')) return false;
+  try {
+    const decoded = atob(authHeader.slice(6));
+    const sep = decoded.indexOf(':');
+    if (sep < 0) return false;
+    return decoded.slice(0, sep) === validUser && decoded.slice(sep + 1) === validPass;
+  } catch {
+    return false;
+  }
+}
+
+// --- updatedDate injection ---
+
 function base64Decode(b64: string): string {
   const std = b64.replaceAll('-', '+').replaceAll('_', '/');
   const padded = std.padEnd(std.length + ((4 - (std.length % 4)) % 4), '=');
@@ -18,36 +42,49 @@ function base64Encode(text: string): string {
   return btoa(binary);
 }
 
-function injectDates(content: string, date: string): string {
+function injectUpdatedDate(content: string, date: string): string {
   if (!content.startsWith('---')) return content;
   const closingIdx = content.indexOf('\n---', 3);
   if (closingIdx === -1) return content;
-  let front = content.slice(0, closingIdx);
+  const front = content.slice(0, closingIdx);
   const rest = content.slice(closingIdx);
-
-  // pubDate: inject only on first save (when absent or not a real date)
-  if (!/^pubDate:\s*\d{4}-\d{2}-\d{2}/m.test(front)) {
-    front = /^pubDate:/m.test(front)
-      ? front.replace(/^pubDate:.*$/m, `pubDate: ${date}`)
-      : `${front}\npubDate: ${date}`;
-  }
-
-  // updatedDate: always stamp to today
   if (/^updatedDate:/m.test(front)) {
-    front = front.replace(/^updatedDate:.*$/m, `updatedDate: ${date}`);
-  } else if (/^pubDate:/m.test(front)) {
-    front = front.replace(/^(pubDate:.*)$/m, `$1\nupdatedDate: ${date}`);
-  } else {
-    front = `${front}\nupdatedDate: ${date}`;
+    return front.replace(/^updatedDate:.*$/m, `updatedDate: ${date}`) + rest;
   }
-
-  return front + rest;
+  if (/^pubDate:/m.test(front)) {
+    return front.replace(/^(pubDate:.*)$/m, `$1\nupdatedDate: ${date}`) + rest;
+  }
+  return `${front}\nupdatedDate: ${date}` + rest;
 }
+
+// --- Middleware ---
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const url = new URL(context.request.url);
+  const path = url.pathname;
 
-  if (context.request.method === 'POST' && url.pathname === '/api/keystatic/update') {
+  // Protect /keystatic (UI) and /api/keystatic (API) with Basic Auth
+  if (path.startsWith('/keystatic') || path.startsWith('/api/keystatic')) {
+    const validUser = getEnvVar(context, 'KEYSTATIC_USERNAME');
+    const validPass = getEnvVar(context, 'KEYSTATIC_PASSWORD');
+
+    if (validUser && validPass) {
+      const authHeader = context.request.headers.get('Authorization');
+      if (!isAuthorized(authHeader, validUser, validPass)) {
+        return new Response('Unauthorized', {
+          status: 401,
+          headers: { 'WWW-Authenticate': 'Basic realm="Keystatic CMS", charset="UTF-8"' },
+        });
+      }
+    }
+  }
+
+  // Inject updatedDate on article save (local dev only — GitHub mode handles commits differently)
+  if (
+    import.meta.env.DEV &&
+    context.request.method === 'POST' &&
+    path === '/api/keystatic/update'
+  ) {
     try {
       const body = await context.request.json();
       const today = new Date().toISOString().split('T')[0];
@@ -56,7 +93,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         (addition: { path: string; contents: string }) => {
           if (!addition.path.startsWith('src/content/artikel/')) return addition;
           const text = base64Decode(addition.contents);
-          const updated = injectDates(text, today);
+          const updated = injectUpdatedDate(text, today);
           return { ...addition, contents: base64Encode(updated) };
         }
       );
@@ -73,7 +110,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         headers: headers as HeadersInit,
       });
     } catch {
-      // On error fall through to normal handler
+      // Fall through to normal handler on error
     }
   }
 
