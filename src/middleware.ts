@@ -1,14 +1,8 @@
 import { defineMiddleware } from 'astro:middleware';
-import { makeGenericAPIRouteHandler } from '@keystatic/core/api/generic';
-import config from '../keystatic.config';
 
-const keystatic = makeGenericAPIRouteHandler({ config });
-
-// --- Basic Auth for /keystatic ---
+// --- Basic Auth helpers ---
 
 function getEnvVar(context: Parameters<typeof defineMiddleware>[0], key: string): string | undefined {
-  // Cloudflare Workers: env vars come from locals.runtime.env
-  // Dev: from import.meta.env
   const runtime = (context.locals as Record<string, unknown>)?.runtime as Record<string, unknown> | undefined;
   const cfEnv = runtime?.env as Record<string, string> | undefined;
   return cfEnv?.[key] ?? (import.meta.env[key] as string | undefined);
@@ -26,7 +20,7 @@ function isAuthorized(authHeader: string | null, validUser: string, validPass: s
   }
 }
 
-// --- updatedDate injection ---
+// --- updatedDate injection helpers (local dev only) ---
 
 function base64Decode(b64: string): string {
   const std = b64.replaceAll('-', '+').replaceAll('_', '/');
@@ -63,14 +57,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const url = new URL(context.request.url);
   const path = url.pathname;
 
-  // Protect /keystatic (UI) and /api/keystatic (API) with Basic Auth
+  // Protect /keystatic UI and /api/keystatic endpoints with Basic Auth
   if (path.startsWith('/keystatic') || path.startsWith('/api/keystatic')) {
     const validUser = getEnvVar(context, 'KEYSTATIC_USERNAME');
     const validPass = getEnvVar(context, 'KEYSTATIC_PASSWORD');
 
     if (validUser && validPass) {
-      const authHeader = context.request.headers.get('Authorization');
-      if (!isAuthorized(authHeader, validUser, validPass)) {
+      if (!isAuthorized(context.request.headers.get('Authorization'), validUser, validPass)) {
         return new Response('Unauthorized', {
           status: 401,
           headers: { 'WWW-Authenticate': 'Basic realm="Keystatic CMS", charset="UTF-8"' },
@@ -79,13 +72,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
   }
 
-  // Inject updatedDate on article save (local dev only — GitHub mode handles commits differently)
+  // Inject updatedDate on local saves (dev only — GitHub mode commits handle this in production)
   if (
     import.meta.env.DEV &&
     context.request.method === 'POST' &&
     path === '/api/keystatic/update'
   ) {
     try {
+      // Dynamically import the Node.js handler (safe in dev, never runs in production bundle)
+      const { makeGenericAPIRouteHandler } = await import('@keystatic/core/api/generic');
+      const { default: ksConfig } = await import('../keystatic.config');
+      const handler = makeGenericAPIRouteHandler({ config: ksConfig });
+
       const body = await context.request.json();
       const today = new Date().toISOString().split('T')[0];
 
@@ -104,11 +102,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
         body: JSON.stringify({ ...body, additions: modifiedAdditions }),
       });
 
-      const { body: responseBody, headers, status } = await keystatic(modifiedRequest);
-      return new Response(responseBody as BodyInit, {
-        status,
-        headers: headers as HeadersInit,
-      });
+      const { body: responseBody, headers, status } = await handler(modifiedRequest);
+      return new Response(responseBody as BodyInit, { status, headers: headers as HeadersInit });
     } catch {
       // Fall through to normal handler on error
     }
