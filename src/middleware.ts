@@ -108,7 +108,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
       const modifiedAdditions = (body.additions ?? []).map(
         (addition: { path: string; contents: string }) => {
-          if (!addition.path.startsWith('src/content/artikel/')) return addition;
+          if (!/^src\/content\/artikel\/.+\.mdoc$/.test(addition.path)) return addition;
           const text = base64Decode(addition.contents);
           const updated = injectUpdatedDate(text, today);
           return { ...addition, contents: base64Encode(updated) };

@@ -20,7 +20,7 @@ export default config({
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         description: fields.text({ label: 'Description', multiline: true }),
-        pubDate: fields.date({ label: 'Created Date' }),
+        pubDate: fields.date({ label: 'Created Date', defaultValue: { kind: 'today' } }),
         updatedDate: fields.date({ label: 'Last Modified' }),
         heroImage: fields.image({ label: 'Cover Image' }),
         topic: fields.select({
