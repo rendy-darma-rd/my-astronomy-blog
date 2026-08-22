@@ -75,6 +75,22 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
   }
 
+  // Keystatic's GitHub login doesn't request any OAuth scopes by default.
+  // Intercept the redirect it returns and inject scope=public_repo so GitHub
+  // issues a token that can create commits on the repository.
+  if (context.request.method === 'GET' && path === '/api/keystatic/github/login') {
+    const response = await next();
+    const location = response.headers.get('Location');
+    if (location?.includes('github.com/login/oauth/authorize')) {
+      const ghUrl = new URL(location);
+      ghUrl.searchParams.set('scope', 'public_repo');
+      const newHeaders = new Headers(response.headers);
+      newHeaders.set('Location', ghUrl.toString());
+      return new Response(null, { status: response.status, headers: newHeaders });
+    }
+    return response;
+  }
+
   // Inject updatedDate on local saves (dev only — GitHub mode commits handle this in production)
   if (
     import.meta.env.DEV &&
