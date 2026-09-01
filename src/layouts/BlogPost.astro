@@ -8,7 +8,8 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
-import AdsenseTag from '../components/AdsenseTag.astro';
+import AdsenseInPagePushTag from '../components/MonetagInPagePush.astro';
+import AdsenseVignetteBannerTag from '../components/MonetagVignetteBanner.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 
 type Props = Omit<CollectionEntry<'blog'>['data'], 'heroImage'> & {
@@ -317,7 +318,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 		</style>
 		<GoogleAnalytics />
-		<AdsenseTag />
+		<AdsenseInPagePushTag />
+		<AdsenseVignetteBannerTag />
 	</head>
 
 	<body>
