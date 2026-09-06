@@ -18,13 +18,11 @@ Sebuah tim astronom dari Universitat Politècnica de Catalunya (Spanyol), Univer
 
 ## Katai Coklat, "Bintang Gagal" yang Terjebak di Tengah
 
-Sebelum masuk ke pasangannya, ada baiknya berkenalan dulu dengan katai coklat itu sendiri.
-
-> **Katai coklat (brown dwarf)** adalah objek langit yang massanya terlalu kecil untuk menyalakan fusi hidrogen secara stabil di intinya, biasanya di bawah sekitar 0,075–0,08 kali massa Matahari, tapi terlalu besar untuk disebut planet raksasa biasa. Karena tidak bisa mempertahankan fusi nuklir, katai coklat tidak pernah benar-benar "menyala" seperti bintang sungguhan. Ia hanya bisa terus mendingin dan meredup seiring waktu, membuatnya sangat sulit dideteksi, apalagi jika ia sedang mengorbit dekat dengan bintang lain yang jauh lebih terang.
+Sebelum masuk lebih jauh, ada baiknya berkenalan dulu dengan katai coklat itu sendiri. Katai coklat (brown dwarf) adalah objek langit yang massanya terlalu kecil untuk menyalakan fusi hidrogen secara stabil di intinya, biasanya di bawah sekitar 0,075–0,08 kali massa Matahari, tapi terlalu besar untuk disebut planet raksasa biasa. Karena tidak bisa mempertahankan fusi nuklir, katai coklat tidak pernah benar-benar "menyala" seperti bintang sungguhan. Ia hanya bisa terus mendingin dan meredup seiring waktu, membuatnya sangat sulit dideteksi, apalagi jika ia sedang mengorbit dekat dengan bintang lain yang jauh lebih terang.
 
 Karena redup dan sulit dideteksi inilah, salah satu dugaan awal soal kelangkaan pasangan katai putih–katai coklat adalah semata-mata karena keterbatasan pengamatan, bukan karena mereka memang jarang terbentuk. Untuk menguji dugaan ini, tim peneliti butuh cara untuk memprediksi, secara teoretis, seberapa banyak seharusnya pasangan semacam ini ada di sekitar kita jika fisika pembentukan bintang biner berjalan seperti yang selama ini dipahami.
 
-## Membangun Alam Semesta Tiruan dengan Kode MRBIN
+## Membangun Simulasi Astrofisika dengan Kode MRBIN
 
 Untuk menjawab itu, tim menggunakan dan mengembangkan lebih lanjut sebuah kode simulasi bernama MRBIN, sebuah program sintesis populasi biner yang sudah lama dipakai kelompok riset ini untuk mempelajari katai putih dan sistem bintang gandanya.
 
@@ -42,27 +40,27 @@ Hasil utama dari penelitian ini cukup memuaskan. Simulasi memprediksi seharusnya
 
 Yang menarik, angka ini didapat menggunakan resep simulasi yang sama persis dengan yang sebelumnya sudah terbukti berhasil mereproduksi populasi katai putih secara umum dan berbagai jenis biner katai putih lainnya, tanpa perlu "disetel ulang" khusus untuk kasus katai putih–katai coklat. Ini artinya, kelangkaan pasangan ini kemungkinan besar memang murni konsekuensi alami dari cara bintang biner terbentuk dan berevolusi, bukan sekadar karena manusia belum cukup jeli mencarinya, meskipun bias pengamatan tetap berperan besar dalam menyulitkan pendeteksian sistem-sistem yang ada.
 
-## Fase Amplop Bersama, Ujian Berat bagi Pasangan yang Berdekatan
+## Tentang Fase Common Envelope
+
+Fase common envelope terjadi ketika salah satu bintang dalam sistem biner membengkak menjadi raksasa merah di akhir hidupnya, sampai-sampai lapisan luarnya menyelimuti kedua bintang sekaligus, termasuk bintang pendampingnya yang jauh lebih kecil, misalnya sebuah katai coklat. Di dalam selubung gas raksasa ini, kedua objek saling bergesekan dan kehilangan energi orbit, membuat mereka berputar semakin mendekat satu sama lain dalam waktu yang sangat singkat. Jika prosesnya berhasil melontarkan seluruh selubung gas sebelum kedua objek sempat bertabrakan dan menyatu, hasil akhirnya adalah sistem biner yang jauh lebih rapat dari sebelumnya, seperti katai putih dan katai coklat yang mengorbit satu sama lain hanya dalam hitungan jam.
 
 Ketika tim memeriksa lebih detail sistem-sistem berjarak orbit dekat, mereka menemukan sesuatu yang perlu penjelasan tambahan. Simulasi standar mereka ternyata menghasilkan terlalu sedikit pasangan katai putih–katai coklat berperiode pendek, dibanding yang benar-benar diamati.
 
-> **Fase amplop bersama (common envelope, CE)** terjadi ketika salah satu bintang dalam sistem biner membengkak menjadi raksasa merah di akhir hidupnya, sampai-sampai lapisan luarnya menyelimuti kedua bintang sekaligus, termasuk bintang pendampingnya yang jauh lebih kecil, misalnya sebuah katai coklat. Di dalam "amplop" gas raksasa ini, kedua objek saling bergesekan dan kehilangan energi orbit, membuat mereka berputar semakin mendekat satu sama lain dalam waktu yang sangat singkat. Jika prosesnya berhasil melontarkan seluruh amplop gas sebelum kedua objek sempat bertabrakan dan menyatu, hasil akhirnya adalah sistem biner yang jauh lebih rapat dari sebelumnya, seperti katai putih dan katai coklat yang mengorbit satu sama lain hanya dalam hitungan jam.
+Untuk mereproduksi jumlah sistem berperiode pendek yang benar-benar teramati, tim mendapati bahwa mereka perlu menaikkan nilai "efisiensi" fase common envelope ini jauh lebih tinggi dibanding nilai standar yang biasa dipakai untuk biner katai putih pada umumnya. Ini masuk akal, karena pada pasangan katai putih–katai coklat, perbedaan massa antara kedua komponennya jauh lebih ekstrem dibanding biner katai putih biasa, sehingga dibutuhkan mekanisme yang lebih efisien agar katai coklat yang jauh lebih ringan bisa selamat melontarkan selubung gas bintang pendampingnya tanpa ikut tertelan di dalamnya.
 
-Untuk mereproduksi jumlah sistem berperiode pendek yang benar-benar teramati, tim mendapati bahwa mereka perlu menaikkan "efisiensi" fase amplop bersama ini jauh lebih tinggi dibanding nilai standar yang biasa dipakai untuk biner katai putih pada umumnya. Ini masuk akal, karena pada pasangan katai putih–katai coklat, perbedaan massa antara kedua komponennya jauh lebih ekstrem dibanding biner katai putih biasa, sehingga dibutuhkan mekanisme yang lebih efisien agar katai coklat yang jauh lebih ringan bisa selamat melontarkan amplop gas bintang pendampingnya tanpa ikut tertelan di dalamnya.
+## Period Gap Antara Periode Pendek dan Panjang
 
-## Jurang Sunyi di Antara Periode Pendek dan Panjang
+Ketika tim memetakan distribusi periode orbit dari seluruh sistem simulasi mereka, muncul sebuah pola menarik, wilayah dengan kepadatan sistem yang jauh lebih rendah di antara sistem berperiode sangat pendek dan sistem berperiode sangat panjang. Ini adalah sebuah fenomena yang secara alami cocok dengan apa yang disebut period gap yang sebelumnya sudah dilaporkan pada biner katai putih–katai coklat.
 
-Ketika tim memetakan distribusi periode orbit dari seluruh sistem simulasi mereka, muncul sebuah pola menarik, wilayah dengan kepadatan sistem yang jauh lebih rendah di antara sistem berperiode sangat pendek dan sistem berperiode sangat panjang, sebuah fenomena yang secara alami cocok dengan apa yang disebut "jurang periode" (period gap) yang sebelumnya sudah dilaporkan pada biner katai putih–katai coklat.
-
-Pola ini ternyata muncul secara alami dari evolusi biner itu sendiri. Sistem yang sempat mengalami fase amplop bersama akan terdorong menjadi berperiode sangat pendek, sementara sistem yang berhasil menghindari fase ini justru melebar orbitnya akibat kehilangan massa dari bintang yang berevolusi, dan berakhir di wilayah periode yang sangat panjang. Akibatnya, wilayah periode menengah menjadi kurang diminati secara alami, bukan karena benar-benar kosong sama sekali, melainkan karena secara statistik jauh lebih jarang terbentuk dibanding kedua ekstremnya.
+Pola ini ternyata muncul secara alami dari evolusi biner itu sendiri. Sistem yang sempat mengalami fase common envelope akan terdorong menjadi berperiode sangat pendek, sementara sistem yang berhasil menghindari fase ini justru melebar orbitnya akibat kehilangan massa dari bintang yang berevolusi, dan berakhir di wilayah periode yang sangat panjang. Akibatnya, wilayah periode menengah menjadi kurang diminati secara alami, bukan karena benar-benar kosong sama sekali, melainkan karena secara statistik jauh lebih jarang terbentuk dibanding kedua ekstremnya.
 
 ## "Gurun" Katai Coklat yang Ternyata Tidak Benar-Benar Gersang
 
-Selain sistem katai putih–katai coklat, tim juga memanfaatkan simulasi mereka untuk menyelidiki fenomena lain yang sudah lama menjadi teka-teki, yaitu apa yang disebut sebagai "gurun katai coklat" (brown dwarf desert) di sekitar bintang deret utama biasa seperti Matahari.
+Selain sistem katai putih–katai coklat, tim juga memanfaatkan simulasi mereka untuk menyelidiki fenomena lain yang sudah lama menjadi teka-teki, yaitu apa yang disebut sebagai brown dwarf desert di sekitar bintang deret utama biasa seperti Matahari.
 
-> **Gurun katai coklat (brown dwarf desert)** adalah istilah untuk pengamatan bahwa katai coklat sangat jarang ditemukan mengorbit dekat dengan bintang bermassa mirip Matahari, jauh lebih jarang dibanding planet maupun bintang pendamping lainnya pada jarak orbit yang sama. Fenomena ini pertama kali diamati lewat survei kecepatan radial dan transit, namun penyebab pastinya masih menjadi perdebatan hingga kini.
+> **Brown dwarf desert** adalah istilah untuk pengamatan bahwa katai coklat sangat jarang ditemukan mengorbit dekat dengan bintang bermassa mirip Matahari, jauh lebih jarang dibanding planet maupun bintang pendamping lainnya pada jarak orbit yang sama. Fenomena ini pertama kali diamati lewat survei kecepatan radial dan transit, namun penyebab pastinya masih menjadi perdebatan hingga kini.
 
-Tanpa sengaja mengasumsikan keberadaan gurun ini sejak awal, simulasi tim justru secara alami menghasilkan versi "gurun" yang lebih lemah, bukan kekosongan total, melainkan hanya penurunan jumlah sistem di sekitar massa 0,04 kali massa Matahari (sekitar 40 kali massa Jupiter), sesuatu yang juga tercermin pada katalog pengamatan terbaru. Ini menunjukkan bahwa gurun katai coklat mungkin bukanlah ketiadaan total pasangan pada rentang massa tersebut, melainkan sekadar kelangkaan statistik yang bisa dijelaskan oleh jalur pembentukan dan evolusi biner yang sudah dikenal, tanpa perlu mekanisme tambahan yang khusus.
+Tanpa sengaja mengasumsikan keberadaan brown dwarf desert ini sejak awal, simulasi tim justru secara alami menghasilkan versi "gurun" yang lebih lemah, bukan kekosongan total, melainkan hanya penurunan jumlah sistem di sekitar massa 0,04 kali massa Matahari (sekitar 40 kali massa Jupiter), sesuatu yang juga tercermin pada katalog pengamatan terbaru. Ini menunjukkan bahwa brown dwarf desert mungkin bukanlah ketiadaan total pasangan pada rentang massa tersebut, melainkan sekadar kelangkaan statistik yang bisa dijelaskan oleh jalur pembentukan dan evolusi biner yang sudah dikenal, tanpa perlu mekanisme tambahan yang khusus.
 
 ## Menyisakan Beberapa Ketidaksesuaian yang Menarik untuk Ditelusuri
 
