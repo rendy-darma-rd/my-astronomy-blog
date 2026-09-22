@@ -2,6 +2,7 @@
 ---
 import { Image } from 'astro:assets';
 import BackToTop from './BackToTop.astro';
+import Footer from './Footer.astro';
 
 const { getCollection } = await import('astro:content');
 const posts = await getCollection('blog', ({ data }) => data.status === 'published');
@@ -272,10 +273,7 @@ function truncateText(text: string, maxLength: number = 120): string {
 
   </main>
 
-  <!-- FOOTER -->
-  <div class="footer">
-    <div class="footer-text">© 2026 Antariksa · Made with curiosity and joy ✨</div>
-  </div>
+  <Footer />
 
   <BackToTop />
 

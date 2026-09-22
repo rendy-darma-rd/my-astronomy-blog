@@ -1,0 +1,89 @@
+---
+export const prerender = true;
+
+import StaticPage from '../layouts/StaticPage.astro';
+
+const lastUpdated = 'September 2026';
+---
+
+<StaticPage
+	title="Kebijakan Privasi"
+	description="Kebijakan privasi Antariksa — informasi mengenai data yang kami kumpulkan, cookies, iklan pihak ketiga, dan hak pengguna."
+	breadcrumbLabel="Kebijakan Privasi"
+	titlePrefix="Kebijakan"
+	titleAccent="Privasi"
+	subtitle="Bagaimana Antariksa mengumpulkan, menggunakan, dan melindungi informasi pengunjung."
+>
+	<div class="static-section">
+		<p class="static-intro">
+			Privasi pengunjung adalah hal yang kami hormati. Halaman ini menjelaskan informasi apa saja yang dikumpulkan saat kamu mengakses Antariksa, bagaimana informasi tersebut digunakan, serta pilihan yang kamu miliki.
+		</p>
+		<p>
+			Terakhir diperbarui: {lastUpdated}.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Informasi yang Kami Kumpulkan</h2>
+		<p>
+			Antariksa tidak mewajibkan pendaftaran akun atau login untuk membaca artikel. Kami tidak secara aktif meminta data pribadi seperti nama, alamat, atau nomor telepon.
+		</p>
+		<p>
+			Namun, seperti kebanyakan situs web, kami menggunakan Google Analytics untuk memahami bagaimana pengunjung menggunakan situs ini, misalnya halaman yang paling banyak dikunjungi, durasi kunjungan, jenis perangkat, browser, serta lokasi umum (negara/kota) pengunjung. Data ini bersifat agregat dan tidak digunakan untuk mengidentifikasi individu secara langsung.
+		</p>
+		<p>
+			Jika kamu menghubungi kami melalui email atau formulir kontak, kami akan menerima informasi yang kamu berikan secara sukarela, seperti alamat email dan isi pesan, untuk keperluan membalas pertanyaan atau masukanmu.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Cookies</h2>
+		<p>
+			Antariksa menggunakan cookies dan teknologi serupa yang dipasang oleh layanan pihak ketiga (Google Analytics dan penyedia iklan) untuk mengingat preferensi, menganalisis trafik, dan menampilkan iklan yang relevan. Cookies ini tidak menyimpan informasi yang dapat mengidentifikasi kamu secara pribadi.
+		</p>
+		<p>
+			Kamu dapat menonaktifkan atau menghapus cookies kapan saja melalui pengaturan browser yang kamu gunakan. Menonaktifkan cookies mungkin memengaruhi beberapa fungsi situs, namun kamu tetap dapat membaca artikel seperti biasa.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Iklan Pihak Ketiga</h2>
+		<p>
+			Untuk membantu mendanai operasional situs, Antariksa menampilkan iklan dari mitra pihak ketiga (termasuk jaringan iklan Monetag), yang dapat berupa banner, iklan sisipan, atau notifikasi push yang bersifat opsional (memerlukan izin dari browser).
+		</p>
+		<p>
+			Penyedia iklan tersebut dapat menggunakan cookies atau pengidentifikasi perangkat untuk menampilkan iklan yang lebih relevan berdasarkan kunjungan kamu di situs ini maupun situs lain. Antariksa tidak mengontrol dan tidak bertanggung jawab atas praktik privasi jaringan iklan pihak ketiga tersebut.
+		</p>
+		<p>
+			Kamu dapat menolak izin notifikasi push kapan saja melalui pengaturan browser, dan dapat mempelajari lebih lanjut mengenai preferensi iklan melalui pengaturan iklan pada browser atau perangkat yang kamu gunakan.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Tautan ke Situs Lain</h2>
+		<p>
+			Artikel di Antariksa sering menyertakan tautan ke sumber ilmiah, jurnal penelitian, atau situs lain sebagai referensi. Kami tidak bertanggung jawab atas konten maupun kebijakan privasi situs pihak ketiga tersebut. Kami menyarankan kamu membaca kebijakan privasi masing-masing situs yang kamu kunjungi.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Privasi Anak-Anak</h2>
+		<p>
+			Antariksa tidak ditujukan khusus untuk anak-anak di bawah 13 tahun, dan kami tidak secara sadar mengumpulkan data pribadi dari anak-anak. Jika kamu adalah orang tua atau wali dan mengetahui anakmu memberikan data pribadi kepada kami, silakan hubungi kami agar dapat segera ditindaklanjuti.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Perubahan Kebijakan Ini</h2>
+		<p>
+			Kebijakan privasi ini dapat diperbarui dari waktu ke waktu mengikuti perkembangan situs maupun perubahan regulasi. Perubahan akan dipublikasikan di halaman ini beserta tanggal pembaruannya.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Hubungi Kami</h2>
+		<p>
+			Jika kamu memiliki pertanyaan mengenai kebijakan privasi ini, silakan kunjungi halaman <a href="/contact">Kontak</a> kami.
+		</p>
+	</div>
+</StaticPage>

@@ -1,0 +1,76 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import StaticPage from '../layouts/StaticPage.astro';
+
+const TAG_MAP = {
+	'benda-kecil': { label: 'Benda Kecil', emoji: '☄️' },
+	'planet': { label: 'Planet', emoji: '🪐' },
+	'bintang': { label: 'Bintang', emoji: '⭐' },
+	'gugus-bintang': { label: 'Gugus Bintang', emoji: '✨' },
+	'galaksi': { label: 'Galaksi', emoji: '🌌' },
+	'alam-semesta': { label: 'Alam Semesta', emoji: '🌠' },
+	'misi-antariksa': { label: 'Misi Antariksa', emoji: '🚀' },
+	'sejarah': { label: 'Sejarah', emoji: '📜' },
+} as const;
+
+const posts = (await getCollection('blog', ({ data }) => data.status === 'published')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const postsByTopic = posts.reduce((acc, post) => {
+	const topic = post.data.topic || 'planet';
+	acc[topic] = acc[topic] || [];
+	acc[topic].push(post);
+	return acc;
+}, {} as Record<string, typeof posts>);
+---
+
+<StaticPage
+	title="Peta Situs"
+	description="Peta situs Antariksa — daftar lengkap halaman dan artikel astronomi yang tersedia di situs ini."
+	breadcrumbLabel="Peta Situs"
+	titlePrefix="Peta"
+	titleAccent="Situs"
+	subtitle="Daftar lengkap halaman dan kategori artikel yang tersedia di Antariksa."
+>
+	<div class="static-section">
+		<h2 class="static-heading">Halaman Utama</h2>
+		<ul>
+			<li><a href="/">Beranda</a></li>
+			<li><a href="/artikel">Semua Artikel</a></li>
+			<li><a href="/about">Tentang Kami</a></li>
+			<li><a href="/contact">Kontak</a></li>
+			<li><a href="/privacy-policy">Kebijakan Privasi</a></li>
+			<li><a href="/sitemap">Peta Situs</a></li>
+		</ul>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Kategori Artikel</h2>
+		<ul>
+			{Object.entries(TAG_MAP).map(([slug, tag]) => (
+				<li>
+					<a href={`/artikel?topic=${slug}`}>{tag.emoji} {tag.label}</a>
+					{' '}({(postsByTopic[slug] || []).length} artikel)
+				</li>
+			))}
+		</ul>
+	</div>
+
+	{Object.entries(TAG_MAP).map(([slug, tag]) => {
+		const topicPosts = postsByTopic[slug] || [];
+		if (topicPosts.length === 0) return null;
+		return (
+			<div class="static-section">
+				<h2 class="static-heading">{tag.emoji} {tag.label}</h2>
+				<ul>
+					{topicPosts.map((post) => (
+						<li><a href={`/artikel/${post.id}`}>{post.data.title}</a></li>
+					))}
+				</ul>
+			</div>
+		);
+	})}
+</StaticPage>

@@ -1,0 +1,45 @@
+---
+export const prerender = true;
+
+import StaticPage from '../layouts/StaticPage.astro';
+---
+
+<StaticPage
+	title="Kontak"
+	description="Hubungi tim Antariksa untuk pertanyaan, masukan, koreksi artikel, atau kerja sama."
+	breadcrumbLabel="Kontak"
+	titlePrefix="Kontak"
+	titleAccent="Kami"
+	subtitle="Punya pertanyaan, masukan, atau ingin berkolaborasi? Kami senang mendengar dari kamu."
+>
+	<div class="static-section">
+		<p class="static-intro">
+			Antariksa dikelola secara independen, jadi setiap pesan yang masuk dibaca langsung oleh pengelola situs ini.
+		</p>
+		<p>
+			Kamu bisa menghubungi kami untuk berbagai keperluan, mulai dari pertanyaan seputar artikel, koreksi informasi, saran topik, hingga peluang kerja sama.
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Email</h2>
+		<p>
+			<a href="mailto:darmarendy@gmail.com">darmarendy@gmail.com</a>
+		</p>
+	</div>
+
+	<div class="static-section">
+		<h2 class="static-heading">Media Sosial</h2>
+		<ul>
+			<li>Instagram: <a href="https://instagram.com/antariksa.web.id" target="_blank" rel="noopener noreferrer">@antariksa.web.id</a></li>
+			<li>Threads: <a href="https://www.threads.net/@antariksa.web.id" target="_blank" rel="noopener noreferrer">@antariksa.web.id</a></li>
+		</ul>
+	</div>
+
+	<div class="static-footer">
+		<p class="static-tagline">
+			<strong>Antariksa</strong><br>
+			<em>Looking up at the sky with curiosity and joy.</em>
+		</p>
+	</div>
+</StaticPage>

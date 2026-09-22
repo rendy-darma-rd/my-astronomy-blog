@@ -1,332 +1,88 @@
 ---
 export const prerender = true;
 
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import BackToTop from '../components/BackToTop.astro';
-import GoogleAnalytics from '../components/GoogleAnalytics.astro';
-import MonetagVignetteBannerTag from '../components/MonetagVignetteBanner.astro';
-import MonetagPushNotifTag from '../components/MonetagPushNotif.astro'
-import Breadcrumb from '../components/Breadcrumb.astro';
+import StaticPage from '../layouts/StaticPage.astro';
 ---
 
-<!doctype html>
-<html lang="id">
-	<head>
-		<BaseHead title="Tentang Kami" description="Platform astronomi independen yang menyajikan informasi tentang alam semesta secara jelas, menarik, dan berbasis penelitian ilmiah." />
-		<GoogleAnalytics />
-		<MonetagPushNotifTag />
-		<MonetagVignetteBannerTag />
-	</head>
-	<body>
-		<Header />
-		
-		<main>
-		<div class="page-wrapper">
-			<!-- PAGE HEADER -->
-			<div class="page-header">
-				<Breadcrumb items={[
-					{ label: 'Beranda', href: '/' },
-					{ label: 'Tentang Kami' },
-				]} />
-				<div class="page-eyebrow">✦ Explore the universe</div>
-				<h1 class="page-title">Tentang <span>Antariksa</span></h1>
-				<p class="page-sub">Mengenal cerita, tujuan, dan semangat di balik Antariksa.</p>
-			</div>
+<StaticPage
+	title="Tentang Kami"
+	description="Platform astronomi independen yang menyajikan informasi tentang alam semesta secara jelas, menarik, dan berbasis penelitian ilmiah."
+	breadcrumbLabel="Tentang Kami"
+	titlePrefix="Tentang"
+	titleAccent="Antariksa"
+	subtitle="Mengenal cerita, tujuan, dan semangat di balik Antariksa."
+>
+	<div class="static-section">
+		<p class="static-intro">
+			Antariksa adalah platform astronomi independen yang menyajikan informasi tentang alam semesta secara jelas, menarik, dan berbasis penelitian ilmiah.
+		</p>
+		<p>
+			Kami percaya bahwa astronomi tidak hanya milik para ilmuwan. Siapa pun yang pernah memandang langit malam dan bertanya-tanya tentang bintang, planet, galaksi, atau asal-usul alam semesta berhak mendapatkan akses terhadap informasi yang akurat dan mudah dipahami.
+		</p>
+		<p>
+			Melalui Antariksa, kami berupaya menjembatani dunia penelitian astronomi dengan pembaca Indonesia dari berbagai kalangan.
+		</p>
+	</div>
 
-			<!-- CONTENT -->
-			<div class="about-content">
-				<div class="about-section">
-					<p class="about-intro">
-						Antariksa adalah platform astronomi independen yang menyajikan informasi tentang alam semesta secara jelas, menarik, dan berbasis penelitian ilmiah.
-					</p>
-					<p>
-						Kami percaya bahwa astronomi tidak hanya milik para ilmuwan. Siapa pun yang pernah memandang langit malam dan bertanya-tanya tentang bintang, planet, galaksi, atau asal-usul alam semesta berhak mendapatkan akses terhadap informasi yang akurat dan mudah dipahami.
-					</p>
-					<p>
-						Melalui Antariksa, kami berupaya menjembatani dunia penelitian astronomi dengan pembaca Indonesia dari berbagai kalangan.
-					</p>
-				</div>
+	<div class="static-section">
+		<h2 class="static-heading">Mengapa Antariksa Dibuat?</h2>
+		<p>
+			Dalam beberapa dekade terakhir, penelitian astronomi berkembang dengan sangat pesat. Ribuan paper ilmiah diterbitkan setiap tahunnya, mengungkap penemuan baru tentang exoplanet, lubang hitam, galaksi, komet, dan berbagai fenomena alam semesta lainnya.
+		</p>
+		<p>
+			Namun, sebagian besar hasil penelitian tersebut ditulis dalam bahasa teknis yang sulit diakses oleh masyarakat umum. Di sisi lain, platform berbahasa Indonesia yang secara khusus membahas astronomi secara luas dan konsisten masih relatif terbatas.
+		</p>
+		<p>
+			Antariksa hadir untuk membantu menjembatani kesenjangan tersebut: menghadirkan hasil-hasil penelitian astronomi terbaru dalam bahasa yang lebih sederhana tanpa menghilangkan akurasi ilmiahnya.
+		</p>
+	</div>
 
-				<div class="about-section">
-					<h2 class="about-heading">Mengapa Antariksa Dibuat?</h2>
-					<p>
-						Dalam beberapa dekade terakhir, penelitian astronomi berkembang dengan sangat pesat. Ribuan paper ilmiah diterbitkan setiap tahunnya, mengungkap penemuan baru tentang exoplanet, lubang hitam, galaksi, komet, dan berbagai fenomena alam semesta lainnya.
-					</p>
-					<p>
-						Namun, sebagian besar hasil penelitian tersebut ditulis dalam bahasa teknis yang sulit diakses oleh masyarakat umum. Di sisi lain, platform berbahasa Indonesia yang secara khusus membahas astronomi secara luas dan konsisten masih relatif terbatas.
-					</p>
-					<p>
-						Antariksa hadir untuk membantu menjembatani kesenjangan tersebut: menghadirkan hasil-hasil penelitian astronomi terbaru dalam bahasa yang lebih sederhana tanpa menghilangkan akurasi ilmiahnya.
-					</p>
-				</div>
+	<div class="static-section">
+		<h2 class="static-heading">Bagaimana Artikel Ditulis?</h2>
+		<p>
+			Sebagian besar artikel di Antariksa berasal dari jurnal ilmiah dan paper penelitian yang diterbitkan oleh astronom dan institusi riset dari berbagai negara.
+		</p>
+		<p>
+			Topik dipilih berdasarkan relevansi, nilai ilmiah, dan daya tariknya bagi pembaca. Setiap artikel kemudian diolah menjadi tulisan yang lebih mudah dipahami oleh pembaca umum, tanpa mengharuskan pembaca memiliki latar belakang sains atau astronomi.
+		</p>
+		<p>
+			Selain artikel berbasis penelitian, Antariksa juga memuat artikel sejarah astronomi dan topik edukasi lainnya yang disusun dari berbagai sumber terpercaya seperti buku, publikasi ilmiah, dokumenter, dan referensi akademik lainnya.
+		</p>
+		<p>
+			Kami berkomitmen untuk selalu mengutamakan ketepatan informasi dan transparansi sumber dalam setiap artikel yang dipublikasikan.
+		</p>
+	</div>
 
-				<div class="about-section">
-					<h2 class="about-heading">Bagaimana Artikel Ditulis?</h2>
-					<p>
-						Sebagian besar artikel di Antariksa berasal dari jurnal ilmiah dan paper penelitian yang diterbitkan oleh astronom dan institusi riset dari berbagai negara.
-					</p>
-					<p>
-						Topik dipilih berdasarkan relevansi, nilai ilmiah, dan daya tariknya bagi pembaca. Setiap artikel kemudian diolah menjadi tulisan yang lebih mudah dipahami oleh pembaca umum, tanpa mengharuskan pembaca memiliki latar belakang sains atau astronomi.
-					</p>
-					<p>
-						Selain artikel berbasis penelitian, Antariksa juga memuat artikel sejarah astronomi dan topik edukasi lainnya yang disusun dari berbagai sumber terpercaya seperti buku, publikasi ilmiah, dokumenter, dan referensi akademik lainnya.
-					</p>
-					<p>
-						Kami berkomitmen untuk selalu mengutamakan ketepatan informasi dan transparansi sumber dalam setiap artikel yang dipublikasikan.
-					</p>
-				</div>
+	<div class="static-section">
+		<h2 class="static-heading">Untuk Siapa Antariksa?</h2>
+		<p>
+			Antariksa ditujukan untuk seluruh masyarakat Indonesia yang memiliki rasa ingin tahu tentang alam semesta.
+		</p>
+		<p>
+			Baik kamu seorang pelajar, mahasiswa, guru, penggemar astronomi, maupun pembaca umum tanpa latar belakang sains, kami berharap dapat menyediakan artikel yang informatif, menarik, dan mudah diikuti.
+		</p>
+		<p>
+			Karena pada akhirnya, rasa penasaran terhadap langit adalah sesuatu yang dapat dimiliki oleh siapa saja.
+		</p>
+	</div>
 
-				<div class="about-section">
-					<h2 class="about-heading">Untuk Siapa Antariksa?</h2>
-					<p>
-						Antariksa ditujukan untuk seluruh masyarakat Indonesia yang memiliki rasa ingin tahu tentang alam semesta.
-					</p>
-					<p>
-						Baik kamu seorang pelajar, mahasiswa, guru, penggemar astronomi, maupun pembaca umum tanpa latar belakang sains, kami berharap dapat menyediakan artikel yang informatif, menarik, dan mudah diikuti.
-					</p>
-					<p>
-						Karena pada akhirnya, rasa penasaran terhadap langit adalah sesuatu yang dapat dimiliki oleh siapa saja.
-					</p>
-				</div>
+	<div class="static-section">
+		<h2 class="static-heading">Tentang Pendiri</h2>
+		<p>
+			Antariksa didirikan dan dikelola secara independen oleh seorang pecinta astronomi yang saat ini berkarier sebagai software developer.
+		</p>
+		<p>
+			Website ini lahir dari keinginan untuk tetap terhubung dengan dunia astronomi sekaligus memanfaatkan pengalaman di bidang teknologi untuk membangun ruang belajar yang terbuka bagi masyarakat Indonesia.
+		</p>
+		<p>
+			Melalui Antariksa, kecintaan terhadap astronomi dan teknologi bertemu dalam satu tujuan: membantu lebih banyak orang memahami dan menikmati sains tentang alam semesta.
+		</p>
+	</div>
 
-				<div class="about-section">
-					<h2 class="about-heading">Tentang Pendiri</h2>
-					<p>
-						Antariksa didirikan dan dikelola secara independen oleh seorang pecinta astronomi yang saat ini berkarier sebagai software developer.
-					</p>
-					<p>
-						Website ini lahir dari keinginan untuk tetap terhubung dengan dunia astronomi sekaligus memanfaatkan pengalaman di bidang teknologi untuk membangun ruang belajar yang terbuka bagi masyarakat Indonesia.
-					</p>
-					<p>
-						Melalui Antariksa, kecintaan terhadap astronomi dan teknologi bertemu dalam satu tujuan: membantu lebih banyak orang memahami dan menikmati sains tentang alam semesta.
-					</p>
-				</div>
-
-				<div class="about-footer">
-					<p class="about-tagline">
-						<strong>Antariksa</strong><br>
-						<em>Looking up at the sky with curiosity and joy.</em>
-					</p>
-				</div>
-			</div>
-		</div>
-		</main>
-
-		<Footer />
-		<BackToTop />
-	</body>
-</html>
-
-<style>
-	@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&display=swap');
-
-	.page-wrapper {
-		font-family: 'Nunito', sans-serif;
-		background: #f5f3ef;
-		min-height: 100vh;
-		overflow-x: hidden;
-	}
-
-	.page-header {
-		position: relative;
-		z-index: 5;
-		background: linear-gradient(180deg, #eceae4 0%, #f5f3ef 100%);
-		border-bottom: 1px solid #e2ddd6;
-		padding: 2rem 2rem 1.5rem;
-		text-align: center;
-	}
-
-	.page-eyebrow {
-		font-size: 11px;
-		letter-spacing: 0.18em;
-		text-transform: uppercase;
-		color: #6e5f52;
-		font-weight: 600;
-		margin-bottom: 0.5rem;
-	}
-
-	.page-title {
-		font-family: 'Lora', serif;
-		font-size: 40px;
-		font-weight: 600;
-		color: #2a2420;
-		margin-bottom: 0.4rem;
-	}
-
-	.page-title span {
-		color: #4a6fa5;
-		font-style: italic;
-	}
-
-	.page-sub {
-		font-size: 16px;
-		color: #6e5f52;
-		font-weight: 400;
-	}
-
-	.about-content {
-		max-width: 1300px;
-		margin: 0 auto;
-		padding: 2rem 2rem 3rem;
-	}
-
-	.about-intro {
-		font-size: 20px;
-		font-weight: 500;
-		color: #5a5040;
-		line-height: 1.8;
-		margin-bottom: 1.5rem;
-	}
-
-	.about-section {
-		margin-bottom: 3rem;
-	}
-
-	.about-section p {
-		font-size: 18px;
-		line-height: 1.75;
-		color: #6a6050;
-		margin-bottom: 1.2rem;
-	}
-
-	.about-heading {
-		font-family: 'Lora', serif;
-		font-size: 26px;
-		font-weight: 600;
-		color: #2a2420;
-		margin-bottom: 1rem;
-		margin-top: 0;
-	}
-
-	.about-footer {
-		margin-top: 4rem;
-		padding-top: 2rem;
-		border-top: 1px solid #e2ddd6;
-		text-align: center;
-	}
-
-	.about-tagline {
-		font-size: 16px;
-		color: #4a4034;
-		line-height: 1.8;
-		margin: 0;
-	}
-
-	.about-tagline strong {
-		font-family: 'Lora', serif;
-		font-size: 22px;
-		color: #2a2420;
-	}
-
-	.about-tagline em {
-		color: #4a6fa5;
-	}
-
-	@media (max-width: 768px) {
-		.page-header {
-			padding: 1.5rem 1rem 1rem;
-		}
-
-		.page-title {
-			font-size: 32px;
-		}
-
-		.page-sub {
-			font-size: 15px;
-		}
-
-		.about-content {
-			padding: 1.5rem 1.5rem 2rem;
-		}
-
-		.about-intro {
-			font-size: 18px;
-		}
-
-		.about-section p {
-			font-size: 18px;
-		}
-
-		.about-heading {
-			font-size: 23px;
-		}
-
-		.about-tagline {
-			font-size: 15px;
-		}
-
-		.about-tagline strong {
-			font-size: 19px;
-		}
-	}
-
-	@media (max-width: 600px) {
-		.page-header {
-			padding: 1.2rem 1rem 0.8rem;
-		}
-
-		.page-title {
-			font-size: 28px;
-		}
-
-		.page-eyebrow {
-			font-size: 10px;
-		}
-
-		.page-sub {
-			font-size: 14px;
-		}
-
-		.about-content {
-			padding: 1.2rem 1rem 1.5rem;
-		}
-
-		.about-intro {
-			font-size: 18px;
-		}
-
-		.about-section p {
-			font-size: 18px;
-		}
-
-		.about-heading {
-			font-size: 21px;
-		}
-
-		.about-footer {
-			margin-top: 3rem;
-		}
-	}
-
-	@media (max-width: 400px) {
-		.page-title {
-			font-size: 24px;
-		}
-
-		.about-content {
-			padding: 1rem 0.8rem 1.2rem;
-		}
-
-		.about-intro {
-			font-size: 18px;
-		}
-
-		.about-section p {
-			font-size: 18px;
-		}
-
-		.about-heading {
-			font-size: 19px;
-		}
-
-		.about-tagline {
-			font-size: 14px;
-		}
-
-		.about-tagline strong {
-			font-size: 17px;
-		}
-	}
-</style>
+	<div class="static-footer">
+		<p class="static-tagline">
+			<strong>Antariksa</strong><br>
+			<em>Looking up at the sky with curiosity and joy.</em>
+		</p>
+	</div>
+</StaticPage>
