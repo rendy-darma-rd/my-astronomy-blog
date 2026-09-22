@@ -8,9 +8,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import GoogleAdsense from '../components/AdsenseTag.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
-import MonetagVignetteBannerTag from '../components/MonetagVignetteBanner.astro';
-import MonetagPushNotifTag from '../components/MonetagPushNotif.astro'
 
 
 const posts = (await getCollection('blog', ({ data }) => data.status === 'published')).sort(
@@ -58,8 +57,7 @@ const topicCounts = posts.reduce((acc, post) => {
 	<head>
 		<BaseHead title="Artikel" description="Jelajahi dan temukan beragam artikel astronomi di Antariksa. Spark your curiosity and joy." />
 		<GoogleAnalytics />
-		<MonetagVignetteBannerTag />
-		<MonetagPushNotifTag />
+		<GoogleAdsense />
 	</head>
 	<body>
 		<Header />

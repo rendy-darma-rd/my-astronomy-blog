@@ -4,8 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BackToTop from '../components/BackToTop.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
-import MonetagVignetteBannerTag from '../components/MonetagVignetteBanner.astro';
-import MonetagPushNotifTag from '../components/MonetagPushNotif.astro';
+import GoogleAdsense from '../components/AdsenseTag.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 
 interface Props {
@@ -34,8 +33,7 @@ const {
 	<head>
 		<BaseHead title={title} description={description} />
 		<GoogleAnalytics />
-		<MonetagPushNotifTag />
-		<MonetagVignetteBannerTag />
+		<GoogleAdsense />
 	</head>
 	<body>
 		<Header />
