@@ -11,3 +11,76 @@ status: draft
 heroImage: heroImage.png
 topic: bintang
 ---
+Dari ribuan pulsar yang sudah ditemukan astronom, hanya dua yang masuk dalam kategori yang disebut sistem Huntsman, kelompok pulsar ganda milidetik yang sangat langka dengan pasangan bintang raksasa yang sudah terkelupas sebagian, namun tetap menjaga jarak aman dari pulsar pendampingnya. Baru-baru ini, tim astronom dari Nanjing University dan Taiyuan University of Technology, dipimpin oleh Hao-Ran Yang, mencoba menjawab satu pertanyaan yang selama ini menggantung: seberapa besar peran radiasi dari pulsar itu sendiri dalam membentuk sistem-sistem langka ini?
+
+## Mengenal Sistem Huntsman, Pulsar Ganda yang Baru Dikenali
+
+Sebelum masuk ke inti masalahnya, ada baiknya kita berkenalan dulu dengan objek yang dibahas dalam penelitian ini.
+
+> **Pulsar milidetik (millisecond pulsar, MSP)** adalah bintang neutron yang berputar sangat cepat, bisa mencapai ratusan kali per detik, dan memancarkan pancaran radiasi elektromagnetik yang terlihat berdenyut teratur dari Bumi, mirip mercusuar yang berputar. Pulsar semacam ini biasanya terbentuk ketika sebuah bintang neutron biasa "dipompa" berputar lebih cepat lewat proses transfer materi dari bintang pendampingnya, sebuah proses yang disebut daur ulang (recycling).
+
+Sistem Huntsman sendiri adalah jenis biner pulsar milidetik yang cukup unik. Berbeda dengan kelompok biner pulsar "laba-laba" (spider binaries) yang sudah lebih dikenal, di mana angin pulsar terus-menerus mengikis bintang pendampingnya dalam orbit yang sangat rapat, sistem Huntsman justru merupakan sistem yang terpisah (detached), artinya bintang pendampingnya tidak sedang mengalami transfer materi aktif ke arah pulsar, dan orbitnya relatif lebar, biasanya berkisar beberapa hingga sepuluh hari.
+
+> **Sistem terpisah (detached system)**, istilah untuk kondisi biner bintang di mana kedua komponennya sudah tidak lagi saling bertukar materi secara aktif, karena masing-masing bintang berada cukup jauh di dalam batas gravitasinya sendiri (Roche lobe) dan tidak "meluap" ke arah pasangannya.
+
+Hingga saat ini, baru ada dua anggota sistem Huntsman yang benar-benar terkonfirmasi lewat pengamatan multi-panjang gelombang, yaitu PSR J1417-4402 dan PSR J1947-1120. Keduanya menunjukkan pulsar yang sudah "didaur ulang" penuh, mengorbit bintang raksasa yang sebagian besar lapisan luarnya sudah terkelupas.
+
+## Bagaimana Sistem Langka Ini Bisa Terbentuk?
+
+Secara teori, pulsar Huntsman diperkirakan terbentuk di sekitar fase yang disebut "red-bump" dalam evolusi bintang raksasa merah.
+
+> **Fase red-bump** adalah momen singkat dalam evolusi bintang raksasa merah ketika lapisan luar bintang sempat menyusut sesaat, sebelum kembali mengembang lagi. Jika penyusutan sementara ini terjadi ketika bintang sedang aktif mentransfer materi ke bintang pendampingnya, transfer materi ini bisa terhenti sejenak karena bintang raksasa tadi "menjauh" dari batas gravitasinya sendiri, meninggalkan sistem biner dalam kondisi terpisah untuk sementara waktu.
+
+Ketika sebuah bintang bermassa rendah kehilangan sebagian besar lapisan luarnya lewat proses transfer materi menuju pulsar pendampingnya, lalu tiba-tiba berhenti mentransfer materi karena memasuki fase red-bump ini, hasilnya adalah sistem yang persis menyerupai apa yang diamati pada sistem Huntsman: pulsar yang sudah didaur ulang penuh, mengorbit bintang raksasa yang sudah terkelupas sebagian namun untuk sementara waktu "beristirahat" dari proses transfer materi.
+
+Namun ada satu faktor lain yang selama ini belum benar-benar dihitung secara kuantitatif dalam skenario ini: pengaruh radiasi dari pulsar itu sendiri terhadap bintang pendampingnya.
+
+## Apakah Angin Pulsar Ikut "Menguapkan" Bintang Pendampingnya?
+
+Di sinilah pertanyaan utama penelitian ini bermula. Fenomena yang disebut evaporasi memang sudah dikenal luas berperan penting pada biner pulsar "laba-laba" yang orbitnya jauh lebih rapat.
+
+> **Evaporasi berbasis pulsar milidetik (MSP-driven evaporation)** adalah proses ketika energi rotasi yang dibawa oleh angin pulsar milidetik mengiradiasi dan mengikis permukaan bintang pendampingnya, menyebabkan bintang tersebut kehilangan massa secara perlahan lewat proses semacam "penguapan". Semakin dekat jarak orbit dan semakin kuat pancaran energi pulsar, semakin besar pula efek pengikisan ini terhadap bintang pendamping.
+
+Pertanyaannya, apakah efek serupa juga cukup berperan pada sistem Huntsman, meski orbitnya jauh lebih lebar dibanding biner laba-laba? Di satu sisi, orbit yang lebih lebar berarti fluks angin pulsar yang sampai ke permukaan bintang pendamping jauh lebih lemah. Namun di sisi lain, bintang raksasa yang sudah berevolusi memiliki ukuran jauh lebih besar dibanding bintang pendamping biasa, sehingga ia "menangkap" lebih banyak sudut pancaran radiasi pulsar meski jaraknya lebih jauh. Selubung bintang raksasa yang renggang dan meluas juga berpotensi lebih mudah terkikis dibanding bintang pendamping yang lebih padat.
+
+## Menjalankan Simulasi Evolusi Biner secara Terperinci
+
+Untuk menjawab teka-teki ini, tim menjalankan perhitungan evolusi biner secara terperinci menggunakan kode simulasi bernama MESA, mencakup berbagai kombinasi massa awal bintang pendamping dan periode orbit awal, lalu memasukkan efek evaporasi pulsar ke dalam perhitungan tersebut dengan berbagai tingkat efisiensi yang berbeda-beda.
+
+> **Transfer materi tipe A, B, dan C (Case A, B, C mass transfer)**, klasifikasi yang menunjukkan pada tahap evolusi mana sebuah bintang mulai mentransfer materi ke pasangannya. Tipe A terjadi ketika bintang donor masih membakar hidrogen di intinya, tipe B terjadi setelah pembakaran hidrogen di inti selesai namun masih membakar hidrogen di lapisan kulitnya (biasanya saat bintang sudah menjadi raksasa), dan tipe C terjadi setelah pembakaran helium di intinya juga selesai.
+
+Hasil simulasi menunjukkan pola yang cukup jelas. Sistem yang mulai mentransfer materi terlalu dini (tipe A) akan membuat orbit biner menyusut drastis dan tidak pernah sempat mengalami fase red-bump, sehingga gagal menjadi sistem Huntsman. Sebaliknya, sistem yang mulai mentransfer materi lebih belakangan, setelah donor sudah mencapai cabang raksasa (tipe B), justru berhasil mengalami fase terhenti sementara akibat fase red-bump, persis kondisi yang diperlukan untuk membentuk sistem Huntsman.
+
+## Evaporasi Ternyata Bukan Faktor Penentu Utama
+
+Setelah membandingkan berbagai tingkat efisiensi evaporasi, mulai dari yang benar-benar tidak ada hingga yang cukup kuat, tim menemukan sesuatu yang cukup mengejutkan: keberadaan evaporasi pulsar ternyata bukan syarat yang diperlukan untuk membentuk sistem Huntsman sama sekali.
+
+Wilayah parameter awal yang bisa menghasilkan sistem Huntsman, yaitu massa donor awal sekitar 1,0 hingga 2,5 kali massa Matahari dengan periode orbit awal di atas periode tertentu (disebut periode bifurkasi), ternyata hampir tidak berubah baik dengan atau tanpa evaporasi. Dengan kata lain, pembentukan sistem Huntsman pada dasarnya ditentukan oleh proses evolusi bintang biner itu sendiri, terutama fenomena red-bump tadi, bukan oleh seberapa kuat pulsar "menguapkan" pendampingnya.
+
+Meski begitu, evaporasi tetap punya pengaruh, meski sifatnya sekunder. Ketika efisiensi evaporasi cukup kuat, proses ini bisa membuat evolusi periode orbit menjadi lebih halus (tanpa penyusutan drastis saat fase red-bump), sedikit memperpanjang durasi fase terpisah, bahkan pada kasus efisiensi paling kuat, bisa mencegah bintang pendamping mengisi kembali batas gravitasinya setelah fase red-bump berakhir, sehingga sistem tetap terjebak dalam kondisi terpisah untuk jangka waktu lebih lama.
+
+## Memprediksi Berapa Banyak Sistem Semacam Ini yang Ada di Galaksi
+
+Selain menjalankan simulasi evolusi biner satu per satu, tim juga melakukan sintesis populasi biner untuk memperkirakan berapa banyak sistem Huntsman yang seharusnya bisa ditemukan di galaksi kita, dengan menyimulasikan sepuluh juta sistem biner primordial dan melacak berapa banyak yang akhirnya berevolusi menjadi sistem Huntsman.
+
+Hasilnya, jumlah sistem Huntsman yang diprediksi berada di kisaran 10 sistem, angka yang cukup masuk akal mengingat baru dua sistem yang benar-benar terkonfirmasi hingga saat ini, plus satu kandidat lain yang belum terkonfirmasi. Menariknya, semakin kuat efisiensi evaporasi yang diasumsikan, jumlah prediksi sistem Huntsman justru sedikit menurun, dari sekitar 18-19 sistem tanpa evaporasi sama sekali, menjadi sekitar 13 sistem pada efisiensi evaporasi paling kuat yang diuji. Distribusi sistem-sistem ini dalam ruang massa donor dan periode orbit juga tampak sedikit lebih melebar ketika evaporasi yang diasumsikan semakin kuat.
+
+## Jejak Evaporasi pada Hubungan Massa Katai Putih dan Periode Orbit
+
+Salah satu temuan paling menarik dari studi ini muncul ketika tim menelusuri nasib akhir sistem-sistem ini, setelah bintang raksasa pendamping akhirnya kehabisan lapisan luarnya dan meninggalkan inti berupa katai putih helium.
+
+> **Hubungan massa katai putih terhadap periode orbit**, sebuah pola yang sudah lama diketahui pada biner pulsar dengan pendamping katai putih helium: semakin besar massa inti katai putih yang tersisa, semakin lebar pula periode orbit akhir sistemnya. Pola ini muncul karena massa inti katai putih berkaitan erat dengan seberapa lama dan seberapa besar bintang donor sempat mengembang sebagai raksasa merah sebelum kehilangan lapisan luarnya.
+
+Tim menemukan bahwa evaporasi pulsar bisa menggeser hubungan klasik ini, khususnya pada ujung bermassa rendah (di bawah sekitar 0,27 kali massa Matahari). Pada sistem dengan evaporasi kuat, katai putih bermassa rendah cenderung berakhir dengan periode orbit yang secara sistematis lebih lebar dibanding prediksi hubungan klasik tanpa evaporasi. Penjelasannya cukup masuk akal: donor bermassa rendah memiliki selubung yang lebih renggang dan mudah terkikis, sehingga evaporasi bisa mempercepat pengangkatan selubung ini, membuat sistem terpisah lebih awal dan berakhir pada orbit yang lebih lebar untuk massa inti yang sama.
+
+Namun ketika dibandingkan dengan data pengamatan sistem biner pulsar dan katai putih helium yang sudah dikenal, tim tidak menemukan bukti kuat bahwa efek pergeseran akibat evaporasi ini benar-benar terjadi pada sistem-sistem yang teramati saat ini, karena data pengamatan yang ada masih konsisten dengan hubungan klasik dalam batas ketidakpastian pengukurannya. Dengan kata lain, pengamatan saat ini belum memerlukan efek evaporasi yang kuat, namun temuan ini menyediakan semacam "prediksi teruji" yang bisa dicek lebih lanjut lewat pengamatan sistem serupa di masa depan.
+
+## Kesimpulan: Evolusi Bintang sebagai Sutradara Utama
+
+Secara keseluruhan, penelitian ini menyimpulkan bahwa pembentukan sistem Huntsman terutama ditentukan oleh proses evolusi bintang biner yang alami, terutama fenomena red-bump yang menyebabkan terhentinya transfer materi sementara, bukan oleh seberapa kuat radiasi pulsar mengikis bintang pendampingnya. Evaporasi memang berperan, tapi lebih sebagai "penyempurna" yang memodifikasi detail evolusi selanjutnya, memperhalus perubahan periode orbit, sedikit memperpanjang fase terpisah, dan pada kasus tertentu menggeser hubungan massa katai putih terhadap periode orbit, ketimbang sebagai faktor penentu utama yang memicu terbentuknya sistem-sistem langka ini sejak awal.
+
+Dengan baru dua sistem Huntsman yang terkonfirmasi di seluruh galaksi, setiap penemuan baru di masa depan akan menjadi kesempatan berharga untuk menguji lebih jauh prediksi-prediksi dari studi ini, terutama soal seberapa besar sebenarnya peran evaporasi pulsar dalam membentuk populasi bintang neutron yang langka dan unik ini.
+
+---
+
+*Ditulis berdasarkan: Yang, H.-R., Gao, S.-J., Li, X.-D., Guo, Y.-L., & Tang, W.-S. (2026). The Influence of Evaporation on the Formation and Evolution of Huntsman Systems. Astronomy & Astrophysics, arXiv:2609.00803v1*
