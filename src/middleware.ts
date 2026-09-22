@@ -91,18 +91,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return response;
   }
 
-  // Inject updatedDate on local saves (dev only — GitHub mode commits handle this in production)
-  if (
-    import.meta.env.DEV &&
-    context.request.method === 'POST' &&
-    path === '/api/keystatic/update'
-  ) {
+  // Inject updatedDate on Keystatic saves. Keystatic never auto-touches a date
+  // field on save (defaultValue only pre-fills new/empty fields) — this applies
+  // in both dev (local filesystem storage) and production (GitHub storage),
+  // since the /api/keystatic/update wire payload has the same shape either way.
+  if (context.request.method === 'POST' && path === '/api/keystatic/update') {
     try {
-      // Dynamically import the Node.js handler (safe in dev, never runs in production bundle)
-      const { makeGenericAPIRouteHandler } = await import('@keystatic/core/api/generic');
-      const { default: ksConfig } = await import('../keystatic.config');
-      const handler = makeGenericAPIRouteHandler({ config: ksConfig });
-
       const body = await context.request.json();
       const today = new Date().toISOString().split('T')[0];
 
@@ -121,8 +115,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         body: JSON.stringify({ ...body, additions: modifiedAdditions }),
       });
 
-      const { body: responseBody, headers, status } = await handler(modifiedRequest);
-      return new Response(responseBody as BodyInit, { status, headers: headers as HeadersInit });
+      return next(modifiedRequest);
     } catch {
       // Fall through to normal handler on error
     }
